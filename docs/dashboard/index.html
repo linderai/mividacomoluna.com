@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Vida Como Luna — Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=JetBrains+Mono:wght@200;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void: #0a0a0f;
+            --luna-silver: #c0c0c0;
+            --luna-purple: #667eea;
+            --luna-violet: #9f7aea;
+            --luna-glow: rgba(159, 122, 234, 0.3);
+            --luna-cold: #a0aec0;
+            --keter: #ffffff;
+            --chokmah: #667eea;
+            --binah: #9f7aea;
+            --chesed: #4299e1;
+            --gevurah: #f56565;
+            --tiferet: #ecc94b;
+            --netzach: #48bb78;
+            --hod: #ed8936;
+            --yesod: #9f7aea;
+            --malkuth: #38b2ac;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: var(--void);
+            color: var(--luna-silver);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+        }
+
+        /* STARS */
+        .stars {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
+        }
+        .star {
+            position: absolute; width: 2px; height: 2px;
+            background: white; border-radius: 50%;
+            animation: twinkle ease-in-out infinite;
+        }
+        @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }
+
+        .moon-glow {
+            position: fixed; top: -20%; right: -10%;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, var(--luna-glow) 0%, transparent 70%);
+            border-radius: 50%; z-index: 1;
+            animation: moonPulse 8s ease-in-out infinite; pointer-events: none;
+        }
+        @keyframes moonPulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .particles {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 2; pointer-events: none;
+        }
+        .particle {
+            position: absolute; width: 1px; height: 1px;
+            background: var(--luna-violet); border-radius: 50%;
+            animation: drift linear infinite;
+        }
+        @keyframes drift {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.4; } 90% { opacity: 0.4; }
+            100% { transform: translateY(-100vh) translateX(60px); opacity: 0; }
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            top: 0; left: 0;
+            width: 220px;
+            height: 100vh;
+            background: rgba(10, 10, 15, 0.95);
+            border-right: 1px solid rgba(159, 122, 234, 0.15);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 0;
+        }
+
+        .sidebar-brand {
+            padding: 0 24px 30px;
+            border-bottom: 1px solid rgba(159, 122, 234, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-moon {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 8px;
+            animation: lunaFloat 4s ease-in-out infinite;
+        }
+        @keyframes lunaFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .sidebar-title {
+            font-size: 0.9rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            background: linear-gradient(135deg, var(--luna-silver), var(--luna-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sidebar-user {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            letter-spacing: 0.2em;
+            color: var(--luna-cold);
+            opacity: 0.5;
+            margin-top: 4px;
+        }
+
+        /* NAV */
+        .sidebar-nav {
+            flex: 1;
+            padding: 0 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.5rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--luna-cold);
+            opacity: 0.3;
+            padding: 12px 12px 6px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            text-decoration: none;
+            color: var(--luna-cold);
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-item .nav-icon {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            flex-shrink: 0;
+        }
+
+        .nav-item:hover {
+            color: var(--luna-violet);
+            border-color: rgba(159, 122, 234, 0.2);
+            background: rgba(159, 122, 234, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--luna-violet);
+            border-color: rgba(159, 122, 234, 0.3);
+            background: rgba(159, 122, 234, 0.08);
+        }
+
+        .nav-item.logout {
+            margin-top: 8px;
+            color: rgba(245, 101, 101, 0.6);
+        }
+        .nav-item.logout:hover {
+            color: #f56565;
+            border-color: rgba(245, 101, 101, 0.2);
+            background: rgba(245, 101, 101, 0.05);
+        }
+
+        .sidebar-footer {
+            padding: 16px 24px 0;
+            border-top: 1px solid rgba(159, 122, 234, 0.08);
+        }
+
+        .sidebar-footer-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.5rem;
+            letter-spacing: 0.15em;
+            color: var(--luna-cold);
+            opacity: 0.25;
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            margin-left: 220px;
+            flex: 1;
+            position: relative;
+            z-index: 10;
+            padding: 50px 50px 60px;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            margin-bottom: 50px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(159, 122, 234, 0.1);
+        }
+
+        .page-greeting {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--luna-cold);
+            opacity: 0.5;
+            margin-bottom: 10px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            background: linear-gradient(135deg, var(--luna-silver), var(--luna-purple), var(--luna-violet));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: lunarShift 6s ease-in-out infinite;
+        }
+        @keyframes lunarShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* CARDS GRID */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 50px;
+        }
+
+        .portal-card {
+            background: rgba(10, 10, 15, 0.6);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            padding: 30px 24px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--card-color);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .portal-card:hover::before { transform: scaleX(1); }
+
+        .portal-card:hover {
+            border-color: var(--card-color);
+            background: rgba(102, 126, 234, 0.04);
+        }
+
+        .card-icon { font-size: 1.5rem; }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            color: var(--card-color);
+        }
+
+        .card-desc {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.1em;
+            color: var(--luna-cold);
+            opacity: 0.5;
+            line-height: 1.6;
+        }
+
+        .card-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--card-color);
+            opacity: 0.6;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-status::before {
+            content: '';
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--card-color);
+            opacity: 0.7;
+            display: inline-block;
+        }
+
+        /* Section label */
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--luna-cold);
+            opacity: 0.4;
+            margin-bottom: 16px;
+        }
+
+        /* QUOTE */
+        .luna-quote {
+            border-left: 2px solid rgba(159, 122, 234, 0.3);
+            padding: 20px 24px;
+            margin-top: 40px;
+            background: rgba(159, 122, 234, 0.03);
+        }
+
+        .luna-quote p {
+            font-size: 1.1rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--luna-violet);
+            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+
+        .luna-quote cite {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            color: var(--luna-cold);
+            opacity: 0.4;
+            font-style: normal;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 180px; }
+            .main { margin-left: 180px; padding: 30px 20px; }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="moon-glow"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <span class="sidebar-moon">☽</span>
+            <div class="sidebar-title">Mi Vida Como Luna</div>
+            <div class="sidebar-user" id="sidebar-user">—</div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Navigation</div>
+
+            <a href="../" class="nav-item">
+                <span class="nav-icon">◎</span>Home
+            </a>
+
+            <div class="nav-section-label" style="margin-top:8px;">Protected</div>
+
+            <a href="../tarot/" class="nav-item">
+                <span class="nav-icon">✦</span>Tarot Reading
+            </a>
+            <a href="../darkvalentine/" class="nav-item">
+                <span class="nav-icon">♥</span>Dark Valentine
+            </a>
+            <a href="../entities/" class="nav-item">
+                <span class="nav-icon">◈</span>Entities
+            </a>
+            <a href="../app/reader/" class="nav-item">
+                <span class="nav-icon">◉</span>App Reader
+            </a>
+
+            <button class="nav-item logout" id="logout-btn">
+                <span class="nav-icon">⊗</span>Logout
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-footer-text">SESSION · LUNA PROTOCOL</div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="page-header">
+            <div class="page-greeting" id="page-greeting">Welcome back</div>
+            <h1 class="page-title">Dashboard</h1>
+        </div>
+
+        <div class="section-label">Your Portals</div>
+        <div class="cards-grid">
+            <a href="../tarot/" class="portal-card" style="--card-color: var(--tiferet);">
+                <div class="card-icon">✦</div>
+                <div class="card-title">Tarot Reading</div>
+                <div class="card-desc">Archetype readings · Wild Unknown · The deep read</div>
+                <div class="card-status">Active</div>
+            </a>
+
+            <a href="../darkvalentine/" class="portal-card" style="--card-color: var(--gevurah);">
+                <div class="card-icon">♥</div>
+                <div class="card-title">Dark Valentine</div>
+                <div class="card-desc">Ritual · Shadow work · The beloved and the wound</div>
+                <div class="card-status">Active</div>
+            </a>
+
+            <a href="../entities/" class="portal-card" style="--card-color: var(--binah);">
+                <div class="card-icon">◈</div>
+                <div class="card-title">Entities</div>
+                <div class="card-desc">Beings · Archetypes · The gallery of forces</div>
+                <div class="card-status">Active</div>
+            </a>
+
+            <a href="../app/reader/" class="portal-card" style="--card-color: var(--malkuth);">
+                <div class="card-icon">◉</div>
+                <div class="card-title">App Reader</div>
+                <div class="card-desc">Interactive reader · Animations · Paganini</div>
+                <div class="card-status">Active</div>
+            </a>
+        </div>
+
+        <div class="luna-quote">
+            <p>"You are not here to fit into the matrix. You are here to build your own."</p>
+            <cite>— Mi Vida Como Luna · Exit The Matrix</cite>
+        </div>
+    </main>
+
+    <script>
+        var TOKEN_KEY = 'luna_token';
+        var USER_KEY = 'luna_user';
+
+        // Auth check
+        var token = sessionStorage.getItem(TOKEN_KEY);
+        if (!token) {
+            window.location.replace('../login/');
+        }
+
+        // Set username
+        var user = sessionStorage.getItem(USER_KEY) || 'agent';
+        document.getElementById('sidebar-user').textContent = user;
+        var hour = new Date().getHours();
+        var greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+        document.getElementById('page-greeting').textContent = greeting + ', ' + user;
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            sessionStorage.removeItem(TOKEN_KEY);
+            sessionStorage.removeItem('luna_refresh');
+            sessionStorage.removeItem(USER_KEY);
+            window.location.replace('../login/');
+        });
+
+        // Stars
+        (function() {
+            var c = document.getElementById('stars');
+            for (var i = 0; i < 100; i++) {
+                var s = document.createElement('div');
+                s.className = 'star';
+                s.style.left = Math.random() * 100 + '%';
+                s.style.top = Math.random() * 100 + '%';
+                s.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                s.style.animationDelay = Math.random() * 3 + 's';
+                s.style.width = (Math.random() * 2 + 1) + 'px';
+                s.style.height = s.style.width;
+                c.appendChild(s);
+            }
+        })();
+
+        // Particles
+        (function() {
+            var c = document.getElementById('particles');
+            for (var i = 0; i < 12; i++) {
+                var p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDuration = (Math.random() * 20 + 15) + 's';
+                p.style.animationDelay = Math.random() * 10 + 's';
+                c.appendChild(p);
+            }
+        })();
+    </script>
+</body>
+</html>
