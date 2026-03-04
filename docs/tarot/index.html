@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archetype Reading — The Wild Unknown</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Spectral:ital,wght@0,200;0,300;0,400;1,200;1,300&display=swap');
+
+  :root {
+    --ink: #0a0a0a;
+    --parchment: #f4f0e8;
+    --gold: #c9a84c;
+    --gold-dim: #8a7234;
+    --silver: #9a9a9a;
+    --storm: #3a3d4a;
+    --card-w: 120px;
+    --card-h: 190px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--ink);
+    color: var(--parchment);
+    font-family: 'Spectral', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === BACKGROUND TEXTURE === */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 30%, rgba(58,61,74,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(201,168,76,0.02) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* grain */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 60px 20px 80px;
+  }
+
+  /* === HEADER === */
+  .header {
+    text-align: center;
+    margin-bottom: 70px;
+    animation: fadeIn 1.5s ease-out;
+  }
+
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 2.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .header .subtitle {
+    font-weight: 200;
+    font-size: 0.85rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--silver);
+    opacity: 0.6;
+  }
+
+  .header .deck-name {
+    margin-top: 16px;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.95rem;
+    color: var(--gold-dim);
+    letter-spacing: 0.08em;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    margin: 50px auto;
+  }
+
+  /* === SPREAD SECTIONS === */
+  .spread-section {
+    margin-bottom: 80px;
+  }
+
+  .spread-title {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .spread-title h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 1.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    opacity: 0.85;
+  }
+
+  .spread-title .spread-desc {
+    font-size: 0.78rem;
+    font-weight: 200;
+    color: var(--silver);
+    opacity: 0.5;
+    letter-spacing: 0.15em;
+    margin-top: 4px;
+  }
+
+  /* === CARD === */
+  .card {
+    width: var(--card-w);
+    height: var(--card-h);
+    position: absolute;
+    transition: transform 0.5s ease, box-shadow 0.4s ease;
+    cursor: default;
+  }
+
+  .card:hover {
+    z-index: 10;
+  }
+
+  .card-inner {
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 6px;
+    background: linear-gradient(170deg, #1a1a1a 0%, #0f0f0f 60%, #141418 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 2px 20px rgba(0,0,0,0.5),
+      inset 0 0 30px rgba(201,168,76,0.03);
+  }
+
+  .card:hover .card-inner {
+    border-color: rgba(201,168,76,0.5);
+    box-shadow:
+      0 4px 30px rgba(201,168,76,0.12),
+      0 2px 20px rgba(0,0,0,0.5),
+      inset 0 0 30px rgba(201,168,76,0.05);
+  }
+
+  .card-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--gold-dim);
+    opacity: 0.7;
+    text-transform: uppercase;
+  }
+
+  .card-symbol {
+    font-size: 2.2rem;
+    line-height: 1;
+    opacity: 0.9;
+    filter: grayscale(0.1);
+  }
+
+  .card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .card-position {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    opacity: 0.5;
+    white-space: nowrap;
+  }
+
+  /* rotation classes on the card-position labels to keep them readable */
+  .card .card-position {
+    transform: translateX(-50%) rotate(calc(var(--card-rot, 0deg) * -1));
+  }
+
+  /* === SUMMON THE DIVINE LAYOUT === */
+  .divine-field {
+    position: relative;
+    width: 100%;
+    height: 620px;
+    margin-top: 40px;
+  }
+
+  /* vertical line connecting the 3 positions */
+  .divine-field::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 40px;
+    bottom: 40px;
+    width: 1px;
+    background: linear-gradient(to bottom, rgba(201,168,76,0.3), rgba(201,168,76,0.08), rgba(201,168,76,0.3));
+    transform: translateX(-50%);
+  }
+
+  .divine-crown {
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, 0);
+    animation: cardReveal 0.8s ease-out 0.6s both;
+  }
+
+  .divine-heart {
+    left: 50%;
+    top: 210px;
+    transform: translate(-50%, 0) rotate(-15deg);
+    animation: cardReveal 0.8s ease-out 0.4s both;
+    --card-rot: -15deg;
+  }
+
+  .divine-root {
+    left: 50%;
+    top: 420px;
+    transform: translate(-50%, 0);
+    animation: cardReveal 0.8s ease-out 0.2s both;
+  }
+
+  /* position labels */
+  .pos-label {
+    position: absolute;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.35;
+  }
+
+  .divine-field .pos-label.lbl-crown {
+    left: 50%;
+    top: -8px;
+    transform: translate(calc(-50% + 90px), 0);
+  }
+
+  .divine-field .pos-label.lbl-heart {
+    left: 50%;
+    top: 260px;
+    transform: translate(calc(-50% + 105px), 0);
+  }
+
+  .divine-field .pos-label.lbl-root {
+    left: 50%;
+    top: 470px;
+    transform: translate(calc(-50% + 90px), 0);
+  }
+
+  /* === AXIS MUNDI LAYOUT === */
+  .axis-field {
+    position: relative;
+    width: 100%;
+    height: 700px;
+    margin-top: 40px;
+  }
+
+  /* X cross lines */
+  .axis-field::before,
+  .axis-field::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(201,168,76,0.15), rgba(201,168,76,0.06), rgba(201,168,76,0.15));
+  }
+
+  .axis-field::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .axis-field::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  /* vertical axis */
+  .axis-vert {
+    position: absolute;
+    left: 50%;
+    top: 30px;
+    bottom: 30px;
+    width: 1px;
+    background: linear-gradient(to bottom, rgba(201,168,76,0.25), rgba(201,168,76,0.06), rgba(201,168,76,0.25));
+    transform: translateX(-50%);
+  }
+
+  /* horizontal axis */
+  .axis-horiz {
+    position: absolute;
+    top: 50%;
+    left: 15%;
+    right: 15%;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(201,168,76,0.25), rgba(201,168,76,0.06), rgba(201,168,76,0.25));
+    transform: translateY(-50%);
+  }
+
+  .axis-center {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    animation: cardReveal 0.8s ease-out 1.2s both;
+    --card-rot: -45deg;
+    z-index: 5;
+  }
+
+  .axis-heaven {
+    left: 50%;
+    top: 20px;
+    transform: translate(-50%, 0) rotate(175deg);
+    animation: cardReveal 0.8s ease-out 0.8s both;
+    --card-rot: 175deg;
+  }
+
+  .axis-underworld {
+    left: 50%;
+    bottom: 20px;
+    transform: translate(-50%, 0) rotate(0deg);
+    animation: cardReveal 0.8s ease-out 0.6s both;
+  }
+
+  .axis-past {
+    left: calc(15% - 10px);
+    top: 50%;
+    transform: translate(0, -50%) rotate(90deg);
+    animation: cardReveal 0.8s ease-out 1.0s both;
+    --card-rot: 90deg;
+  }
+
+  .axis-future {
+    right: calc(15% - 10px);
+    top: 50%;
+    transform: translate(0, -50%) rotate(15deg);
+    animation: cardReveal 0.8s ease-out 1.0s both;
+    --card-rot: 15deg;
+  }
+
+  /* axis labels */
+  .axis-field .pos-label {
+    z-index: 3;
+  }
+
+  .axis-field .lbl-heaven { top: 12px; right: calc(50% - 120px); }
+  .axis-field .lbl-underworld { bottom: 12px; right: calc(50% - 130px); }
+  .axis-field .lbl-past { left: calc(15% - 10px); top: calc(50% - 130px); }
+  .axis-field .lbl-future { right: calc(15% - 10px); top: calc(50% - 130px); }
+  .axis-field .lbl-self { left: 50%; top: 50%; transform: translate(85px, -80px); }
+
+  /* === STORM EFFECT === */
+  .storm-aura {
+    position: absolute;
+    inset: -15px;
+    border-radius: 12px;
+    background: radial-gradient(ellipse, rgba(58,61,74,0.3), transparent 70%);
+    animation: stormPulse 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes stormPulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.08); }
+  }
+
+  /* === NOTE === */
+  .reading-note {
+    text-align: center;
+    margin-top: 10px;
+    font-style: italic;
+    font-weight: 200;
+    font-size: 0.82rem;
+    color: var(--storm);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+  }
+
+  .reading-note em {
+    color: var(--gold-dim);
+    font-style: italic;
+  }
+
+  /* === ANIMATIONS === */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes cardReveal {
+    from { opacity: 0; filter: blur(4px); }
+    to { opacity: 1; filter: blur(0); }
+  }
+
+  /* === PROSE / INTERPRETATION === */
+  .interpretation {
+    max-width: 620px;
+    margin: 30px auto 0;
+    font-weight: 300;
+    font-size: 0.92rem;
+    line-height: 1.85;
+    color: var(--parchment);
+    opacity: 0.75;
+    letter-spacing: 0.015em;
+  }
+
+  .interpretation p {
+    margin-bottom: 14px;
+  }
+
+  .deep-reading {
+    max-width: 680px;
+    margin: 0 auto;
+    padding-top: 10px;
+  }
+
+  .deep-reading h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 1.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    opacity: 0.85;
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .card-reading {
+    margin-bottom: 50px;
+    padding-left: 24px;
+    border-left: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .card-reading h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .card-reading .position-tag {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    opacity: 0.6;
+    margin-bottom: 14px;
+  }
+
+  .card-reading p {
+    font-weight: 300;
+    font-size: 0.88rem;
+    line-height: 1.85;
+    color: var(--parchment);
+    opacity: 0.72;
+    margin-bottom: 12px;
+  }
+
+  .synthesis {
+    max-width: 620px;
+    margin: 20px auto 0;
+    padding: 40px 0;
+    border-top: 1px solid rgba(201,168,76,0.12);
+  }
+
+  .synthesis h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 1.2rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .synthesis p {
+    font-weight: 300;
+    font-size: 0.9rem;
+    line-height: 1.85;
+    color: var(--parchment);
+    opacity: 0.72;
+    margin-bottom: 14px;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 600px) {
+    :root {
+      --card-w: 90px;
+      --card-h: 145px;
+    }
+    .header h1 { font-size: 1.6rem; }
+    .divine-field { height: 480px; }
+    .divine-heart { top: 160px; }
+    .divine-root { top: 320px; }
+    .axis-field { height: 560px; }
+    .card-symbol { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Archetype Reading</h1>
+    <div class="subtitle">March 1, 2026</div>
+    <div class="deck-name">The Wild Unknown Archetypes — Kim Krans</div>
+  </div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- SUMMON THE DIVINE              -->
+  <!-- ═══════════════════════════════ -->
+  <div class="spread-section">
+    <div class="spread-title">
+      <h2>Summon the Divine</h2>
+      <div class="spread-desc">Root · Heart · Crown</div>
+    </div>
+
+    <div class="divine-field">
+
+      <!-- guide labels -->
+      <div class="pos-label lbl-crown">crown ▵</div>
+      <div class="pos-label lbl-heart">heart ◇</div>
+      <div class="pos-label lbl-root">root ▿</div>
+
+      <!-- 3 · CROWN — The Storm -->
+      <div class="card divine-crown">
+        <div class="card-inner">
+          <div class="card-number">III</div>
+          <div class="card-symbol">⛈</div>
+          <div class="card-name">The Storm</div>
+          <div class="storm-aura"></div>
+        </div>
+      </div>
+
+      <!-- 2 · HEART — The Eternal Child (rotated -15°) -->
+      <div class="card divine-heart">
+        <div class="card-inner">
+          <div class="card-number">II</div>
+          <div class="card-symbol">✒</div>
+          <div class="card-name">The Eternal<br>Child</div>
+        </div>
+      </div>
+
+      <!-- 1 · ROOT — The Father -->
+      <div class="card divine-root">
+        <div class="card-inner">
+          <div class="card-number">I</div>
+          <div class="card-symbol">♚</div>
+          <div class="card-name">The Father</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="reading-note">
+      <em>The Storm arrived as a living storm broke overhead —<br>
+      the cards and the sky speaking in unison.</em>
+    </div>
+
+    <div class="interpretation">
+      <p>The Father as your root is a grounded, structural foundation — order, authority, the bones of things. The Eternal Child tilting at the heart says something about approaching feeling with play, wonder, or vulnerability — the slight rotation suggesting it doesn't sit perfectly still, it fidgets, it leans into curiosity. And The Storm crowning the spread while an actual storm breaks around you — that's not symbolism, that's participation. The sky confirmed the pull.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- AXIS MUNDI                     -->
+  <!-- ═══════════════════════════════ -->
+  <div class="spread-section">
+    <div class="spread-title">
+      <h2>Axis Mundi</h2>
+      <div class="spread-desc">Underworld · Past · Heaven · Future · Self</div>
+    </div>
+
+    <div class="axis-field">
+
+      <div class="axis-vert"></div>
+      <div class="axis-horiz"></div>
+
+      <!-- guide labels -->
+      <div class="pos-label lbl-heaven">③ heaven</div>
+      <div class="pos-label lbl-underworld">① underworld</div>
+      <div class="pos-label lbl-past">② past</div>
+      <div class="pos-label lbl-future">④ future</div>
+      <div class="pos-label lbl-self">⑤ self</div>
+
+      <!-- 3 · HEAVEN — The Warrior (nearly upside down ~175°) -->
+      <div class="card axis-heaven">
+        <div class="card-inner">
+          <div class="card-number">III</div>
+          <div class="card-symbol">⚔</div>
+          <div class="card-name">The Warrior</div>
+        </div>
+      </div>
+
+      <!-- 1 · UNDERWORLD — The Mother (upright, mirroring Heaven) -->
+      <div class="card axis-underworld">
+        <div class="card-inner">
+          <div class="card-number">I</div>
+          <div class="card-symbol">☽</div>
+          <div class="card-name">The Mother</div>
+        </div>
+      </div>
+
+      <!-- 2 · PAST — The Hunter (rotated -90°, horse looking up) -->
+      <div class="card axis-past">
+        <div class="card-inner">
+          <div class="card-number">II</div>
+          <div class="card-symbol">🏇</div>
+          <div class="card-name">The Hunter</div>
+        </div>
+      </div>
+
+      <!-- 4 · FUTURE — The Queen (rotated +15°) -->
+      <div class="card axis-future">
+        <div class="card-inner">
+          <div class="card-number">IV</div>
+          <div class="card-symbol">♛</div>
+          <div class="card-name">The Queen</div>
+        </div>
+      </div>
+
+      <!-- 5 · SELF — Anima Mundi (rotated 45° in balanced X) -->
+      <div class="card axis-center">
+        <div class="card-inner" style="border-color: rgba(201,168,76,0.45); box-shadow: 0 0 35px rgba(201,168,76,0.1), inset 0 0 25px rgba(201,168,76,0.05);">
+          <div class="card-number">V</div>
+          <div class="card-symbol">🌍</div>
+          <div class="card-name">Anima<br>Mundi</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="interpretation">
+      <p>The Mother holding the Underworld upright while The Warrior hangs nearly inverted in Heaven creates a striking mirror — the maternal as the ground below, the warrior energy suspended and reversed above, as if strength is being asked to surrender rather than fight. The Hunter turned sideways in the past, charging upward, suggests momentum you've already ridden that's now feeding into the center. The Queen tilts gently into the future. And Anima Mundi — the World Soul — sits at the crossing point in a perfect X, holding all of it together.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- DEEP READING                   -->
+  <!-- ═══════════════════════════════ -->
+  <div class="deep-reading">
+    <h2>The Deep Read</h2>
+
+    <!-- SUMMON THE DIVINE — card by card -->
+
+    <div class="card-reading">
+      <h3>The Father</h3>
+      <div class="position-tag">Summon the Divine · Root</div>
+      <p>The Father archetype is structure made flesh — law, threshold, the one who builds the frame so everything else can live inside it. In the root position, he's not asking you to become him. He's telling you the foundation already exists. There's something below you that is solid, that has been built over time, perhaps by lineage, by discipline, by sheer refusal to collapse. The card sat perfectly upright: no ambiguity, no wobble. The Father at root says, <em>the ground is not going to give way.</em> Trust the architecture.</p>
+    </div>
+
+    <div class="card-reading">
+      <h3>The Eternal Child</h3>
+      <div class="position-tag">Summon the Divine · Heart</div>
+      <p>The Eternal Child is the archetype of beginning before there's a name for it — pure potential, play as a form of prayer, imagination before it calcifies into plan. That it sits in the heart position, slightly tilted, is telling. The heart doesn't hold this energy straight. It holds it at a tilt, a lean, like a question mark. This is the part of you that still wonders rather than knows, that would rather draw the map than follow one. The 15-degree rotation is small but deliberate — the Child hasn't fallen, it's just looking at the world from a slightly different angle than everyone else. That's its gift.</p>
+    </div>
+
+    <div class="card-reading">
+      <h3>The Storm</h3>
+      <div class="position-tag">Summon the Divine · Crown</div>
+      <p>The Storm in the crown position is revelation through disruption. The crown is the channel between you and what's above — the divine, the cosmic, whatever you want to call the frequency that's larger than the personal. And what came through that channel today wasn't a soft whisper. It was weather. The fact that an actual storm arrived while you dealt this card collapses the distance between the reading and reality. The Storm archetype is not punishment; it's clearing. It strips the sky so you can see further. At the crown, it says the divine is speaking to you right now through intensity, not through calm. Pay attention to what gets rearranged.</p>
+    </div>
+
+    <div class="card-reading">
+      <h3>The Mother</h3>
+      <div class="position-tag">Axis Mundi · ① Underworld</div>
+      <p>The Mother in the Underworld is the deep feminine — not nurturing on the surface, but nurturing from below. She is the root system, the mycelium, the thing that feeds in the dark where nothing is visible. Positioned upright and mirroring the nearly-inverted Warrior above, she forms the stable pole of the vertical axis. The Underworld is where things decompose and regenerate. The Mother here says that what sustains you right now isn't something you can point to in daylight — it's an older intelligence, something instinctive, something that knows how to keep things alive even in the dark. She is the mirror-twin to the Warrior's reversal: where he's asked to surrender, she simply <em>is.</em></p>
+    </div>
+
+    <div class="card-reading">
+      <h3>The Hunter</h3>
+      <div class="position-tag">Axis Mundi · ② Past</div>
+      <p>The Hunter rotated 90 degrees to the left, horse charging upward toward the center. This is the past as momentum — the Hunter doesn't just sit in what was, he rides out of it. The Hunter archetype is focus turned lethal: single-pointed pursuit, the tracking instinct, the thing in you that once locked onto something and didn't stop. Turned sideways, this energy no longer moves in its original direction. It's been redirected. Whatever you were hunting — a goal, an identity, an answer — that chase has pivoted. The horse faces the center of the cross, which means all that kinetic energy from the past is now feeding directly into the Self position, into the Anima Mundi. The hunt isn't over. It's just changed what it's pointed at.</p>
+    </div>
+
+    <div class="card-reading">
+      <h3>The Warrior</h3>
+      <div class="position-tag">Axis Mundi · ③ Heaven</div>
+      <p>Nearly upside down. The Warrior in Heaven, reversed. This is one of the most striking positions in the entire reading. The Warrior is will, courage, the refusal to back down — and Heaven is the highest point on the vertical axis, the place closest to the transcendent. But the card is inverted, which means the usual warrior posture is being asked to stand down. Not out of weakness. Out of wisdom. When the Warrior hangs upside down in Heaven, strength becomes surrender. The sword points down instead of up. This is the archetype learning that the hardest fight might be the fight against fighting. Something up there — some principle, some belief about what strength means — is being turned on its head.</p>
+    </div>
+
+    <div class="card-reading">
+      <h3>The Queen</h3>
+      <div class="position-tag">Axis Mundi · ④ Future</div>
+      <p>The Queen tilts 15 degrees into the future — gentle, deliberate, almost regal in how little she moves. The Queen is sovereignty. Not the sovereignty of conquest (that's the Warrior), but the sovereignty of presence. She rules by being fully herself, and others organize around that. In the future position with a slight lean, she suggests what's coming isn't a dramatic arrival but a settling into authority. The tilt is subtle: the future doesn't require you to become something radically new. It requires you to sit more fully in who you already are. The Queen doesn't chase. She receives. What's approaching you will come on its own terms, and your job is to be seated when it arrives.</p>
+    </div>
+
+    <div class="card-reading">
+      <h3>Anima Mundi</h3>
+      <div class="position-tag">Axis Mundi · ⑤ Self</div>
+      <p>The World Soul at the center, in a perfect X. This is the keystone. Anima Mundi is not a personal archetype — it's the archetype of interconnection itself, the idea that the world has a soul and you are a nerve ending within it. In the Self position, it says something extraordinary: <em>you</em> are not the point. And precisely because you are not the point, you are essential. The balanced X rotation means all four directions — underworld, past, heaven, future — feed into and flow out of this center equally. Nothing is privileged. Nothing is neglected. The Self here isn't an ego; it's a crossing, a junction, a place where everything meets. You are the intersection.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- SYNTHESIS                      -->
+  <!-- ═══════════════════════════════ -->
+  <div class="synthesis">
+    <h3>Between the Two Spreads</h3>
+
+    <p>The Summon the Divine spread reads vertically — root, heart, crown — like a spine. It tells you what you're standing on (The Father's structure), what you're feeling with (The Eternal Child's curiosity), and what's coming through from above (The Storm's clearing fire). It's a portrait of your channel right now: stable below, playful in the middle, electric at the top.</p>
+
+    <p>The Axis Mundi reads as a map — not of you, but of the territory you're moving through. It tells you where you've been (The Hunter's redirected chase), what lies below consciousness (The Mother's dark nourishment), what hangs above it in reversal (The Warrior learning to put the sword down), and what tilts toward you from the future (The Queen's quiet sovereignty). And at the center: not a person, but a principle. Anima Mundi. The world's own soul, sitting where your ego usually sits.</p>
+
+    <p>What links the two spreads is the question of <em>who is doing the acting.</em> In Summon the Divine, the vertical channel runs through you — Father, Child, Storm are your grounding, your heart, your crown. It's personal. But in the Axis Mundi, the Self position isn't personal at all. It's the World Soul. The reading moves from "I am the channel" to "I am the crossing point." The first spread says <em>the divine is moving through you.</em> The second says <em>you are the place where everything meets.</em></p>
+
+    <p>The Father and The Mother bookend the two spreads as the archetypal parents — one as your root, one in the underworld. Structure above ground, nourishment below it. The Eternal Child in the heart and The Hunter in the past create a diagonal tension: innocence in the present, pursuit in the past, and the question of whether you can carry the Child's wonder forward without the Hunter's obsessive grip. The Storm at your crown and The Warrior inverted in Heaven are perhaps the most charged pairing — both are forceful energies, but the Storm is arriving while the Warrior is retreating. What breaks open above you now is not something you fight. It's something you stand inside of.</p>
+
+    <p>And The Queen in the future, with her gentle 15-degree lean, mirrors the Eternal Child's 15-degree tilt in the heart. Same angle. Different archetype. As if the Child grows into the Queen — not by losing its wonder, but by learning to hold it with authority. The future doesn't ask you to abandon play. It asks you to rule from it.</p>
+  </div>
+
+  <!-- CLOSING -->
+  <div style="text-align:center; opacity:0.3; margin-top:40px; margin-bottom: 20px;">
+    <span style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--gold-dim); letter-spacing:0.3em;">✦</span>
+  </div>
+
+</div>
+
+</body>
+</html>
