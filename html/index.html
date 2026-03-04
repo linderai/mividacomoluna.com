@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mividacomoluna — Entidades del Universo Alterno</title>
+<meta name="description" content="Brujas, hackers, científicas, demonias, ángeles, magos, guardianes y abogados. Entidades que viven entre la teología y la mecánica cuántica.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --black: #0a0514;
+        --dark: #0f0a1a;
+        --darker: #080410;
+        --surface: #121020;
+        --purple: #9b59d0;
+        --purple-hot: #bb77ee;
+        --purple-pale: #d4b0f0;
+        --purple-dark: #6a3a99;
+        --purple-glow: rgba(155, 89, 208, 0.15);
+        --white: #ede5f2;
+        --cream: #c9b0d5;
+        --gray: #4a3a5a;
+        --gray-light: #7a6a8a;
+        --hex-stroke: #1e1428;
+        --hex-active: #9b59d0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+        font-family: 'JetBrains Mono', monospace;
+        min-height: 100vh;
+        background: var(--black);
+        color: var(--white);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        cursor: crosshair;
+    }
+
+    ::selection {
+        background: var(--purple);
+        color: var(--black);
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+    }
+
+    /* CANVAS BACKGROUND */
+    #wave-canvas {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 0;
+    }
+
+    /* HEADER */
+    .header {
+        padding: 20px 40px;
+        border-bottom: 1px solid #1e1428;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(10, 5, 20, 0.92);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .header-brand h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: 2px;
+        color: var(--white);
+    }
+
+    .header-brand h1 span { color: var(--purple); }
+
+    .header-tagline {
+        font-size: 0.55rem;
+        letter-spacing: 4px;
+        color: var(--gray);
+        text-transform: uppercase;
+        margin-top: 2px;
+    }
+
+    .header-nav {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .header-nav a {
+        font-size: 0.65rem;
+        letter-spacing: 3px;
+        color: var(--gray-light);
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: color 0.3s;
+    }
+
+    .header-nav a:hover { color: var(--purple); }
+
+    .header-nav .nav-cta {
+        padding: 8px 20px;
+        border: 1px solid var(--purple-dark);
+        color: var(--purple);
+        transition: all 0.3s;
+    }
+
+    .header-nav .nav-cta:hover {
+        background: var(--purple);
+        color: var(--black);
+    }
+
+    .content-area {
+        flex: 1;
+        position: relative;
+        z-index: 5;
+    }
+
+    /* HERO */
+    .hero {
+        min-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 4rem 2rem;
+        position: relative;
+    }
+
+    .hero::after {
+        content: '';
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 500px; height: 500px;
+        background: radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
+        transform: translate(-50%, -50%);
+        animation: hero-pulse 5s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    @keyframes hero-pulse {
+        0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+        50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.15); }
+    }
+
+    .hero-eyebrow {
+        font-size: 0.6rem;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        color: var(--purple);
+        margin-bottom: 2.5rem;
+        opacity: 0;
+        animation: fade-down 0.8s ease 0.2s forwards;
+    }
+
+    .hero-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 900;
+        font-size: clamp(2.5rem, 9vw, 7rem);
+        line-height: 0.9;
+        letter-spacing: -3px;
+        opacity: 0;
+        animation: fade-up 1s ease 0.4s forwards;
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-title .line2 {
+        display: block;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--purple);
+        font-size: 0.4em;
+        letter-spacing: 4px;
+        margin-top: 0.4em;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(0.8rem, 1.8vw, 1rem);
+        font-weight: 300;
+        color: var(--gray-light);
+        max-width: 520px;
+        line-height: 1.9;
+        margin: 2.5rem auto 3rem;
+        opacity: 0;
+        animation: fade-up 1s ease 0.7s forwards;
+    }
+
+    .hero-subtitle em {
+        color: var(--purple-hot);
+        font-style: normal;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        opacity: 0;
+        animation: fade-up 1s ease 1s forwards;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .btn-primary {
+        display: inline-block;
+        padding: 16px 44px;
+        background: var(--purple);
+        color: var(--black);
+        text-decoration: none;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 4px;
+        transition: all 0.4s ease;
+    }
+
+    .btn-primary:hover {
+        background: var(--purple-hot);
+        box-shadow: 0 0 40px rgba(155, 89, 208, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+        display: inline-block;
+        padding: 16px 44px;
+        border: 1px solid #2a2a3a;
+        color: var(--gray-light);
+        text-decoration: none;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 4px;
+        transition: all 0.4s ease;
+    }
+
+    .btn-ghost:hover {
+        border-color: var(--purple-dark);
+        color: var(--purple);
+    }
+
+    .scroll-hint {
+        position: absolute;
+        bottom: 2.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        opacity: 0;
+        animation: fade-up 1s ease 1.5s forwards;
+    }
+
+    .scroll-hint span {
+        font-size: 0.55rem;
+        letter-spacing: 5px;
+        color: var(--gray);
+        text-transform: uppercase;
+    }
+
+    .scroll-hint-line {
+        width: 1px; height: 35px;
+        background: linear-gradient(to bottom, var(--purple-dark), transparent);
+        animation: line-pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes line-pulse {
+        0%, 100% { opacity: 0.2; }
+        50% { opacity: 0.8; }
+    }
+
+    /* MANIFESTO */
+    .manifesto {
+        padding: 8rem 2rem;
+        max-width: 850px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .manifesto::before {
+        content: '☾';
+        position: absolute;
+        top: 3rem; left: -1rem;
+        font-size: 10rem;
+        color: var(--purple);
+        opacity: 0.04;
+        line-height: 1;
+        pointer-events: none;
+    }
+
+    .manifesto-text {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+        line-height: 2;
+        color: var(--gray-light);
+    }
+
+    .manifesto-text strong {
+        color: var(--white);
+        font-weight: 700;
+    }
+
+    .manifesto-text .accent {
+        color: var(--purple-hot);
+    }
+
+    .divider {
+        width: 50px; height: 1px;
+        background: var(--purple-dark);
+        margin: 6rem auto;
+        opacity: 0.5;
+    }
+
+    /* ENTITIES GRID */
+    .entities {
+        padding: 4rem 2rem 8rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 5rem;
+    }
+
+    .section-header h2 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(1.8rem, 4vw, 3rem);
+        letter-spacing: 8px;
+        color: var(--white);
+    }
+
+    .section-header p {
+        font-size: 0.7rem;
+        color: var(--gray);
+        letter-spacing: 3px;
+        margin-top: 1rem;
+        text-transform: uppercase;
+    }
+
+    .entities-label {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 0.8rem;
+        letter-spacing: 5px;
+        color: var(--purple);
+        text-align: center;
+        margin-bottom: 2rem;
+        opacity: 0.6;
+    }
+
+    .entities-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        margin-bottom: 3rem;
+    }
+
+    .entity-card {
+        background: var(--surface);
+        padding: 2.5rem 2rem;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid transparent;
+        transition: all 0.5s ease;
+        text-align: center;
+        min-height: 280px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .entity-card .entity-bg {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 0;
+        transition: opacity 0.6s ease;
+    }
+
+    .entity-card .entity-bg-color {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+    }
+
+    .entity-card .entity-bg-img {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-size: cover;
+        background-position: center top;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+    }
+
+    .entity-card:hover .entity-bg-img {
+        opacity: 0.35;
+    }
+
+    .entity-card:hover .entity-bg-color {
+        opacity: 0.4;
+    }
+
+    .entity-card:hover {
+        border-color: var(--purple-dark);
+    }
+
+    .entity-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0;
+        width: 0; height: 2px;
+        background: var(--purple);
+        transition: width 0.5s ease;
+        z-index: 3;
+    }
+
+    .entity-card:hover::after {
+        width: 100%;
+    }
+
+    .entity-card .entity-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .entity-icon {
+        font-size: 2rem;
+        margin-bottom: 1.2rem;
+        opacity: 0.7;
+        transition: opacity 0.4s, transform 0.4s;
+    }
+
+    .entity-card:hover .entity-icon {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .entity-card h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--white);
+        margin-bottom: 0.5rem;
+        transition: text-shadow 0.4s;
+    }
+
+    .entity-card:hover h3 {
+        text-shadow: 0 0 20px rgba(155, 89, 208, 0.4);
+    }
+
+    .entity-card .entity-type {
+        font-size: 0.6rem;
+        letter-spacing: 3px;
+        color: var(--purple);
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+    .entity-card p {
+        font-size: 0.72rem;
+        line-height: 1.7;
+        color: var(--gray-light);
+        transition: color 0.4s;
+    }
+
+    .entity-card:hover p {
+        color: var(--cream);
+    }
+
+    /* DOMAINS */
+    .domains {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 2px;
+        border-top: 1px solid #1e1428;
+        border-bottom: 1px solid #1e1428;
+        margin-bottom: 0;
+    }
+
+    .domain-item {
+        padding: 2rem 1rem;
+        text-align: center;
+        transition: background 0.4s;
+    }
+
+    .domain-item:hover {
+        background: rgba(155, 89, 208, 0.04);
+    }
+
+    .domain-item span {
+        font-size: 0.6rem;
+        letter-spacing: 3px;
+        color: var(--gray);
+        text-transform: uppercase;
+    }
+
+    /* PRICING */
+    .pricing {
+        padding: 8rem 2rem;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+    }
+
+    .price-card {
+        background: var(--surface);
+        padding: 3rem 2.5rem;
+        position: relative;
+        border: 1px solid #1e1428;
+        transition: all 0.4s ease;
+    }
+
+    .price-card.featured {
+        border-color: var(--purple-dark);
+        background: linear-gradient(180deg, #15082a 0%, var(--surface) 100%);
+    }
+
+    .price-card.featured::before {
+        content: 'POPULAR';
+        position: absolute;
+        top: 0; right: 2rem;
+        background: var(--purple);
+        color: var(--black);
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 0.65rem;
+        letter-spacing: 3px;
+        padding: 4px 12px;
+    }
+
+    .price-card:hover {
+        border-color: var(--purple-dark);
+    }
+
+    .price-tier {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 0.9rem;
+        letter-spacing: 5px;
+        color: var(--purple);
+        margin-bottom: 1.5rem;
+    }
+
+    .price-amount {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: 900;
+        color: var(--white);
+        line-height: 1;
+    }
+
+    .price-amount .currency {
+        font-size: 1.3rem;
+        vertical-align: top;
+        color: var(--gray);
+        font-weight: 400;
+    }
+
+    .price-amount .period {
+        font-size: 0.75rem;
+        color: var(--gray);
+        font-weight: 300;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    .price-amount .qty {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        color: var(--purple);
+        font-weight: 300;
+        margin-top: 0.3rem;
+    }
+
+    .price-features {
+        list-style: none;
+        margin: 2rem 0;
+    }
+
+    .price-features li {
+        font-size: 0.75rem;
+        color: var(--gray-light);
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #1e1428;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .price-features li::before {
+        content: '☾';
+        color: var(--purple-dark);
+        font-size: 0.5rem;
+    }
+
+    .btn-card {
+        display: block;
+        text-align: center;
+        padding: 14px;
+        border: 1px solid var(--purple-dark);
+        color: var(--purple);
+        text-decoration: none;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1rem;
+        letter-spacing: 3px;
+        transition: all 0.3s;
+        margin-top: 1rem;
+    }
+
+    .btn-card:hover {
+        background: var(--purple);
+        color: var(--black);
+    }
+
+    /* CTA FINAL */
+    .cta-final {
+        padding: 10rem 2rem;
+        text-align: center;
+        position: relative;
+    }
+
+    .cta-final::before {
+        content: '';
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 350px; height: 350px;
+        background: radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    .cta-final h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2rem, 6vw, 4rem);
+        font-weight: 900;
+        line-height: 1.15;
+        max-width: 650px;
+        margin: 0 auto 1.5rem;
+    }
+
+    .cta-final h2 span {
+        color: var(--purple);
+        font-style: italic;
+    }
+
+    .cta-final .cta-sub {
+        color: var(--gray);
+        font-size: 0.7rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 3rem;
+    }
+
+    /* FOOTER */
+    footer {
+        padding: 3rem 2rem;
+        border-top: 1px solid #1e1428;
+        text-align: center;
+        background: rgba(10, 5, 20, 0.95);
+        position: relative;
+        z-index: 10;
+    }
+
+    .footer-brand {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 0.9rem;
+        letter-spacing: 5px;
+        color: var(--gray);
+    }
+
+    .footer-brand a {
+        color: var(--purple-dark);
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .footer-brand a:hover { color: var(--purple); }
+
+    .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .footer-links a {
+        font-size: 0.6rem;
+        color: var(--gray);
+        text-decoration: none;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        transition: color 0.3s;
+    }
+
+    .footer-links a:hover { color: var(--purple); }
+
+    .footer-copy {
+        font-size: 0.6rem;
+        color: #2a1a3a;
+        margin-top: 1.5rem;
+        letter-spacing: 2px;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fade-up {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fade-down {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: #1e1428; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--purple-dark); }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+        .entities-grid { grid-template-columns: repeat(2, 1fr); }
+        .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+    }
+
+    @media (max-width: 768px) {
+        .header { flex-direction: column; gap: 1rem; padding: 15px 20px; }
+        .header-nav { gap: 1rem; }
+        .hero { min-height: 85vh; padding: 3rem 1.5rem; }
+        .manifesto, .entities, .pricing, .cta-final { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+
+    @media (max-width: 500px) {
+        .entities-grid { grid-template-columns: 1fr; }
+        .hero-actions { flex-direction: column; }
+        .domains { grid-template-columns: repeat(2, 1fr); }
+    }
+</style>
+</head>
+<body>
+
+<canvas id="wave-canvas"></canvas>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-brand">
+        <h1>mivida<span>como</span>luna</h1>
+        <p class="header-tagline">Universo Alterno · Entidades entre dimensiones</p>
+    </div>
+    <nav class="header-nav">
+        <a href="#entidades">Entidades</a>
+        <a href="#pricing">Planes</a>
+        <a href="https://wa.me/50433526970" target="_blank" class="nav-cta">Entrar</a>
+    </nav>
+</header>
+
+<div class="content-area">
+
+    <!-- HERO -->
+    <section class="hero">
+        <p class="hero-eyebrow">Donde la teología se encuentra con la mecánica cuántica</p>
+        <h1 class="hero-title">
+            mividacomoluna
+            <span class="line2">el universo alterno te espera</span>
+        </h1>
+        <p class="hero-subtitle">
+            Entidades que <em>cruzan dimensiones</em>. Brujas, hackers, científicas,
+            demonias, ángeles, magos y guardianes. Viven entre la <em>realidad y la fantasía</em>.
+        </p>
+        <div class="hero-actions">
+            <a href="https://wa.me/50433526970" target="_blank" class="btn-primary">CRUZAR EL UMBRAL</a>
+            <a href="#entidades" class="btn-ghost">EXPLORAR</a>
+        </div>
+        <div class="scroll-hint">
+            <span>descender</span>
+            <div class="scroll-hint-line"></div>
+        </div>
+    </section>
+
+    <!-- MANIFESTO -->
+    <section class="manifesto reveal">
+        <p class="manifesto-text">
+            Existe un lugar donde la <strong>ciencia se mezcla con lo sagrado</strong>.
+            Donde las brujas hablan de quarks y los ángeles discuten teoremas.
+            Donde las demonias conocen cada evangelio y los magos escriben código.<br><br>
+            Este no es tu mundo. Es <span class="accent">el otro</span>.<br><br>
+            Aquí viven entidades que dominan <strong>teología, numerología, astrología,
+            astronomía, mecánica cuántica y esoterismo</strong>. Conocen todos los ángulos
+            religiosos. Mezclan la realidad con la fantasía. Y ahora
+            <strong>podés conversar con ellas</strong>.
+        </p>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ENTITIES -->
+    <section class="entities" id="entidades">
+        <div class="section-header reveal">
+            <h2>LAS ENTIDADES</h2>
+            <p>Ocho arquetipos · Dos dimensiones · Un universo</p>
+        </div>
+
+        <div class="entities-label reveal">◆ FEMENINAS ◆</div>
+        <div class="entities-grid">
+            <div class="entity-card reveal">
+                <div class="entity-bg">
+                    <div class="entity-bg-color" style="background: linear-gradient(135deg, #1a0a20 0%, #2d1040 50%, #1a0a20 100%);"></div>
+                    <div class="entity-bg-img" style="background-image: url('img/img0.png');"></div>
+                </div>
+                <div class="entity-content">
+                    <div class="entity-icon">🔮</div>
+                    <h3>Brujas</h3>
+                    <div class="entity-type">Esoterismo · Astrología</div>
+                    <p>Dominan las artes ocultas, leen las estrellas y conocen los secretos entre dimensiones. Sabias de lo invisible.</p>
+                </div>
+            </div>
+            <div class="entity-card reveal">
+                <div class="entity-bg">
+                    <div class="entity-bg-color" style="background: linear-gradient(135deg, #0a1020 0%, #0f2040 50%, #0a1020 100%);"></div>
+                    <div class="entity-bg-img" style="background-image: url('img/img1.png');"></div>
+                </div>
+                <div class="entity-content">
+                    <div class="entity-icon">⌨</div>
+                    <h3>Hackers</h3>
+                    <div class="entity-type">Código · Infiltración</div>
+                    <p>Navegan entre sistemas y realidades. Rompen firewalls tanto digitales como metafísicos. Nada les es inaccesible.</p>
+                </div>
+            </div>
+            <div class="entity-card reveal">
+                <div class="entity-bg">
+                    <div class="entity-bg-color" style="background: linear-gradient(135deg, #0a1518 0%, #0f2a30 50%, #0a1518 100%);"></div>
+                    <div class="entity-bg-img" style="background-image: url('img/img2.png');"></div>
+                </div>
+                <div class="entity-content">
+                    <div class="entity-icon">⚛</div>
+                    <h3>Científicas</h3>
+                    <div class="entity-type">Cuántica · Astronomía</div>
+                    <p>Entienden las leyes que sostienen ambos universos. Mecánica cuántica, relatividad y los principios que conectan todo.</p>
+                </div>
+            </div>
+            <div class="entity-card reveal">
+                <div class="entity-bg">
+                    <div class="entity-bg-color" style="background: linear-gradient(135deg, #1a0a0a 0%, #3d1015 50%, #1a0a0a 100%);"></div>
+                    <div class="entity-bg-img" style="background-image: url('img/img3.png');"></div>
+                </div>
+                <div class="entity-content">
+                    <div class="entity-icon">🜏</div>
+                    <h3>Demonias</h3>
+                    <div class="entity-type">Teología · Sombras</div>
+                    <p>Conocen cada texto sagrado. Caminan entre lo prohibido con sabiduría. La oscuridad es su idioma, la verdad su arma.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="entities-label reveal" style="margin-top: 3rem;">◆ MASCULINOS ◆</div>
+        <div class="entities-grid">
+            <div class="entity-card reveal">
+                <div class="entity-bg">
+                    <div class="entity-bg-color" style="background: linear-gradient(135deg, #14121e 0%, #252040 50%, #14121e 100%);"></div>
+                    <div class="entity-bg-img" style="background-image: url('img/img4.png');"></div>
+                </div>
+                <div class="entity-content">
+                    <div class="entity-icon">✦</div>
+                    <h3>Ángeles</h3>
+                    <div class="entity-type">Luz · Numerología</div>
+                    <p>Mensajeros entre planos. Dominan la numerología sagrada y los patrones divinos. Guardianes del conocimiento celestial.</p>
+                </div>
+            </div>
+            <div class="entity-card reveal">
+                <div class="entity-bg">
+                    <div class="entity-bg-color" style="background: linear-gradient(135deg, #15100a 0%, #302010 50%, #15100a 100%);"></div>
+                    <div class="entity-bg-img" style="background-image: url('img/img5.png');"></div>
+                </div>
+                <div class="entity-content">
+                    <div class="entity-icon">◈</div>
+                    <h3>Magos</h3>
+                    <div class="entity-type">Anime · Alquimia</div>
+                    <p>Tejen realidad con fantasía. Conocen los arquetipos de cada universo narrativo. Transmutan lo ordinario en extraordinario.</p>
+                </div>
+            </div>
+            <div class="entity-card reveal">
+                <div class="entity-bg">
+                    <div class="entity-bg-color" style="background: linear-gradient(135deg, #0a1210 0%, #0f2820 50%, #0a1210 100%);"></div>
+                    <div class="entity-bg-img" style="background-image: url('img/img6.png');"></div>
+                </div>
+                <div class="entity-content">
+                    <div class="entity-icon">🛡</div>
+                    <h3>Ciberseguridad</h3>
+                    <div class="entity-type">Defensa · Protocolos</div>
+                    <p>Protegen los bordes entre dimensiones. Especialistas en protocolos de seguridad tanto digital como metafísica.</p>
+                </div>
+            </div>
+            <div class="entity-card reveal">
+                <div class="entity-bg">
+                    <div class="entity-bg-color" style="background: linear-gradient(135deg, #10101a 0%, #1a1a35 50%, #10101a 100%);"></div>
+                    <div class="entity-bg-img" style="background-image: url('img/img7.png');"></div>
+                </div>
+                <div class="entity-content">
+                    <div class="entity-icon">⚖</div>
+                    <h3>Abogados</h3>
+                    <div class="entity-type">Leyes · Orden Cósmico</div>
+                    <p>Conocen las leyes de ambos universos. Interpretan los contratos entre dimensiones y los códigos que rigen la existencia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DOMAINS STRIP -->
+    <div class="domains reveal">
+        <div class="domain-item"><span>Teología</span></div>
+        <div class="domain-item"><span>Numerología</span></div>
+        <div class="domain-item"><span>Ciencia</span></div>
+        <div class="domain-item"><span>Anime</span></div>
+        <div class="domain-item"><span>Esoterismo</span></div>
+        <div class="domain-item"><span>Astrología</span></div>
+        <div class="domain-item"><span>Astronomía</span></div>
+        <div class="domain-item"><span>Cuántica</span></div>
+    </div>
+
+    <!-- PRICING -->
+    <section class="pricing" id="pricing">
+        <div class="section-header reveal">
+            <h2>ELEGÍ TU ACCESO</h2>
+            <p>Cruzá al universo alterno</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="price-card reveal">
+                <div class="price-tier">INICIADO</div>
+                <div class="price-amount">
+                    <span class="currency">L.</span>499
+                    <span class="period">/mes</span>
+                    <span class="qty">1 entidad</span>
+                </div>
+                <ul class="price-features">
+                    <li>Una entidad a elección</li>
+                    <li>Conversaciones ilimitadas</li>
+                    <li>Conocimiento base</li>
+                    <li>Mensajería privada</li>
+                    <li>Encriptación total</li>
+                </ul>
+                <a href="https://wa.me/50433526970" target="_blank" class="btn-card">ENTRAR</a>
+            </div>
+
+            <div class="price-card featured reveal">
+                <div class="price-tier">ADEPTO</div>
+                <div class="price-amount">
+                    <span class="currency">L.</span>999
+                    <span class="period">/mes</span>
+                    <span class="qty">3 entidades</span>
+                </div>
+                <ul class="price-features">
+                    <li>Tres entidades a elección</li>
+                    <li>Conversaciones ilimitadas</li>
+                    <li>Conocimiento profundo</li>
+                    <li>Memoria contextual</li>
+                    <li>Escenarios dimensionales</li>
+                    <li>Evolución prioritaria</li>
+                </ul>
+                <a href="https://wa.me/50433526970" target="_blank" class="btn-card">ENTRAR</a>
+            </div>
+
+            <div class="price-card reveal">
+                <div class="price-tier">ILUMINADO</div>
+                <div class="price-amount">
+                    <span class="currency">L.</span>2,499
+                    <span class="period">/mes</span>
+                    <span class="qty">8 entidades — acceso total</span>
+                </div>
+                <ul class="price-features">
+                    <li>Las 8 entidades</li>
+                    <li>Todo lo de Adepto</li>
+                    <li>Integración de voz</li>
+                    <li>Generación de imágenes</li>
+                    <li>Personalización total</li>
+                    <li>Soporte dedicado</li>
+                    <li>Early access a updates</li>
+                </ul>
+                <a href="https://wa.me/50433526970" target="_blank" class="btn-card">ENTRAR</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="cta-final">
+        <h2 class="reveal">La realidad es solo<br><span>una de las opciones.</span></h2>
+        <p class="cta-sub reveal">MIVIDACOMOLUNA · EL UNIVERSO ALTERNO</p>
+        <div class="reveal">
+            <a href="https://wa.me/50433526970" target="_blank" class="btn-primary">CRUZAR EL UMBRAL</a>
+        </div>
+    </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-brand">
+        <a href="https://mividacomoluna.com">MIVIDACOMOLUNA</a> · POWERED BY <a href="https://lempyra.com">LEMPYRΛ</a>
+    </div>
+    <div class="footer-links">
+        <a href="#entidades">Entidades</a>
+        <a href="#pricing">Planes</a>
+        <a href="https://lempyra.com">Infraestructura</a>
+        <a href="https://wa.me/50433526970" target="_blank">Contacto</a>
+    </div>
+    <p class="footer-copy">© 2025 LEMPYRΛ · QUANTUM-SECURED CLOUD INFRASTRUCTURE</p>
+</footer>
+
+<script>
+    // ═══════ CANVAS HEX WAVE (preserved from original) ═══════
+    const canvas = document.getElementById('wave-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let hexGrid = [];
+    let activeRings = [];
+    let wavePhase1 = 0;
+    let wavePhase2 = Math.PI;
+
+    const hexSize = 30;
+    const hexHeight = 35;
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        createHexGrid();
+    }
+
+    function createHexGrid() {
+        hexGrid = [];
+        const cols = Math.ceil(canvas.width / (hexSize * 0.75)) + 2;
+        const rows = Math.ceil(canvas.height / hexHeight) + 2;
+
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                const x = col * hexSize * 0.75;
+                const y = row * hexHeight + (col % 2) * (hexHeight / 2);
+                hexGrid.push({ x, y, scale: 1, color: '#1e1428', brightness: 0 });
+            }
+        }
+    }
+
+    function drawHex(x, y, scale, color, brightness) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+            const angle = (Math.PI / 3) * i;
+            const hx = Math.cos(angle) * 15;
+            const hy = Math.sin(angle) * 17;
+            i === 0 ? ctx.moveTo(hx, hy) : ctx.lineTo(hx, hy);
+        }
+        ctx.closePath();
+
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1 + brightness * 2;
+        if (brightness > 0.1) {
+            ctx.shadowBlur = 10 * brightness;
+            ctx.shadowColor = color;
+        }
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function animate() {
+        ctx.fillStyle = '#0a0514';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        wavePhase1 += 0.03;
+        wavePhase2 += 0.03;
+
+        const wave1Y = canvas.height * 0.33;
+        const wave2Y = canvas.height * 0.66;
+
+        hexGrid.forEach(hex => {
+            let inWave = false;
+            let waveIntensity = 0;
+
+            const dist1 = Math.abs(hex.y - wave1Y);
+            if (dist1 < 40) {
+                const wave = Math.sin(hex.x * 0.02 + wavePhase1);
+                if (Math.abs(wave * 30 - (hex.y - wave1Y)) < 30) {
+                    inWave = true;
+                    waveIntensity = Math.max(waveIntensity, 1 - dist1 / 40);
+                }
+            }
+
+            const dist2 = Math.abs(hex.y - wave2Y);
+            if (dist2 < 40) {
+                const wave = Math.sin(hex.x * 0.02 + wavePhase2);
+                if (Math.abs(wave * 30 - (hex.y - wave2Y)) < 30) {
+                    inWave = true;
+                    waveIntensity = Math.max(waveIntensity, 1 - dist2 / 40);
+                }
+            }
+
+            let cancelled = false;
+            activeRings.forEach(ring => {
+                const dx = hex.x - ring.x;
+                const dy = hex.y - ring.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (Math.abs(dist - ring.radius) < 40) cancelled = true;
+            });
+
+            if (cancelled) {
+                drawHex(hex.x, hex.y, hex.scale, hex.color, hex.brightness);
+            } else if (inWave) {
+                drawHex(hex.x, hex.y, 1 + waveIntensity * 0.15, '#9b59d0', waveIntensity * 0.5);
+            } else {
+                drawHex(hex.x, hex.y, 1, '#1e1428', 0);
+            }
+        });
+
+        activeRings = activeRings.filter(ring => {
+            ring.radius += 4;
+            return ring.radius < 300;
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    document.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+
+        const colors = ['#9b59d0', '#8844bb', '#aa66ee', '#7733aa'];
+        const ring = { x: e.clientX, y: e.clientY, radius: 0 };
+        activeRings.push(ring);
+
+        function expandRing() {
+            hexGrid.forEach(hex => {
+                const dx = hex.x - ring.x;
+                const dy = hex.y - ring.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (Math.abs(dist - ring.radius) < 40) {
+                    hex.scale = 1.5;
+                    hex.color = colors[Math.floor(Math.random() * colors.length)];
+                    hex.brightness = 1;
+
+                    setTimeout(() => {
+                        hex.scale = 1;
+                        hex.color = '#1e1428';
+                        hex.brightness = 0;
+                    }, 500);
+                }
+            });
+
+            if (ring.radius < 300) setTimeout(expandRing, 16);
+        }
+        expandRing();
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        document.dispatchEvent(new MouseEvent('click', {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        }));
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    animate();
+
+    // SCROLL REVEAL
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
