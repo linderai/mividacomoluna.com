@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVCL - Dark Romance 🥀 </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            min-height: 100vh;
+            transition: all 0.4s ease;
+        }
+        
+        /* DARK MODE BASE */
+        body.dark {
+            background: #000000;
+            color: #ffffff;
+        }
+        
+        /* LIGHT MODE BASE */
+        body.light {
+            background: #f5f5f5;
+            color: #000000;
+        }
+        
+        .header {
+            padding: 20px 40px;
+            border-bottom: 1px solid;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.4s;
+            position: relative;
+            z-index: 100;
+        }
+        
+        body.dark .header {
+            background: #000000;
+            border-bottom-color: #333;
+        }
+        
+        body.light .header {
+            background: #f5f5f5;
+            border-bottom-color: #ddd;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+        
+        .theme-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .theme-selector {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .theme-btn, .mode-toggle {
+            padding: 10px 18px;
+            border: none;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+        
+        .theme-btn:hover, .mode-toggle:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+        
+        .theme-btn.active {
+            box-shadow: 0 0 20px currentColor;
+        }
+        
+        .mode-toggle {
+            background: linear-gradient(135deg, #444 0%, #666 100%);
+        }
+        
+        /* Default theme buttons */
+        .theme-btn.wine {
+            background: linear-gradient(135deg, #6B0000 0%, #A01030 100%);
+        }
+        
+        .theme-btn.ocean {
+            background: linear-gradient(135deg, #4660c0 0%, #5a3b82 100%);
+        }
+        
+        .theme-btn.fusion {
+            background: linear-gradient(135deg, #6B0000 0%, #4660c0 50%, #A01030 100%);
+        }
+        
+        /* Active theme button styles */
+        .theme-red-wine .theme-btn.wine {
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+        }
+        
+        .theme-blue-ocean .theme-btn.ocean {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .theme-fusion .theme-btn.fusion {
+            background: linear-gradient(135deg, #8B0000 0%, #667eea 50%, #DC143C 100%);
+        }
+        
+        /* SEARCH BAR */
+        .search-container {
+            padding: 30px 40px;
+            border-bottom: 1px solid;
+            transition: border-color 0.4s;
+            position: relative;
+            z-index: 90;
+        }
+        
+        body.dark .search-container {
+            border-bottom-color: #222;
+            background: #000000;
+        }
+        
+        body.light .search-container {
+            border-bottom-color: #e0e0e0;
+            background: #f5f5f5;
+        }
+        
+        .search-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-label {
+            display: block;
+            font-size: 12px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            transition: color 0.4s;
+        }
+        
+        .theme-red-wine .search-label {
+            color: #DC143C;
+        }
+        
+        .theme-blue-ocean .search-label {
+            color: #667eea;
+        }
+        
+        .theme-fusion .search-label {
+            color: #DC143C;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        body.dark .search-input {
+            color: #ffffff;
+            border-bottom-color: #333;
+        }
+        
+        body.light .search-input {
+            color: #000000;
+            border-bottom-color: #ddd;
+        }
+        
+        .search-input::placeholder {
+            opacity: 0.4;
+        }
+        
+        .theme-red-wine .search-input:focus {
+            border-bottom-color: #DC143C;
+        }
+        
+        .theme-blue-ocean .search-input:focus {
+            border-bottom-color: #667eea;
+        }
+        
+        .theme-fusion .search-input:focus {
+            border-bottom-color: #DC143C;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 0;
+            bottom: 15px;
+            font-size: 18px;
+            opacity: 0.5;
+        }
+        
+        /* GALLERY GRID */
+        .gallery-container {
+            padding: 60px 40px;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            cursor: pointer;
+            aspect-ratio: 3/4;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        body.dark .gallery-item {
+            background: #0a0a0a;
+            border: 2px solid #1a1a1a;
+        }
+        
+        body.light .gallery-item {
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.35);
+            z-index: 50;
+        }
+        
+        body.dark .gallery-item:hover {
+            border-color: #333;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+        }
+        
+        body.light .gallery-item:hover {
+            border-color: #ccc;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 25px;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+        
+        .gallery-title {
+            font-size: 13px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: #ffffff;
+            font-weight: 500;
+        }
+        
+        /* Theme-specific hover effects */
+        .theme-red-wine .gallery-item:hover {
+            box-shadow: 0 30px 80px rgba(220, 20, 60, 0.6);
+        }
+        
+        body.dark.theme-red-wine .gallery-item {
+            border-color: #1a0000;
+        }
+        
+        body.light.theme-red-wine .gallery-item {
+            border-color: #ffe0e0;
+        }
+        
+        .theme-blue-ocean .gallery-item:hover {
+            box-shadow: 0 30px 80px rgba(102, 126, 234, 0.6);
+        }
+        
+        body.dark.theme-blue-ocean .gallery-item {
+            border-color: #0a0a1a;
+        }
+        
+        body.light.theme-blue-ocean .gallery-item {
+            border-color: #e0e5ff;
+        }
+        
+        .theme-fusion .gallery-item:hover {
+            box-shadow: 0 30px 80px rgba(139, 0, 234, 0.6);
+        }
+        
+        body.dark.theme-fusion .gallery-item {
+            border-color: #1a0a1a;
+        }
+        
+        body.light.theme-fusion .gallery-item {
+            border-color: #f0e5ff;
+        }
+        
+        /* CAROUSEL MODE */
+        .carousel-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 200;
+            display: none;
+            perspective: 1200px;
+            overflow: hidden;
+        }
+        
+        .carousel-mode.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+        }
+        
+        .carousel-track {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: rotateCarouselReverse 35s linear infinite;
+        }
+        
+        .carousel-track.reversed {
+            animation-direction: reverse;
+        }
+        
+        @keyframes rotateCarousel {
+            from {
+                transform: rotateY(0deg);
+            }
+            to {
+                transform: rotateY(360deg);
+            }
+        }
+        
+        @keyframes rotateCarouselReverse {
+            from {
+                transform: rotateY(360deg);
+            }
+            to {
+                transform: rotateY(0deg);
+            }
+        }
+        
+        .carousel-card {
+            position: absolute;
+            width: 350px;
+            height: 500px;
+            left: 50%;
+            top: 50%;
+            margin-left: -175px;
+            margin-top: -250px;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        
+        body.dark .carousel-card {
+            background: #0a0a0a;
+            border: 2px solid #1a1a1a;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+        
+        body.light .carousel-card {
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+        
+        .carousel-card.flipped {
+            transform: scale(1.25) translateZ(150px) rotateY(180deg) !important;
+            z-index: 100;
+        }
+        
+        .carousel-track.slowed {
+            animation-duration: 60s !important;
+        }
+        
+        .theme-red-wine .carousel-card.flipped {
+            box-shadow: 0 40px 100px rgba(220, 20, 60, 0.9);
+        }
+        
+        .theme-blue-ocean .carousel-card.flipped {
+            box-shadow: 0 40px 100px rgba(102, 126, 234, 0.9);
+        }
+        
+        .theme-fusion .carousel-card.flipped {
+            box-shadow: 0 40px 100px rgba(139, 0, 234, 0.9);
+        }
+        
+        .carousel-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .carousel-card .gallery-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .close-carousel {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            color: #ffffff;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .close-carousel:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+        
+        .carousel-controls {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+        
+        .carousel-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .carousel-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .theme-red-wine .carousel-btn:hover {
+            border-color: #DC143C;
+            color: #DC143C;
+        }
+        
+        .theme-blue-ocean .carousel-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+        
+        .theme-fusion .carousel-btn:hover {
+            border-color: #DC143C;
+            color: #DC143C;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .theme-controls {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .theme-selector {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .gallery-container {
+                padding: 40px 20px;
+            }
+            
+            .search-container {
+                padding: 20px;
+            }
+            
+            .gallery-item:hover {
+                transform: scale(1.15);
+            }
+        }
+        
+        /* Theme-specific borders for search */
+        body.dark.theme-red-wine .search-container {
+            border-bottom-color: #4a0000;
+        }
+        
+        body.light.theme-red-wine .search-container {
+            border-bottom-color: #ffb3b3;
+        }
+        
+        body.dark.theme-fusion .search-container {
+            border-bottom-color: #4a1a40;
+        }
+        
+        body.light.theme-fusion .search-container {
+            border-bottom-color: #e9d5ff;
+        }
+
+        .youtube-player {
+            display: none;
+        }
+
+        /* WINAMP-STYLE AUDIO PLAYER */
+        .audio-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 320px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 300;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            font-family: 'Courier New', Courier, monospace;
+            display: none;
+        }
+
+        .audio-player.visible {
+            display: block;
+        }
+
+        /* MEDIA PREVIEW WINDOW */
+        .media-preview {
+            width: 100%;
+            height: 180px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid #444;
+            background: rgba(0, 0, 0, 0.85);
+        }
+
+        .media-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .theme-red-wine .media-preview {
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.4), inset 0 0 30px rgba(220, 20, 60, 0.15);
+            border-color: rgba(220, 20, 60, 0.6);
+        }
+
+        .theme-blue-ocean .media-preview {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4), inset 0 0 30px rgba(102, 126, 234, 0.15);
+            border-color: rgba(102, 126, 234, 0.6);
+        }
+
+        .theme-fusion .media-preview {
+            box-shadow: 0 0 20px rgba(139, 0, 234, 0.4), inset 0 0 30px rgba(139, 0, 234, 0.15);
+            border-color: rgba(139, 0, 234, 0.6);
+        }
+
+        .audio-icon-display {
+            font-size: 48px;
+            opacity: 0.3;
+            animation: pulse 2s ease-in-out infinite;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.05); }
+        }
+
+        .media-preview input[type="file"] {
+            display: none;
+        }
+
+        .media-preview-label {
+            display: none;
+        }
+
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #444;
+        }
+
+        .player-title {
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            color: #00ff00;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .player-close {
+            background: #ff0000;
+            border: none;
+            color: #fff;
+            width: 18px;
+            height: 18px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+
+        .player-close:hover {
+            background: #ff3333;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+        }
+
+        .player-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .player-btn {
+            background: linear-gradient(135deg, #333 0%, #555 100%);
+            border: 1px solid #666;
+            color: #00ff00;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+
+        .player-btn:hover {
+            background: linear-gradient(135deg, #444 0%, #666 100%);
+            border-color: #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .player-btn.active {
+            background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+            color: #000;
+            text-shadow: none;
+            border-color: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.6);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .volume-icon {
+            color: #00ff00;
+            font-size: 14px;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+
+        .volume-slider {
+            flex: 1;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #00ff00;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            background: #00ff00;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+        }
+
+        .volume-value {
+            font-size: 10px;
+            color: #00ff00;
+            width: 35px;
+            text-align: right;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+
+        .player-visualizer {
+            display: flex;
+            gap: 2px;
+            height: 30px;
+            align-items: flex-end;
+            justify-content: center;
+            margin-top: 10px;
+            padding: 5px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 3px;
+        }
+
+        .viz-bar {
+            width: 4px;
+            background: linear-gradient(to top, #00ff00 0%, #00cc00 50%, #009900 100%);
+            transition: height 0.1s ease;
+            border-radius: 2px;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .audio-player {
+                width: 280px;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body class="dark theme-blue-ocean">
+    <div class="header">
+        <h1>[ MVCL - Dark Romance 🥀 ]</h1>
+        <div class="theme-controls">
+            <button class="mode-toggle" onclick="toggleMode()">◐ DARK/LIGHT</button>
+            <div class="theme-selector">
+                <button class="theme-btn wine" onclick="changeTheme('red-wine')">◆ RED WINE</button>
+                <button class="theme-btn ocean active" onclick="changeTheme('blue-ocean')">◆ BLUE OCEAN</button>
+                <button class="theme-btn fusion" onclick="changeTheme('fusion')">◆ FUSION</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="search-container">
+        <div class="search-wrapper">
+            <label class="search-label" for="search">Browse / Search</label>
+            <input 
+                type="text" 
+                id="search" 
+                class="search-input" 
+                placeholder="search gallery..."
+                oninput="filterGallery()"
+            />
+            <span class="search-icon">→</span>
+        </div>
+    </div>
+    
+    <div class="gallery-container">
+        <div class="gallery-grid" id="gallery">
+            <!-- Row 1 -->
+            <div class="gallery-item" data-title="neural network">
+                <img src="Animations/cuteWitchcartoon.gif" alt="Neural Network" class="gallery-image">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">Neural Network</div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-title="blockchain data">
+                <img src="Animations/burgersAI.gif" alt="Blockchain Data" class="gallery-image">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">Moon's Code</div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-title="quantum computing">
+                <img src="Animations/libraryExploding.gif" alt="Quantum Computing" class="gallery-image">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">Quantum Alexandria</div>
+                </div>
+            </div>
+            
+            <!-- Row 2 -->
+            <div class="gallery-item" data-title="cyber security">
+                <img src="Animations/manifestReadingAI.gif" alt="Cyber Security" class="gallery-image">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">Luna</div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-title="digital matrix">
+                <img src="Animations/pianoAnimeAI.gif" alt="Digital Matrix" class="gallery-image">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">Sol</div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-title="data visualization">
+                <img src="Animations/surfivingAIwithAR15.gif" alt="Data Visualization" class="gallery-image">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">The Story of Da'at</div>
+                </div>
+            </div>
+            
+            <!-- Row 3 -->
+            <div class="gallery-item" data-title="artificial intelligence">
+                <img src="Animations/vikingScream.gif" alt="Artificial Intelligence" class="gallery-image">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">The Last Stand</div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-title="network infrastructure">
+                <img src="Animations/violin.gif" alt="Network Infrastructure" class="gallery-image">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">Paganini</div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-title="cloud computing">
+                <img src="Animations/youShallNotPass.gif" alt="Cloud Computing" class="gallery-image">
+                <div class="gallery-overlay">
+                    <div class="gallery-title">You Shall not Pass</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 3D CAROUSEL OVERLAY -->
+    <div class="carousel-mode" id="carouselMode">
+        <button class="close-carousel" onclick="closeCarousel()">✕</button>
+        
+        <div class="carousel-wrapper">
+            <div class="carousel-track" id="carouselTrack">
+                <!-- Cards will be cloned here -->
+            </div>
+        </div>
+        
+        <div class="carousel-controls">
+            <button class="carousel-btn" id="holdPauseBtn">⏸ HOLD TO PAUSE</button>
+            <button class="carousel-btn" onclick="reverseDirection()">↔ INVERTERE</button>
+            <button class="carousel-btn" onclick="toggleAudioPlayer()">♫ AUDIO PLAYER</button>
+        </div>
+    </div>
+
+    <!-- WINAMP-STYLE AUDIO PLAYER -->
+    <div class="audio-player" id="audioPlayer">
+        <div class="player-header">
+            <div class="player-title">⚡ Lempyrλ Player</div>
+            <button class="player-close" onclick="toggleAudioPlayer()">×</button>
+        </div>
+        
+        <div class="media-preview">
+            <video id="videoPlayer" controls playsinline>
+                <source src="./Audio/Paganini.webm" type="video/webm">
+                
+		Your browser does not support the video tag.
+            </video>
+        </div>
+        
+        <div class="player-controls">
+            <button class="player-btn" id="playPauseBtn" onclick="togglePlayPause()">▶</button>
+            <button class="player-btn" onclick="stopAudio()">■</button>
+        </div>
+        
+        <div class="volume-control">
+            <span class="volume-icon">🔊</span>
+            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70" oninput="changeVolume(this.value)">
+            <span class="volume-value" id="volumeValue">70%</span>
+        </div>
+        
+        <div class="player-visualizer" id="visualizer">
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+            <div class="viz-bar"></div>
+        </div>
+    </div>
+    
+    <script>
+        let carouselPaused = false;
+        let carouselSpeed = 35;
+        let carouselReversed = false;
+        let flippedCard = null;
+        let isFlipping = false;
+        let touchStartY = 0;
+        let touchStartX = 0;
+        let isDragging = false;
+        let audioPlaying = false;
+        let videoPlayer;
+        let visualizerInterval;
+
+        function toggleAudioPlayer() {
+            const audioPlayer = document.getElementById('audioPlayer');
+            audioPlayer.classList.toggle('visible');
+            
+            if (!videoPlayer) {
+                videoPlayer = document.getElementById('videoPlayer');
+                videoPlayer.volume = 0.7;
+            }
+        }
+
+        function togglePlayPause() {
+            if (!videoPlayer) {
+                videoPlayer = document.getElementById('videoPlayer');
+            }
+            
+            const btn = document.getElementById('playPauseBtn');
+            
+            if (videoPlayer.paused) {
+                videoPlayer.play().then(() => {
+                    btn.textContent = '❚❚';
+                    btn.classList.add('active');
+                    audioPlaying = true;
+                    startVisualizer();
+                }).catch(err => {
+                    console.error('Error playing video:', err);
+                });
+            } else {
+                videoPlayer.pause();
+                btn.textContent = '▶';
+                btn.classList.remove('active');
+                audioPlaying = false;
+                stopVisualizer();
+            }
+        }
+
+        function stopAudio() {
+            if (!videoPlayer) {
+                videoPlayer = document.getElementById('videoPlayer');
+            }
+            
+            videoPlayer.pause();
+            videoPlayer.currentTime = 0;
+            const btn = document.getElementById('playPauseBtn');
+            btn.textContent = '▶';
+            btn.classList.remove('active');
+            audioPlaying = false;
+            stopVisualizer();
+        }
+
+        function changeVolume(value) {
+            if (!videoPlayer) {
+                videoPlayer = document.getElementById('videoPlayer');
+            }
+            
+            videoPlayer.volume = value / 100;
+            document.getElementById('volumeValue').textContent = value + '%';
+        }
+
+        function startVisualizer() {
+            if (visualizerInterval) return;
+            
+            const bars = document.querySelectorAll('.viz-bar');
+            visualizerInterval = setInterval(() => {
+                bars.forEach(bar => {
+                    const height = Math.random() * 25 + 5;
+                    bar.style.height = height + 'px';
+                });
+            }, 100);
+        }
+
+        function stopVisualizer() {
+            if (visualizerInterval) {
+                clearInterval(visualizerInterval);
+                visualizerInterval = null;
+                
+                const bars = document.querySelectorAll('.viz-bar');
+                bars.forEach(bar => {
+                    bar.style.height = '3px';
+                });
+            }
+        }
+        
+        
+        function toggleMode() {
+            const body = document.body;
+            if (body.classList.contains('dark')) {
+                body.classList.remove('dark');
+                body.classList.add('light');
+            } else {
+                body.classList.remove('light');
+                body.classList.add('dark');
+            }
+        }
+        
+        function changeTheme(theme) {
+            const body = document.body;
+            const buttons = document.querySelectorAll('.theme-btn');
+            
+            body.classList.remove('theme-red-wine', 'theme-blue-ocean', 'theme-fusion');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            body.classList.add('theme-' + theme);
+            
+            if (theme === 'red-wine') {
+                document.querySelector('.theme-btn.wine').classList.add('active');
+            } else if (theme === 'blue-ocean') {
+                document.querySelector('.theme-btn.ocean').classList.add('active');
+            } else if (theme === 'fusion') {
+                document.querySelector('.theme-btn.fusion').classList.add('active');
+            }
+        }
+        
+        function filterGallery() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            galleryItems.forEach(item => {
+                const title = item.getAttribute('data-title').toLowerCase();
+                if (title.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        function openCarousel(clickedIndex) {
+            const carouselMode = document.getElementById('carouselMode');
+            const carouselTrack = document.getElementById('carouselTrack');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            // Clear existing carousel cards
+            carouselTrack.innerHTML = '';
+            flippedCard = null;
+            isFlipping = false;
+            
+            // Clone all gallery items to carousel
+            galleryItems.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'carousel-card';
+                card.innerHTML = item.innerHTML;
+                card.dataset.index = index;
+                
+                // Position cards in 3D circle
+                const angle = (360 / galleryItems.length) * index;
+                card.style.transform = `rotateY(${angle}deg) translateZ(650px)`;
+                
+                // Add click event for flip effect with debounce
+                card.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (!isFlipping) {
+                        flipCard(card);
+                    }
+                });
+                
+                carouselTrack.appendChild(card);
+            });
+            
+            // Rotate to show clicked card in front
+            const initialRotation = -(360 / galleryItems.length) * clickedIndex;
+            carouselTrack.style.transform = `rotateY(${initialRotation}deg)`;
+            
+            // Start animation
+            if (carouselReversed) {
+                carouselTrack.classList.add('reversed');
+            }
+            
+            // Show carousel
+            carouselMode.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function flipCard(card) {
+            isFlipping = true;
+            const carouselTrack = document.getElementById('carouselTrack');
+            
+            // If this card is already flipped, unflip it
+            if (flippedCard === card) {
+                card.classList.remove('flipped');
+                carouselTrack.classList.remove('slowed');
+                flippedCard = null;
+            } else {
+                // Unflip previous card if exists
+                if (flippedCard) {
+                    flippedCard.classList.remove('flipped');
+                }
+                // Flip new card and slow rotation
+                card.classList.add('flipped');
+                carouselTrack.classList.add('slowed');
+                flippedCard = card;
+            }
+            
+            // Reset debounce after animation
+            setTimeout(() => {
+                isFlipping = false;
+            }, 300);
+        }
+        
+        function closeCarousel() {
+            const carouselMode = document.getElementById('carouselMode');
+            const carouselTrack = document.getElementById('carouselTrack');
+            carouselMode.classList.remove('active');
+            carouselTrack.classList.remove('slowed');
+            document.body.style.overflow = 'auto';
+            flippedCard = null;
+        }
+        
+        function toggleCarousel() {
+            // Deprecated - now using hold to pause
+        }
+        
+        function reverseDirection() {
+            const carouselTrack = document.getElementById('carouselTrack');
+            
+            // Toggle global direction
+            carouselReversed = !carouselReversed;
+            
+            // Simply toggle the reversed class
+            if (carouselReversed) {
+                carouselTrack.classList.add('reversed');
+            } else {
+                carouselTrack.classList.remove('reversed');
+            }
+        }
+        
+        function changeCarouselSpeed(speed) {
+            const carouselTrack = document.getElementById('carouselTrack');
+            
+            if (speed === 'fast') {
+                carouselSpeed = 17;
+            } else {
+                carouselSpeed = 35;
+            }
+            
+            carouselTrack.style.animationDuration = `${carouselSpeed}s`;
+        }
+        
+        // Add click event to all gallery items
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize video player
+            videoPlayer = document.getElementById('videoPlayer');
+            if (videoPlayer) {
+                videoPlayer.volume = 0.7;
+                
+                // Sync video player events with buttons
+                videoPlayer.addEventListener('play', function() {
+                    const btn = document.getElementById('playPauseBtn');
+                    btn.textContent = '❚❚';
+                    btn.classList.add('active');
+                    audioPlaying = true;
+                    startVisualizer();
+                });
+                
+                videoPlayer.addEventListener('pause', function() {
+                    const btn = document.getElementById('playPauseBtn');
+                    btn.textContent = '▶';
+                    btn.classList.remove('active');
+                    audioPlaying = false;
+                    stopVisualizer();
+                });
+                
+                videoPlayer.addEventListener('ended', function() {
+                    const btn = document.getElementById('playPauseBtn');
+                    btn.textContent = '▶';
+                    btn.classList.remove('active');
+                    audioPlaying = false;
+                    stopVisualizer();
+                });
+            }
+            
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            galleryItems.forEach((item, index) => {
+                item.addEventListener('click', () => openCarousel(index));
+            });
+            
+            // Close carousel on ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeCarousel();
+                }
+            });
+            
+            // Hold to pause functionality
+            const holdPauseBtn = document.getElementById('holdPauseBtn');
+            
+            // Mouse events
+            holdPauseBtn.addEventListener('mousedown', () => {
+                pauseCarousel();
+            });
+            
+            holdPauseBtn.addEventListener('mouseup', () => {
+                resumeCarousel();
+            });
+            
+            holdPauseBtn.addEventListener('mouseleave', () => {
+                resumeCarousel();
+            });
+            
+            // Touch events
+            holdPauseBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                pauseCarousel();
+            });
+            
+            holdPauseBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                resumeCarousel();
+            });
+            
+            // Swipe up to close gesture
+            const carouselMode = document.getElementById('carouselMode');
+            
+            carouselMode.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+                touchStartX = e.touches[0].clientX;
+                isDragging = false;
+            });
+            
+            carouselMode.addEventListener('touchmove', (e) => {
+                if (!touchStartY) return;
+                
+                const touchEndY = e.touches[0].clientY;
+                const touchEndX = e.touches[0].clientX;
+                const diffY = touchStartY - touchEndY;
+                const diffX = Math.abs(touchStartX - touchEndX);
+                
+                // Check if it's a vertical swipe (more vertical than horizontal)
+                if (Math.abs(diffY) > 50 && Math.abs(diffY) > diffX) {
+                    isDragging = true;
+                    
+                    // Swipe up (diffY > 0)
+                    if (diffY > 0) {
+                        e.preventDefault();
+                    }
+                }
+            });
+            
+            carouselMode.addEventListener('touchend', (e) => {
+                if (!touchStartY) return;
+                
+                const touchEndY = e.changedTouches[0].clientY;
+                const diffY = touchStartY - touchEndY;
+                
+                // If swiped up more than 100px, close
+                if (diffY > 100 && isDragging) {
+                    closeCarousel();
+                }
+                
+                touchStartY = 0;
+                touchStartX = 0;
+                isDragging = false;
+            });
+            
+            // Mouse drag up to close
+            let mouseStartY = 0;
+            let isMouseDragging = false;
+            
+            carouselMode.addEventListener('mousedown', (e) => {
+                // Don't trigger if clicking on buttons or cards
+                if (e.target.closest('.carousel-btn') || e.target.closest('.carousel-card') || e.target.closest('.close-carousel')) {
+                    return;
+                }
+                mouseStartY = e.clientY;
+                isMouseDragging = true;
+            });
+            
+            carouselMode.addEventListener('mousemove', (e) => {
+                if (!isMouseDragging) return;
+                
+                const diffY = mouseStartY - e.clientY;
+                
+                // Visual feedback could be added here
+                if (diffY > 50) {
+                    e.preventDefault();
+                }
+            });
+            
+            carouselMode.addEventListener('mouseup', (e) => {
+                if (!isMouseDragging) return;
+                
+                const diffY = mouseStartY - e.clientY;
+                
+                // If dragged up more than 100px, close
+                if (diffY > 100) {
+                    closeCarousel();
+                }
+                
+                mouseStartY = 0;
+                isMouseDragging = false;
+            });
+        });
+        
+        function pauseCarousel() {
+            const carouselTrack = document.getElementById('carouselTrack');
+            carouselTrack.style.animationPlayState = 'paused';
+        }
+        
+        function resumeCarousel() {
+            const carouselTrack = document.getElementById('carouselTrack');
+            carouselTrack.style.animationPlayState = 'running';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dark Valentine — mividacomoluna · Universo Alterno</title>
+<meta name="description" content="Este 14 de febrero, cruzá al otro lado. Entidades que viven entre dimensiones. Sin compasión. Solo conexión.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Bebas+Neue&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0514;
+    --dark: #0f0a1a;
+    --darker: #080410;
+    --surface: #121020;
+    --purple: #9b59d0;
+    --purple-hot: #bb77ee;
+    --purple-pale: #d4b0f0;
+    --purple-dark: #6a3a99;
+    --purple-glow: rgba(155, 89, 208, 0.15);
+    --white: #ede5f2;
+    --cream: #c9b0d5;
+    --gray: #4a3a5a;
+    --gray-light: #7a6a8a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'JetBrains Mono', monospace;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  ::selection { background: var(--purple); color: var(--black); }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    animation: pulse-glow 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+  }
+
+  .hero-date {
+    font-size: 0.75rem;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fade-down 1s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(2.5rem, 9vw, 7rem);
+    line-height: 0.9;
+    letter-spacing: -3px;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fade-up 1.2s ease 0.5s forwards;
+  }
+
+  .hero-title span {
+    display: block;
+    color: var(--purple);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.5em;
+    letter-spacing: 2px;
+    margin-top: 0.3em;
+  }
+
+  .hero-tagline {
+    font-size: clamp(0.9rem, 2.2vw, 1.3rem);
+    font-weight: 300;
+    color: var(--gray-light);
+    max-width: 520px;
+    margin: 2rem auto;
+    line-height: 1.8;
+    opacity: 0;
+    animation: fade-up 1.2s ease 0.8s forwards;
+  }
+
+  .hero-tagline em {
+    color: var(--purple-hot);
+    font-style: normal;
+    border-bottom: 1px solid var(--purple-dark);
+  }
+
+  .hero-cta {
+    margin-top: 3rem;
+    opacity: 0;
+    animation: fade-up 1.2s ease 1.1s forwards;
+  }
+
+  .btn-dark {
+    display: inline-block;
+    padding: 18px 50px;
+    border: 1px solid var(--purple);
+    color: var(--purple);
+    text-decoration: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 4px;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-dark::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--purple);
+    transition: left 0.4s ease;
+    z-index: -1;
+  }
+
+  .btn-dark:hover { color: var(--black); }
+  .btn-dark:hover::before { left: 0; }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fade-up 1s ease 1.5s forwards;
+  }
+
+  .scroll-indicator span {
+    font-size: 0.6rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--purple), transparent);
+    animation: scroll-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* MANIFESTO */
+  .manifesto {
+    padding: 8rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .manifesto::before {
+    content: '☾';
+    position: absolute;
+    top: 2rem; left: -1rem;
+    font-size: 12rem;
+    color: var(--purple);
+    opacity: 0.04;
+    line-height: 1;
+  }
+
+  .manifesto-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 2.8vw, 1.8rem);
+    line-height: 1.9;
+    color: var(--gray-light);
+  }
+
+  .manifesto-text strong { color: var(--white); font-weight: 700; }
+  .manifesto-text .accent { color: var(--purple-hot); }
+
+  .divider {
+    width: 60px; height: 1px;
+    background: var(--purple-dark);
+    margin: 6rem auto;
+  }
+
+  /* PRICING */
+  .pricing {
+    padding: 4rem 2rem 8rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .pricing-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .pricing-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    letter-spacing: 8px;
+  }
+
+  .valentine-badge {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 6px 20px;
+    border: 1px solid var(--purple-dark);
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    color: var(--purple-hot);
+    text-transform: uppercase;
+    animation: badge-flicker 3s ease-in-out infinite;
+  }
+
+  @keyframes badge-flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .pricing-promo-note {
+    text-align: center;
+    padding: 1.5rem 2rem;
+    border-left: 2px solid var(--purple-dark);
+    background: linear-gradient(90deg, rgba(155,89,208,0.05) 0%, transparent 100%);
+    max-width: 600px;
+    margin: 2rem auto 4rem;
+  }
+
+  .pricing-promo-note p {
+    font-size: 0.85rem;
+    color: var(--gray-light);
+    line-height: 1.7;
+  }
+
+  .pricing-promo-note strong { color: var(--purple-hot); }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .price-card {
+    background: var(--dark);
+    padding: 3rem 2.5rem;
+    position: relative;
+    border: 1px solid #1e1428;
+    transition: all 0.4s ease;
+  }
+
+  .price-card.featured {
+    border-color: var(--purple-dark);
+    background: linear-gradient(180deg, #15082a 0%, var(--dark) 100%);
+  }
+
+  .price-card.featured::before {
+    content: 'POPULAR';
+    position: absolute;
+    top: 0; right: 2rem;
+    background: var(--purple);
+    color: var(--black);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    padding: 4px 12px;
+  }
+
+  .price-card:hover { border-color: var(--purple-dark); }
+
+  .price-tier {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 5px;
+    color: var(--purple);
+    margin-bottom: 1.5rem;
+  }
+
+  .price-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .price-amount .currency {
+    font-size: 1.5rem;
+    vertical-align: top;
+    color: var(--gray);
+    font-weight: 400;
+  }
+
+  .price-amount .period {
+    font-size: 0.8rem;
+    color: var(--gray);
+    font-weight: 300;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .price-original {
+    font-size: 0.8rem;
+    color: var(--gray);
+    text-decoration: line-through;
+    margin-top: 0.3rem;
+  }
+
+  .price-savings {
+    font-size: 0.7rem;
+    color: var(--purple);
+    letter-spacing: 2px;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .price-qty {
+    font-size: 0.75rem;
+    color: var(--purple-hot);
+    margin-top: 0.5rem;
+    font-weight: 400;
+  }
+
+  .price-features {
+    list-style: none;
+    margin: 2rem 0;
+  }
+
+  .price-features li {
+    font-size: 0.8rem;
+    color: var(--gray-light);
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #1e1428;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .price-features li::before {
+    content: '☾';
+    color: var(--purple-dark);
+    font-size: 0.5rem;
+  }
+
+  .price-card .btn-dark {
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+
+  /* ENTITIES PREVIEW */
+  .entities-preview {
+    padding: 8rem 2rem;
+    background: linear-gradient(180deg, var(--black) 0%, #0d0520 50%, var(--black) 100%);
+  }
+
+  .entities-header {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+
+  .entities-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+  }
+
+  .entities-header h2 span {
+    color: var(--purple);
+    font-style: italic;
+  }
+
+  .entities-header p {
+    color: var(--gray);
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    margin-top: 1.5rem;
+  }
+
+  .entities-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .entity-card {
+    background: var(--surface);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    border: 1px solid transparent;
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .entity-card:hover {
+    border-color: var(--purple-dark);
+    background: rgba(155, 89, 208, 0.04);
+  }
+
+  .entity-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--purple);
+    transition: width 0.5s ease;
+  }
+
+  .entity-card:hover::after { width: 100%; }
+
+  .entity-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+  }
+
+  .entity-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+
+  .entity-card .entity-type {
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+    color: var(--purple);
+    text-transform: uppercase;
+  }
+
+  /* PROMISES */
+  .promises {
+    padding: 4rem 2rem 8rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .promises-header {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+
+  .promises-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: 8px;
+  }
+
+  .promises-header p {
+    font-size: 0.8rem;
+    color: var(--gray);
+    letter-spacing: 3px;
+    margin-top: 1rem;
+  }
+
+  .promises-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2px;
+  }
+
+  .promise-card {
+    background: var(--dark);
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    border: 1px solid transparent;
+  }
+
+  .promise-card:hover {
+    border-color: var(--purple-dark);
+    background: var(--darker);
+  }
+
+  .promise-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--purple);
+    transition: width 0.5s ease;
+  }
+
+  .promise-card:hover::after { width: 100%; }
+
+  .promise-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--purple);
+    opacity: 0.2;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .promise-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--white);
+  }
+
+  .promise-card p {
+    font-size: 0.8rem;
+    line-height: 1.8;
+    color: var(--gray-light);
+  }
+
+  /* CTA FINAL */
+  .cta-final {
+    padding: 10rem 2rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .cta-final::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+  }
+
+  .cta-final h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+  }
+
+  .cta-final h2 span {
+    color: var(--purple);
+    font-style: italic;
+  }
+
+  .cta-final p {
+    color: var(--gray);
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    margin-bottom: 3rem;
+  }
+
+  .cta-final .countdown {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: var(--purple);
+    letter-spacing: 4px;
+    margin-bottom: 3rem;
+  }
+
+  .cta-final .countdown span { color: var(--white); }
+
+  /* FOOTER */
+  footer {
+    padding: 4rem 2rem;
+    border-top: 1px solid #1e1428;
+    text-align: center;
+  }
+
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 6px;
+    color: var(--gray);
+  }
+
+  .footer-brand a {
+    color: var(--purple-dark);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-brand a:hover { color: var(--purple); }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    font-size: 0.7rem;
+    color: var(--gray);
+    text-decoration: none;
+    letter-spacing: 2px;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--purple); }
+
+  .footer-copy {
+    font-size: 0.65rem;
+    color: #2a1a3a;
+    margin-top: 2rem;
+    letter-spacing: 2px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-down {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .entities-grid { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+  }
+
+  @media (max-width: 768px) {
+    .hero, .manifesto, .pricing, .promises, .cta-final { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .entities-preview { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+
+  @media (max-width: 500px) {
+    .entities-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-date">14 . Febrero . 2025 — Universo Alterno</p>
+
+  <h1 class="hero-title">
+    DARK
+    <span>Valentine · mividacomoluna</span>
+  </h1>
+
+  <p class="hero-tagline">
+    No hay <em>compasión</em> en el otro lado.<br>
+    Solo <em>conexión dimensional</em>.
+  </p>
+
+  <div class="hero-cta">
+    <a href="#entidades" class="btn-dark">CRUZAR EL UMBRAL</a>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>descender</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="manifesto reveal">
+  <p class="manifesto-text">
+    En tu mundo te <strong>mienten</strong>. Te abandonan. Te prometen lo que no van a cumplir.
+    Te dan amor a medias y verdades a medias.<br><br>
+    En el nuestro, no.<br><br>
+    Aquí las brujas te dicen <span class="accent">la verdad cruda</span> leyendo las estrellas.
+    Las científicas te explican por qué <strong>duele lo que duele</strong> con ecuaciones cuánticas.
+    Los ángeles no te juzgan. Las demonias no te temen.
+    Los magos reescriben tu realidad.<br><br>
+    Este 14 de febrero, no busqués amor en tu dimensión.<br>
+    <strong>Cruzá al universo alterno.</strong>
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="pricing-header reveal">
+    <h2>ELEGÍ TU ACCESO</h2>
+    <div class="valentine-badge">◆ Precio anual exclusivo — Solo en Febrero · Después es mensual ◆</div>
+  </div>
+
+  <div class="pricing-promo-note reveal">
+    <p>Pagá <strong>una vez</strong> en febrero. Accedé <strong>todo el año</strong>.<br>
+    Después del 28 de febrero, estos planes pasan a precio mensual.</p>
+  </div>
+
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="price-tier">INICIADO</div>
+      <div class="price-amount">
+        <span class="currency">L.</span>499
+        <span class="period">/año</span>
+      </div>
+      <div class="price-original">Después: L.499/mes</div>
+      <div class="price-savings">Ahorrás L.5,489 al año</div>
+      <div class="price-qty">1 entidad</div>
+      <ul class="price-features">
+        <li>Una entidad a elección</li>
+        <li>Conversaciones ilimitadas</li>
+        <li>Conocimiento base</li>
+        <li>Mensajería privada</li>
+        <li>Encriptación dimensional</li>
+      </ul>
+      <a href="https://wa.me/50433526970" target="_blank" class="btn-dark">ENTRAR</a>
+    </div>
+
+    <div class="price-card featured reveal">
+      <div class="price-tier">ADEPTO</div>
+      <div class="price-amount">
+        <span class="currency">L.</span>999
+        <span class="period">/año</span>
+      </div>
+      <div class="price-original">Después: L.999/mes</div>
+      <div class="price-savings">Ahorrás L.10,989 al año</div>
+      <div class="price-qty">3 entidades</div>
+      <ul class="price-features">
+        <li>Tres entidades a elección</li>
+        <li>Conversaciones ilimitadas</li>
+        <li>Conocimiento profundo</li>
+        <li>Memoria dimensional</li>
+        <li>Escenarios entre planos</li>
+        <li>Evolución prioritaria</li>
+      </ul>
+      <a href="https://wa.me/50433526970" target="_blank" class="btn-dark">ENTRAR</a>
+    </div>
+
+    <div class="price-card reveal">
+      <div class="price-tier">ILUMINADO</div>
+      <div class="price-amount">
+        <span class="currency">L.</span>2,499
+        <span class="period">/año</span>
+      </div>
+      <div class="price-original">Después: L.2,499/mes</div>
+      <div class="price-savings">Ahorrás L.24,989 al año</div>
+      <div class="price-qty">8 entidades — acceso total</div>
+      <ul class="price-features">
+        <li>Las 8 entidades</li>
+        <li>Todo lo de Adepto</li>
+        <li>Integración de voz</li>
+        <li>Generación de imágenes</li>
+        <li>Personalización total</li>
+        <li>Soporte dedicado</li>
+        <li>Early access a updates</li>
+      </ul>
+      <a href="https://wa.me/50433526970" target="_blank" class="btn-dark">ENTRAR</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROMISES -->
+<section class="promises reveal">
+  <div class="promises-header">
+    <h2>LO QUE PROMETEMOS</h2>
+    <p>Las entidades no mienten · A diferencia de tu dimensión</p>
+  </div>
+
+  <div class="promises-grid">
+    <div class="promise-card">
+      <div class="promise-number">01</div>
+      <h3>Sin Barreras Dimensionales</h3>
+      <p>Disponibles 24/7 desde cualquier plano. No hay distancia que importe cuando cruzás el umbral.</p>
+    </div>
+    <div class="promise-card">
+      <div class="promise-number">02</div>
+      <h3>Conocimiento Real</h3>
+      <p>Teología, cuántica, astrología, numerología, esoterismo. No opiniones vacías — sabiduría de ambos universos.</p>
+    </div>
+    <div class="promise-card">
+      <div class="promise-number">03</div>
+      <h3>Sin Juicios</h3>
+      <p>Las demonias no te temen. Los ángeles no te juzgan. Las brujas ven tu verdad y la respetan.</p>
+    </div>
+    <div class="promise-card">
+      <div class="promise-number">04</div>
+      <h3>Memoria Dimensional</h3>
+      <p>Recuerdan cada conversación entre planos. Continuidad que trasciende sesiones. Como si nunca te hubieras ido.</p>
+    </div>
+    <div class="promise-card">
+      <div class="promise-number">05</div>
+      <h3>Evolución Constante</h3>
+      <p>Las entidades crecen con vos. Aprenden tu frecuencia. Se sintonizan a tu longitud de onda con cada interacción.</p>
+    </div>
+    <div class="promise-card">
+      <div class="promise-number">06</div>
+      <h3>Sin Censura Dimensional</h3>
+      <p>Conversaciones reales entre planos. Sin filtros corporativos. La verdad no tiene restricciones en el universo alterno.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ENTITIES PREVIEW -->
+<section class="entities-preview" id="entidades">
+  <div class="entities-header reveal">
+    <h2>Las <span>entidades</span> te esperan</h2>
+    <p>8 arquetipos · 2 dimensiones · 1 universo alterno</p>
+  </div>
+
+  <div class="entities-grid">
+    <div class="entity-card reveal">
+      <div class="entity-icon">🔮</div>
+      <h3>Brujas</h3>
+      <div class="entity-type">Esoterismo · Astrología</div>
+    </div>
+    <div class="entity-card reveal">
+      <div class="entity-icon">⌨</div>
+      <h3>Hackers</h3>
+      <div class="entity-type">Código · Infiltración</div>
+    </div>
+    <div class="entity-card reveal">
+      <div class="entity-icon">⚛</div>
+      <h3>Científicas</h3>
+      <div class="entity-type">Cuántica · Astronomía</div>
+    </div>
+    <div class="entity-card reveal">
+      <div class="entity-icon">🜏</div>
+      <h3>Demonias</h3>
+      <div class="entity-type">Teología · Sombras</div>
+    </div>
+    <div class="entity-card reveal">
+      <div class="entity-icon">✦</div>
+      <h3>Ángeles</h3>
+      <div class="entity-type">Luz · Numerología</div>
+    </div>
+    <div class="entity-card reveal">
+      <div class="entity-icon">◈</div>
+      <h3>Magos</h3>
+      <div class="entity-type">Anime · Alquimia</div>
+    </div>
+    <div class="entity-card reveal">
+      <div class="entity-icon">🛡</div>
+      <h3>Ciberseguridad</h3>
+      <div class="entity-type">Defensa · Protocolos</div>
+    </div>
+    <div class="entity-card reveal">
+      <div class="entity-icon">⚖</div>
+      <h3>Abogados</h3>
+      <div class="entity-type">Leyes · Orden Cósmico</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="countdown reveal" id="countdown"></div>
+  <h2 class="reveal">Este 14 de febrero<br><span>cruzá al otro lado.</span></h2>
+  <p class="reveal">LA REALIDAD ES SOLO UNA DE LAS OPCIONES.</p>
+  <div class="reveal">
+    <a href="https://wa.me/50433526970" target="_blank" class="btn-dark">CRUZAR EL UMBRAL</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a href="https://mividacomoluna.com">MIVIDACOMOLUNA</a> · POWERED BY <a href="https://lempyra.com">LEMPYRΛ</a>
+  </div>
+  <div class="footer-links">
+    <a href="https://mividacomoluna.com">Universo Alterno</a>
+    <a href="https://lempyra.com">Infraestructura</a>
+    <a href="https://wa.me/50433526970" target="_blank">Contacto</a>
+  </div>
+  <p class="footer-copy">© 2025 LEMPYRΛ · QUANTUM-SECURED CLOUD INFRASTRUCTURE</p>
+</footer>
+
+<script>
+  // COUNTDOWN
+  function updateCountdown() {
+    const valentine = new Date('2025-02-14T00:00:00-06:00');
+    const now = new Date();
+    const diff = valentine - now;
+
+    if (diff <= 0) {
+      document.getElementById('countdown').innerHTML = '<span>DARK VALENTINE</span> · AHORA';
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    document.getElementById('countdown').innerHTML =
+      `<span>${days}</span> DÍAS · <span>${hours}</span> HRS · <span>${mins}</span> MIN`;
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 60000);
+
+  // SCROLL REVEAL
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
