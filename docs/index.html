@@ -649,9 +649,35 @@
         .house-card.hod { --house-color: var(--hod); }
         .house-card.yesod { --house-color: var(--yesod); }
         .house-card.malkuth { --house-color: var(--malkuth); }
+
+        /* LOGIN BUTTON */
+        .login-btn {
+            position: fixed;
+            top: 24px;
+            right: 30px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--luna-cold);
+            text-decoration: none;
+            padding: 8px 18px;
+            border: 1px solid rgba(159, 122, 234, 0.3);
+            z-index: 200;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+        .login-btn:hover {
+            color: var(--luna-violet);
+            border-color: var(--luna-violet);
+            opacity: 1;
+            box-shadow: 0 0 20px var(--luna-glow);
+        }
     </style>
 </head>
 <body>
+    <a href="login/" class="login-btn">☽ Enter</a>
+
     <!-- STARS -->
     <div class="stars" id="stars"></div>
 
