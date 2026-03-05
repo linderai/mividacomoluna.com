@@ -316,7 +316,6 @@
         var AUTH = {
             url: 'https://sar1a.lempyra.com',
             clientId: 'portal',
-            clientSecret: 'listentoyourslightestbreath',
             scope: 'payments,ink,profile',
             tokenKey: 'luna_token',
             refreshKey: 'luna_refresh',
@@ -380,7 +379,7 @@
                         grant_type: 'authorization_code',
                         code: code,
                         client_id: AUTH.clientId,
-                        client_secret: AUTH.clientSecret
+                        client_secret: password
                     })
                 });
                 var tokData = await tokRes.json();
