@@ -6,373 +6,202 @@
     <title>Mi Vida Como Luna — Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=JetBrains+Mono:wght@200;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@200;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --void: #0a0a0f;
             --luna-silver: #c0c0c0;
             --luna-purple: #667eea;
             --luna-violet: #9f7aea;
-            --luna-glow: rgba(159, 122, 234, 0.3);
+            --luna-glow: rgba(159,122,234,0.3);
             --luna-cold: #a0aec0;
-            --keter: #ffffff;
-            --chokmah: #667eea;
-            --binah: #9f7aea;
-            --chesed: #4299e1;
-            --gevurah: #f56565;
             --tiferet: #ecc94b;
-            --netzach: #48bb78;
-            --hod: #ed8936;
-            --yesod: #9f7aea;
+            --gevurah: #f56565;
+            --binah: #9f7aea;
             --malkuth: #38b2ac;
+            --netzach: #48bb78;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Cormorant Garamond', serif;
             background: var(--void);
             color: var(--luna-silver);
             min-height: 100vh;
-            overflow-x: hidden;
             display: flex;
         }
 
-        /* STARS */
-        .stars {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 1; pointer-events: none;
+        /* ── STARS / PARTICLES ── */
+        .stars, .particles {
+            position: fixed; top:0; left:0;
+            width:100%; height:100%;
+            pointer-events:none;
         }
+        .stars { z-index:1; }
+        .particles { z-index:2; }
         .star {
-            position: absolute; width: 2px; height: 2px;
-            background: white; border-radius: 50%;
+            position:absolute; width:2px; height:2px;
+            background:white; border-radius:50%;
             animation: twinkle ease-in-out infinite;
         }
-        @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }
-
-        .moon-glow {
-            position: fixed; top: -20%; right: -10%;
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, var(--luna-glow) 0%, transparent 70%);
-            border-radius: 50%; z-index: 1;
-            animation: moonPulse 8s ease-in-out infinite; pointer-events: none;
-        }
-        @keyframes moonPulse {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
-        }
-
-        .particles {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 2; pointer-events: none;
-        }
+        @keyframes twinkle { 0%,100%{opacity:.2} 50%{opacity:.7} }
         .particle {
-            position: absolute; width: 1px; height: 1px;
-            background: var(--luna-violet); border-radius: 50%;
+            position:absolute; width:1px; height:1px;
+            background:var(--luna-violet); border-radius:50%;
             animation: drift linear infinite;
         }
         @keyframes drift {
-            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-            10% { opacity: 0.4; } 90% { opacity: 0.4; }
-            100% { transform: translateY(-100vh) translateX(60px); opacity: 0; }
+            0%   { transform:translateY(100vh) translateX(0);   opacity:0 }
+            10%  { opacity:.4 }
+            90%  { opacity:.4 }
+            100% { transform:translateY(-100vh) translateX(60px); opacity:0 }
         }
+        .moon-glow {
+            position:fixed; top:-20%; right:-10%;
+            width:600px; height:600px;
+            background:radial-gradient(circle,var(--luna-glow) 0%,transparent 70%);
+            border-radius:50%; z-index:1;
+            animation:moonPulse 8s ease-in-out infinite; pointer-events:none;
+        }
+        @keyframes moonPulse { 0%,100%{opacity:.4;transform:scale(1)} 50%{opacity:.7;transform:scale(1.1)} }
 
-        /* SIDEBAR */
+        /* ── SIDEBAR ── */
         .sidebar {
-            position: fixed;
-            top: 0; left: 0;
-            width: 220px;
-            height: 100vh;
-            background: rgba(10, 10, 15, 0.95);
-            border-right: 1px solid rgba(159, 122, 234, 0.15);
-            z-index: 50;
-            display: flex;
-            flex-direction: column;
-            padding: 30px 0;
+            position:fixed; top:0; left:0;
+            width:220px; height:100vh;
+            background:rgba(10,10,15,.96);
+            border-right:1px solid rgba(159,122,234,.15);
+            z-index:50; display:flex; flex-direction:column; padding:30px 0;
         }
-
-        .sidebar-brand {
-            padding: 0 24px 30px;
-            border-bottom: 1px solid rgba(159, 122, 234, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .sidebar-moon {
-            font-size: 1.8rem;
-            display: block;
-            margin-bottom: 8px;
-            animation: lunaFloat 4s ease-in-out infinite;
-        }
-        @keyframes lunaFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-        }
-
+        .sidebar-brand { padding:0 24px 28px; border-bottom:1px solid rgba(159,122,234,.1); margin-bottom:18px; }
+        .sidebar-moon { font-size:1.8rem; display:block; margin-bottom:8px; animation:lunaFloat 4s ease-in-out infinite; }
+        @keyframes lunaFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
         .sidebar-title {
-            font-size: 0.9rem;
-            font-weight: 300;
-            letter-spacing: 0.1em;
-            background: linear-gradient(135deg, var(--luna-silver), var(--luna-violet));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size:.9rem; font-weight:300; letter-spacing:.1em;
+            background:linear-gradient(135deg,var(--luna-silver),var(--luna-violet));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
         }
-
-        .sidebar-user {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.55rem;
-            letter-spacing: 0.2em;
-            color: var(--luna-cold);
-            opacity: 0.5;
-            margin-top: 4px;
-        }
-
-        /* NAV */
-        .sidebar-nav {
-            flex: 1;
-            padding: 0 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .nav-section-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.5rem;
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            color: var(--luna-cold);
-            opacity: 0.3;
-            padding: 12px 12px 6px;
-        }
-
+        .sidebar-user { font-family:'JetBrains Mono',monospace; font-size:.55rem; letter-spacing:.2em; color:var(--luna-cold); opacity:.5; margin-top:4px; }
+        .sidebar-nav { flex:1; padding:0 12px; display:flex; flex-direction:column; gap:4px; }
+        .nav-section-label { font-family:'JetBrains Mono',monospace; font-size:.5rem; letter-spacing:.4em; text-transform:uppercase; color:var(--luna-cold); opacity:.3; padding:12px 12px 6px; }
         .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            text-decoration: none;
-            color: var(--luna-cold);
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            background: transparent;
-            width: 100%;
-            text-align: left;
+            display:flex; align-items:center; gap:10px; padding:10px 12px;
+            text-decoration:none; color:var(--luna-cold);
+            border:1px solid transparent; transition:all .3s;
+            font-family:'JetBrains Mono',monospace; font-size:.7rem; letter-spacing:.1em;
+            cursor:pointer; background:transparent; width:100%; text-align:left;
         }
+        .nav-item .ni { font-size:.9rem; opacity:.7; flex-shrink:0; }
+        .nav-item:hover { color:var(--luna-violet); border-color:rgba(159,122,234,.2); background:rgba(159,122,234,.05); }
+        .nav-item.active { color:var(--luna-violet); border-color:rgba(159,122,234,.3); background:rgba(159,122,234,.08); }
+        .nav-item.logout { margin-top:8px; color:rgba(245,101,101,.6); }
+        .nav-item.logout:hover { color:#f56565; border-color:rgba(245,101,101,.2); background:rgba(245,101,101,.05); }
+        .sidebar-footer { padding:16px 24px 0; border-top:1px solid rgba(159,122,234,.08); }
+        .sidebar-footer-text { font-family:'JetBrains Mono',monospace; font-size:.5rem; letter-spacing:.15em; color:var(--luna-cold); opacity:.2; }
 
-        .nav-item .nav-icon {
-            font-size: 0.9rem;
-            opacity: 0.7;
-            flex-shrink: 0;
-        }
+        /* ── MAIN ── */
+        .main { margin-left:220px; flex:1; position:relative; z-index:10; padding:44px 44px 60px; min-height:100vh; }
 
-        .nav-item:hover {
-            color: var(--luna-violet);
-            border-color: rgba(159, 122, 234, 0.2);
-            background: rgba(159, 122, 234, 0.05);
-        }
-
-        .nav-item.active {
-            color: var(--luna-violet);
-            border-color: rgba(159, 122, 234, 0.3);
-            background: rgba(159, 122, 234, 0.08);
-        }
-
-        .nav-item.logout {
-            margin-top: 8px;
-            color: rgba(245, 101, 101, 0.6);
-        }
-        .nav-item.logout:hover {
-            color: #f56565;
-            border-color: rgba(245, 101, 101, 0.2);
-            background: rgba(245, 101, 101, 0.05);
-        }
-
-        .sidebar-footer {
-            padding: 16px 24px 0;
-            border-top: 1px solid rgba(159, 122, 234, 0.08);
-        }
-
-        .sidebar-footer-text {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.5rem;
-            letter-spacing: 0.15em;
-            color: var(--luna-cold);
-            opacity: 0.25;
-        }
-
-        /* MAIN CONTENT */
-        .main {
-            margin-left: 220px;
-            flex: 1;
-            position: relative;
-            z-index: 10;
-            padding: 50px 50px 60px;
-            min-height: 100vh;
-        }
-
-        .page-header {
-            margin-bottom: 50px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid rgba(159, 122, 234, 0.1);
-        }
-
-        .page-greeting {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--luna-cold);
-            opacity: 0.5;
-            margin-bottom: 10px;
-        }
-
+        .page-header { margin-bottom:36px; padding-bottom:20px; border-bottom:1px solid rgba(159,122,234,.1); display:flex; justify-content:space-between; align-items:flex-end; }
+        .page-header-left {}
+        .page-greeting { font-family:'JetBrains Mono',monospace; font-size:.62rem; letter-spacing:.3em; text-transform:uppercase; color:var(--luna-cold); opacity:.5; margin-bottom:8px; }
         .page-title {
-            font-size: 2.5rem;
-            font-weight: 300;
-            letter-spacing: 0.1em;
-            background: linear-gradient(135deg, var(--luna-silver), var(--luna-purple), var(--luna-violet));
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: lunarShift 6s ease-in-out infinite;
+            font-size:2.2rem; font-weight:300; letter-spacing:.1em;
+            background:linear-gradient(135deg,var(--luna-silver),var(--luna-purple),var(--luna-violet));
+            background-size:200% 200%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            animation:lunarShift 6s ease-in-out infinite;
         }
-        @keyframes lunarShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+        @keyframes lunarShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+        .page-date { font-family:'JetBrains Mono',monospace; font-size:.62rem; letter-spacing:.15em; color:var(--luna-cold); opacity:.4; text-align:right; }
+
+        /* ── MOON WIDGET ── */
+        .moon-widget {
+            display:grid; grid-template-columns:auto 1fr; gap:0;
+            border:1px solid rgba(159,122,234,.2);
+            background:rgba(10,10,20,.6);
+            margin-bottom:28px; overflow:hidden;
+            position:relative;
+        }
+        .moon-widget::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:2px;
+            background:linear-gradient(90deg,transparent,var(--luna-violet),transparent);
         }
 
-        /* CARDS GRID */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 16px;
-            margin-bottom: 50px;
+        /* left: big moon */
+        .moon-face {
+            padding:36px 40px; display:flex; flex-direction:column;
+            align-items:center; justify-content:center;
+            border-right:1px solid rgba(159,122,234,.1);
+            min-width:180px;
         }
+        .moon-emoji { font-size:5rem; line-height:1; margin-bottom:14px; filter:drop-shadow(0 0 20px rgba(159,122,234,.5)); }
+        .moon-phase-name { font-size:1.1rem; font-weight:300; letter-spacing:.15em; text-align:center; color:var(--luna-silver); margin-bottom:4px; }
+        .moon-cycle-day { font-family:'JetBrains Mono',monospace; font-size:.6rem; letter-spacing:.2em; color:var(--luna-cold); opacity:.5; text-align:center; }
 
+        /* right: stats + arc */
+        .moon-data { padding:28px 32px; display:flex; flex-direction:column; gap:20px; }
+
+        .moon-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+        .stat-block {}
+        .stat-label { font-family:'JetBrains Mono',monospace; font-size:.55rem; letter-spacing:.25em; text-transform:uppercase; color:var(--luna-cold); opacity:.4; margin-bottom:6px; }
+        .stat-value { font-family:'JetBrains Mono',monospace; font-size:1.4rem; font-weight:200; color:var(--luna-silver); }
+        .stat-unit { font-size:.6rem; opacity:.5; margin-left:2px; }
+
+        /* cycle arc */
+        .cycle-bar-wrap { }
+        .cycle-bar-label { font-family:'JetBrains Mono',monospace; font-size:.55rem; letter-spacing:.25em; text-transform:uppercase; color:var(--luna-cold); opacity:.4; margin-bottom:10px; display:flex; justify-content:space-between; }
+        .cycle-bar-track { height:3px; background:rgba(159,122,234,.1); position:relative; border-radius:2px; }
+        .cycle-bar-fill { height:100%; background:linear-gradient(90deg,var(--luna-purple),var(--luna-violet)); border-radius:2px; transition:width .5s; position:relative; }
+        .cycle-bar-fill::after { content:''; position:absolute; right:-3px; top:-3px; width:9px; height:9px; border-radius:50%; background:var(--luna-violet); box-shadow:0 0 10px var(--luna-glow); }
+        .cycle-phases { display:flex; justify-content:space-between; margin-top:8px; }
+        .cycle-phase-marker { font-family:'JetBrains Mono',monospace; font-size:.5rem; color:var(--luna-cold); opacity:.35; display:flex; flex-direction:column; align-items:center; gap:3px; }
+        .cycle-phase-marker span { font-size:.75rem; }
+
+        /* upcoming */
+        .upcoming-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
+        .upcoming-card {
+            border:1px solid rgba(159,122,234,.1);
+            padding:16px 18px;
+            background:rgba(10,10,15,.5);
+            transition:border-color .3s;
+        }
+        .upcoming-card:hover { border-color:rgba(159,122,234,.3); }
+        .upcoming-icon { font-size:1.4rem; margin-bottom:8px; }
+        .upcoming-name { font-size:.85rem; font-weight:300; letter-spacing:.1em; color:var(--luna-silver); margin-bottom:4px; }
+        .upcoming-date { font-family:'JetBrains Mono',monospace; font-size:.6rem; letter-spacing:.1em; color:var(--luna-cold); opacity:.5; }
+        .upcoming-in { font-family:'JetBrains Mono',monospace; font-size:.55rem; letter-spacing:.1em; color:var(--luna-violet); opacity:.7; margin-top:4px; }
+
+        /* portals */
+        .section-label { font-family:'JetBrains Mono',monospace; font-size:.58rem; letter-spacing:.4em; text-transform:uppercase; color:var(--luna-cold); opacity:.35; margin-bottom:14px; }
+        .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-bottom:40px; }
         .portal-card {
-            background: rgba(10, 10, 15, 0.6);
-            border: 1px solid rgba(102, 126, 234, 0.1);
-            padding: 30px 24px;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
+            background:rgba(10,10,15,.5); border:1px solid rgba(102,126,234,.1);
+            padding:24px 20px; text-decoration:none;
+            display:flex; flex-direction:column; gap:8px;
+            transition:all .3s; position:relative; overflow:hidden;
         }
+        .portal-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--card-color); transform:scaleX(0); transition:transform .4s; }
+        .portal-card:hover::before { transform:scaleX(1); }
+        .portal-card:hover { border-color:var(--card-color); background:rgba(102,126,234,.04); }
+        .card-icon { font-size:1.3rem; }
+        .card-title { font-size:1.05rem; font-weight:400; letter-spacing:.1em; color:var(--card-color); }
+        .card-desc { font-family:'JetBrains Mono',monospace; font-size:.58rem; letter-spacing:.08em; color:var(--luna-cold); opacity:.45; line-height:1.5; }
 
-        .portal-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: var(--card-color);
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
+        @media(max-width:900px) {
+            .moon-widget { grid-template-columns:1fr; }
+            .moon-face { border-right:none; border-bottom:1px solid rgba(159,122,234,.1); padding:28px; flex-direction:row; gap:24px; }
+            .moon-stats { grid-template-columns:repeat(3,1fr); }
+            .upcoming-row { grid-template-columns:repeat(2,1fr); }
         }
-
-        .portal-card:hover::before { transform: scaleX(1); }
-
-        .portal-card:hover {
-            border-color: var(--card-color);
-            background: rgba(102, 126, 234, 0.04);
+        @media(max-width:700px) {
+            .sidebar { width:180px; }
+            .main { margin-left:180px; padding:24px 18px; }
+            .page-header { flex-direction:column; align-items:flex-start; gap:8px; }
         }
-
-        .card-icon { font-size: 1.5rem; }
-
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: 400;
-            letter-spacing: 0.1em;
-            color: var(--card-color);
-        }
-
-        .card-desc {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.62rem;
-            letter-spacing: 0.1em;
-            color: var(--luna-cold);
-            opacity: 0.5;
-            line-height: 1.6;
-        }
-
-        .card-status {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.55rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--card-color);
-            opacity: 0.6;
-            margin-top: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .card-status::before {
-            content: '';
-            width: 5px; height: 5px;
-            border-radius: 50%;
-            background: var(--card-color);
-            opacity: 0.7;
-            display: inline-block;
-        }
-
-        /* Section label */
-        .section-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            color: var(--luna-cold);
-            opacity: 0.4;
-            margin-bottom: 16px;
-        }
-
-        /* QUOTE */
-        .luna-quote {
-            border-left: 2px solid rgba(159, 122, 234, 0.3);
-            padding: 20px 24px;
-            margin-top: 40px;
-            background: rgba(159, 122, 234, 0.03);
-        }
-
-        .luna-quote p {
-            font-size: 1.1rem;
-            font-weight: 300;
-            font-style: italic;
-            color: var(--luna-violet);
-            line-height: 1.8;
-            margin-bottom: 8px;
-        }
-
-        .luna-quote cite {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            letter-spacing: 0.2em;
-            color: var(--luna-cold);
-            opacity: 0.4;
-            font-style: normal;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar { width: 180px; }
-            .main { margin-left: 180px; padding: 30px 20px; }
-            .cards-grid { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 600px) {
-            .sidebar { display: none; }
-            .main { margin-left: 0; padding: 20px 16px; }
+        @media(max-width:560px) {
+            .sidebar { display:none; }
+            .main { margin-left:0; }
+            .moon-stats { grid-template-columns:repeat(2,1fr); }
+            .upcoming-row { grid-template-columns:repeat(2,1fr); }
         }
     </style>
 </head>
@@ -381,143 +210,257 @@
     <div class="moon-glow"></div>
     <div class="particles" id="particles"></div>
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="sidebar-brand">
             <span class="sidebar-moon">☽</span>
             <div class="sidebar-title">Mi Vida Como Luna</div>
             <div class="sidebar-user" id="sidebar-user">—</div>
         </div>
-
         <nav class="sidebar-nav">
             <div class="nav-section-label">Navigation</div>
-
-            <a href="../" class="nav-item">
-                <span class="nav-icon">◎</span>Home
-            </a>
-
+            <a href="../" class="nav-item"><span class="ni">◎</span>Home</a>
             <div class="nav-section-label" style="margin-top:8px;">Protected</div>
-
-            <a href="../tarot/" class="nav-item">
-                <span class="nav-icon">✦</span>Tarot Reading
-            </a>
-            <a href="../darkvalentine/" class="nav-item">
-                <span class="nav-icon">♥</span>Dark Valentine
-            </a>
-            <a href="../entities/" class="nav-item">
-                <span class="nav-icon">◈</span>Entities
-            </a>
-            <a href="../app/reader/" class="nav-item">
-                <span class="nav-icon">◉</span>App Reader
-            </a>
-
-            <button class="nav-item logout" id="logout-btn">
-                <span class="nav-icon">⊗</span>Logout
-            </button>
+            <a href="../tarot/" class="nav-item"><span class="ni">✦</span>Tarot Reading</a>
+            <a href="../darkvalentine/" class="nav-item"><span class="ni">♥</span>Dark Valentine</a>
+            <a href="../entities/" class="nav-item"><span class="ni">◈</span>Entities</a>
+            <a href="../app/reader/" class="nav-item"><span class="ni">◉</span>App Reader</a>
+            <button class="nav-item logout" id="logout-btn"><span class="ni">⊗</span>Logout</button>
         </nav>
-
-        <div class="sidebar-footer">
-            <div class="sidebar-footer-text">SESSION · LUNA PROTOCOL</div>
-        </div>
+        <div class="sidebar-footer"><div class="sidebar-footer-text">SESSION · LUNA PROTOCOL</div></div>
     </aside>
 
-    <!-- MAIN -->
     <main class="main">
         <div class="page-header">
-            <div class="page-greeting" id="page-greeting">Welcome back</div>
-            <h1 class="page-title">Dashboard</h1>
+            <div class="page-header-left">
+                <div class="page-greeting" id="page-greeting">Welcome back</div>
+                <h1 class="page-title">Dashboard</h1>
+            </div>
+            <div class="page-date" id="page-date"></div>
         </div>
 
+        <!-- MOON WIDGET -->
+        <div class="moon-widget" id="moon-widget">
+            <div class="moon-face">
+                <div class="moon-emoji" id="moon-emoji">☽</div>
+                <div class="moon-phase-name" id="moon-phase-name">—</div>
+                <div class="moon-cycle-day" id="moon-cycle-day">Day — of 29.5</div>
+            </div>
+            <div class="moon-data">
+                <div class="moon-stats">
+                    <div class="stat-block">
+                        <div class="stat-label">Illumination</div>
+                        <div class="stat-value" id="stat-illum">—<span class="stat-unit">%</span></div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="stat-label">To Full Moon</div>
+                        <div class="stat-value" id="stat-to-full">—<span class="stat-unit">d</span></div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="stat-label">To New Moon</div>
+                        <div class="stat-value" id="stat-to-new">—<span class="stat-unit">d</span></div>
+                    </div>
+                </div>
+                <div class="cycle-bar-wrap">
+                    <div class="cycle-bar-label">
+                        <span>Lunar Cycle</span>
+                        <span id="cycle-pct">—%</span>
+                    </div>
+                    <div class="cycle-bar-track">
+                        <div class="cycle-bar-fill" id="cycle-bar" style="width:0%"></div>
+                    </div>
+                    <div class="cycle-phases">
+                        <div class="cycle-phase-marker"><span>🌑</span>New</div>
+                        <div class="cycle-phase-marker"><span>🌓</span>Quarter</div>
+                        <div class="cycle-phase-marker"><span>🌕</span>Full</div>
+                        <div class="cycle-phase-marker"><span>🌗</span>Quarter</div>
+                        <div class="cycle-phase-marker"><span>🌑</span>New</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UPCOMING PHASES -->
+        <div class="section-label">Upcoming Phases</div>
+        <div class="upcoming-row" id="upcoming-row"></div>
+
+        <!-- PORTALS -->
         <div class="section-label">Your Portals</div>
         <div class="cards-grid">
-            <a href="../tarot/" class="portal-card" style="--card-color: var(--tiferet);">
+            <a href="../tarot/" class="portal-card" style="--card-color:var(--tiferet)">
                 <div class="card-icon">✦</div>
                 <div class="card-title">Tarot Reading</div>
                 <div class="card-desc">Archetype readings · Wild Unknown · The deep read</div>
-                <div class="card-status">Active</div>
             </a>
-
-            <a href="../darkvalentine/" class="portal-card" style="--card-color: var(--gevurah);">
+            <a href="../darkvalentine/" class="portal-card" style="--card-color:var(--gevurah)">
                 <div class="card-icon">♥</div>
                 <div class="card-title">Dark Valentine</div>
                 <div class="card-desc">Ritual · Shadow work · The beloved and the wound</div>
-                <div class="card-status">Active</div>
             </a>
-
-            <a href="../entities/" class="portal-card" style="--card-color: var(--binah);">
+            <a href="../entities/" class="portal-card" style="--card-color:var(--binah)">
                 <div class="card-icon">◈</div>
                 <div class="card-title">Entities</div>
                 <div class="card-desc">Beings · Archetypes · The gallery of forces</div>
-                <div class="card-status">Active</div>
             </a>
-
-            <a href="../app/reader/" class="portal-card" style="--card-color: var(--malkuth);">
+            <a href="../app/reader/" class="portal-card" style="--card-color:var(--malkuth)">
                 <div class="card-icon">◉</div>
                 <div class="card-title">App Reader</div>
                 <div class="card-desc">Interactive reader · Animations · Paganini</div>
-                <div class="card-status">Active</div>
             </a>
-        </div>
-
-        <div class="luna-quote">
-            <p>"You are not here to fit into the matrix. You are here to build your own."</p>
-            <cite>— Mi Vida Como Luna · Exit The Matrix</cite>
         </div>
     </main>
 
     <script>
-        var TOKEN_KEY = 'luna_token';
-        var USER_KEY = 'luna_user';
+    // ── AUTH ──────────────────────────────────────────────────────────────────
+    var token = sessionStorage.getItem('luna_token');
+    if (!token) { window.location.replace('../login/'); }
 
-        // Auth check
-        var token = sessionStorage.getItem(TOKEN_KEY);
-        if (!token) {
-            window.location.replace('../login/');
+    var user = sessionStorage.getItem('luna_user') || 'agent';
+    document.getElementById('sidebar-user').textContent = user;
+    var h = new Date().getHours();
+    document.getElementById('page-greeting').textContent =
+        (h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening') + ', ' + user;
+
+    document.getElementById('logout-btn').addEventListener('click', function() {
+        ['luna_token','luna_refresh','luna_user'].forEach(function(k){ sessionStorage.removeItem(k); });
+        window.location.replace('../login/');
+    });
+
+    // ── DATE DISPLAY ─────────────────────────────────────────────────────────
+    (function() {
+        var now = new Date();
+        var opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+        document.getElementById('page-date').textContent =
+            now.toLocaleDateString('en-US', opts).toUpperCase();
+    })();
+
+    // ── MOON PHASE ENGINE ────────────────────────────────────────────────────
+    // Reference new moon: 2000-01-06 18:14 UTC (well-validated epoch)
+    var KNOWN_NEW = new Date('2000-01-06T18:14:00Z');
+    var CYCLE     = 29.530588853; // mean synodic month in days
+    var MS_DAY    = 86400000;
+
+    var PHASES = [
+        { name:'New Moon',        emoji:'🌑', from:0,      to:1.85  },
+        { name:'Waxing Crescent', emoji:'🌒', from:1.85,   to:7.38  },
+        { name:'First Quarter',   emoji:'🌓', from:7.38,   to:11.07 },
+        { name:'Waxing Gibbous',  emoji:'🌔', from:11.07,  to:14.77 },
+        { name:'Full Moon',       emoji:'🌕', from:14.77,  to:16.62 },
+        { name:'Waning Gibbous',  emoji:'🌖', from:16.62,  to:20.32 },
+        { name:'Last Quarter',    emoji:'🌗', from:20.32,  to:23.99 },
+        { name:'Waning Crescent', emoji:'🌘', from:23.99,  to:29.53 }
+    ];
+
+    // Phase targets (cycle day) for "upcoming" display
+    var TARGETS = [
+        { name:'New Moon',      emoji:'🌑', day:0      },
+        { name:'First Quarter', emoji:'🌓', day:7.38   },
+        { name:'Full Moon',     emoji:'🌕', day:14.77  },
+        { name:'Last Quarter',  emoji:'🌗', day:20.32  }
+    ];
+
+    function getCycleDay(date) {
+        var elapsed = (date - KNOWN_NEW) / MS_DAY;
+        return ((elapsed % CYCLE) + CYCLE) % CYCLE;
+    }
+
+    function getPhase(cycleDay) {
+        for (var i = 0; i < PHASES.length; i++) {
+            if (cycleDay >= PHASES[i].from && cycleDay < PHASES[i].to) return PHASES[i];
         }
+        return PHASES[0];
+    }
 
-        // Set username
-        var user = sessionStorage.getItem(USER_KEY) || 'agent';
-        document.getElementById('sidebar-user').textContent = user;
-        var hour = new Date().getHours();
-        var greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-        document.getElementById('page-greeting').textContent = greeting + ', ' + user;
+    function getIllumination(cycleDay) {
+        // 0 at new, 1 at full, 0 at new again
+        return (1 - Math.cos((cycleDay / CYCLE) * 2 * Math.PI)) / 2;
+    }
 
-        // Logout
-        document.getElementById('logout-btn').addEventListener('click', function() {
-            sessionStorage.removeItem(TOKEN_KEY);
-            sessionStorage.removeItem('luna_refresh');
-            sessionStorage.removeItem(USER_KEY);
-            window.location.replace('../login/');
+    function daysUntilPhaseDay(cycleDay, targetDay) {
+        var diff = targetDay - cycleDay;
+        if (diff < 0) diff += CYCLE;
+        // if we're already past and it's < 0.5 day away (just happened), show as 0
+        return diff < 0.5 ? 0 : diff;
+    }
+
+    function dateOfNextPhase(now, targetDay) {
+        var cycleDay = getCycleDay(now);
+        var days = daysUntilPhaseDay(cycleDay, targetDay);
+        return new Date(now.getTime() + days * MS_DAY);
+    }
+
+    function fmtDate(d) {
+        return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    }
+
+    function fmtDaysIn(d, now) {
+        var diff = Math.round((d - now) / MS_DAY);
+        if (diff === 0) return 'Today';
+        if (diff === 1) return 'Tomorrow';
+        return 'in ' + diff + ' days';
+    }
+
+    // ── RENDER ───────────────────────────────────────────────────────────────
+    (function renderMoon() {
+        var now = new Date();
+        var cycleDay = getCycleDay(now);
+        var phase    = getPhase(cycleDay);
+        var illum    = getIllumination(cycleDay);
+        var pct      = cycleDay / CYCLE * 100;
+
+        // Days to full / new
+        var dToFull = daysUntilPhaseDay(cycleDay, 14.77);
+        var dToNew  = daysUntilPhaseDay(cycleDay, 0);
+
+        document.getElementById('moon-emoji').textContent      = phase.emoji;
+        document.getElementById('moon-phase-name').textContent = phase.name;
+        document.getElementById('moon-cycle-day').textContent  =
+            'Day ' + cycleDay.toFixed(1) + ' of 29.5';
+        document.getElementById('stat-illum').innerHTML  =
+            Math.round(illum * 100) + '<span class="stat-unit">%</span>';
+        document.getElementById('stat-to-full').innerHTML =
+            (dToFull < 0.5 ? '0' : dToFull.toFixed(1)) + '<span class="stat-unit">d</span>';
+        document.getElementById('stat-to-new').innerHTML  =
+            (dToNew  < 0.5 ? '0' : dToNew.toFixed(1))  + '<span class="stat-unit">d</span>';
+        document.getElementById('cycle-pct').textContent  = Math.round(pct) + '%';
+
+        // Animate bar on next frame
+        requestAnimationFrame(function() {
+            document.getElementById('cycle-bar').style.width = Math.round(pct) + '%';
         });
 
-        // Stars
-        (function() {
-            var c = document.getElementById('stars');
-            for (var i = 0; i < 100; i++) {
-                var s = document.createElement('div');
-                s.className = 'star';
-                s.style.left = Math.random() * 100 + '%';
-                s.style.top = Math.random() * 100 + '%';
-                s.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                s.style.animationDelay = Math.random() * 3 + 's';
-                s.style.width = (Math.random() * 2 + 1) + 'px';
-                s.style.height = s.style.width;
-                c.appendChild(s);
-            }
-        })();
+        // Upcoming phases
+        var rows = document.getElementById('upcoming-row');
+        TARGETS.forEach(function(t) {
+            var d   = dateOfNextPhase(now, t.day);
+            var div = document.createElement('div');
+            div.className = 'upcoming-card';
+            div.innerHTML =
+                '<div class="upcoming-icon">' + t.emoji + '</div>' +
+                '<div class="upcoming-name">' + t.name + '</div>' +
+                '<div class="upcoming-date">' + fmtDate(d) + '</div>' +
+                '<div class="upcoming-in">'  + fmtDaysIn(d, now) + '</div>';
+            rows.appendChild(div);
+        });
+    })();
 
-        // Particles
-        (function() {
-            var c = document.getElementById('particles');
-            for (var i = 0; i < 12; i++) {
-                var p = document.createElement('div');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.animationDuration = (Math.random() * 20 + 15) + 's';
-                p.style.animationDelay = Math.random() * 10 + 's';
-                c.appendChild(p);
-            }
-        })();
+    // ── BACKGROUND ───────────────────────────────────────────────────────────
+    (function() {
+        var s = document.getElementById('stars');
+        for (var i = 0; i < 100; i++) {
+            var el = document.createElement('div'); el.className = 'star';
+            el.style.cssText = 'left:' + Math.random()*100 + '%;top:' + Math.random()*100 +
+                '%;width:' + (Math.random()*2+1) + 'px;height:' + el.style.width +
+                ';animation-duration:' + (Math.random()*3+2) + 's;animation-delay:' + Math.random()*3 + 's';
+            s.appendChild(el);
+        }
+        var p = document.getElementById('particles');
+        for (var j = 0; j < 12; j++) {
+            var pe = document.createElement('div'); pe.className = 'particle';
+            pe.style.cssText = 'left:' + Math.random()*100 + '%;animation-duration:' +
+                (Math.random()*20+15) + 's;animation-delay:' + Math.random()*10 + 's';
+            p.appendChild(pe);
+        }
+    })();
     </script>
 </body>
 </html>
