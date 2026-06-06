@@ -1,448 +1,323 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="theme-blue">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://sar1a.lempyra.com; font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: blob:;">
-    <title>Mi Vida Como Luna — Access</title>
-<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <title>Mi Vida Como Luna · Login</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=JetBrains+Mono:wght@200;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Orbitron:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --void: #0a0a0f;
-            --luna-silver: #c0c0c0;
-            --luna-purple: #667eea;
-            --luna-violet: #9f7aea;
-            --luna-glow: rgba(159, 122, 234, 0.3);
-            --luna-cold: #a0aec0;
-            --keter: #ffffff;
-        }
+    :root{
+      --black:#0a0a0c; --void:#06060a; --surface:#101015; --raised:#16161c; --line:#1f1f28;
+      --text:#dcd9d5; --muted:#7a7780; --bone:#e8d8d0; --ash:#5c5862; --ok:#3df0a8;
+      --magenta:#ff2bd6; --magenta-dim:#aa1e92; --magenta-deep:#5a0e4d;
+      --moon:#c0c0c0;
+      --crimson:#a01228;
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+      --paired:#0099ff; --paired-soft:#3df0ff; --paired-dim:#0066aa; --paired-deep:#003366;
+      --paired-rgb:0,153,255;
+    }
+    html.theme-red{
+      --paired:#ff2929; --paired-soft:#ff6b6b; --paired-dim:#a00010; --paired-deep:#550000;
+      --paired-rgb:255,41,41;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Cormorant Garamond',Georgia,serif;color:var(--text);
+      font-size:16px;line-height:1.6;letter-spacing:0.2px;
+      background:var(--black);min-height:100vh;display:flex;align-items:center;justify-content:center;
+      padding:24px;position:relative;overflow-x:hidden;
+    }
+    .bg-image{
+      position:fixed;inset:0;z-index:-2;pointer-events:none;
+      background:url('../assets/Landing.jpg') center/cover no-repeat;
+    }
+    .bg-scrim{
+      position:fixed;inset:0;z-index:-1;pointer-events:none;
+      background:
+        radial-gradient(ellipse at top right,rgba(var(--paired-rgb),0.12),transparent 55%),
+        radial-gradient(ellipse at bottom left,rgba(255,43,214,0.09),transparent 55%),
+        linear-gradient(180deg,rgba(8,8,12,0.55) 0%,rgba(8,8,12,0.78) 50%,rgba(8,8,12,0.92) 100%);
+    }
+    .moon-halo{
+      position:fixed;top:-22%;right:-12%;width:680px;height:680px;
+      background:radial-gradient(circle,rgba(var(--paired-rgb),0.14) 0%,rgba(255,43,214,0.07) 35%,transparent 70%);
+      border-radius:50%;z-index:-1;pointer-events:none;animation:halo-pulse 12s ease-in-out infinite;
+    }
+    @keyframes halo-pulse{50%{opacity:0.7;transform:scale(1.05)}}
+    a{color:inherit;text-decoration:none}
+    button{font-family:'Orbitron',sans-serif;cursor:pointer;border:none;background:none;color:inherit}
 
-        body {
-            font-family: 'Cormorant Garamond', serif;
-            background: var(--void);
-            color: var(--luna-silver);
-            min-height: 100vh;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .home-link{
+      position:fixed;top:24px;left:28px;z-index:10;
+      font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+      font-size:15px;color:var(--bone);letter-spacing:0.5px;
+      display:inline-flex;align-items:center;gap:8px;opacity:0.85;transition:opacity 0.18s,color 0.18s;
+    }
+    .home-link:hover{opacity:1;color:var(--magenta)}
+    .home-link .g{color:var(--moon);font-size:18px;text-shadow:0 0 10px rgba(192,192,192,0.5)}
 
-        /* STARS */
-        .stars {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 1; pointer-events: none;
-        }
-        .star {
-            position: absolute;
-            width: 2px; height: 2px;
-            background: white; border-radius: 50%;
-            animation: twinkle ease-in-out infinite;
-        }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
+    .login-wrap{
+      width:100%;max-width:460px;position:relative;z-index:1;
+      animation:fade-up 1s ease backwards;
+    }
+    @keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-        /* MOON GLOW */
-        .moon-glow {
-            position: fixed;
-            top: -20%; right: -10%;
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, var(--luna-glow) 0%, transparent 70%);
-            border-radius: 50%;
-            z-index: 1;
-            animation: moonPulse 8s ease-in-out infinite;
-            pointer-events: none;
-        }
-        @keyframes moonPulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.1); }
-        }
+    .login-card{
+      background:rgba(10,10,14,0.72);backdrop-filter:blur(14px);
+      border:1px solid var(--magenta-deep);padding:48px 40px;position:relative;
+      box-shadow:0 0 50px rgba(0,0,0,0.7),0 0 80px rgba(255,43,214,0.08);
+      clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+    }
+    .login-card::before{content:'';position:absolute;top:-1px;left:30px;right:30px;height:1px;background:var(--magenta);box-shadow:0 0 10px var(--magenta)}
+    .login-card::after{content:'';position:absolute;bottom:-1px;left:30px;right:30px;height:1px;background:var(--paired);box-shadow:0 0 10px var(--paired)}
 
-        /* PARTICLES */
-        .particles {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 2; pointer-events: none;
-        }
-        .particle {
-            position: absolute;
-            width: 1px; height: 1px;
-            background: var(--luna-violet);
-            border-radius: 50%;
-            animation: drift linear infinite;
-        }
-        @keyframes drift {
-            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-            10% { opacity: 0.5; }
-            90% { opacity: 0.5; }
-            100% { transform: translateY(-100vh) translateX(80px); opacity: 0; }
-        }
+    .moon-icon{
+      font-size:42px;color:var(--moon);text-align:center;display:block;
+      text-shadow:0 0 20px rgba(192,192,192,0.5),0 0 40px rgba(var(--paired-rgb),0.3);
+      margin-bottom:18px;line-height:1;
+    }
+    .login-title{
+      font-family:'Cormorant Garamond',serif;font-weight:400;font-style:italic;
+      font-size:30px;color:var(--bone);text-align:center;letter-spacing:1px;
+      line-height:1.1;margin-bottom:6px;
+    }
+    .login-title .em{color:var(--magenta);font-style:italic}
+    .login-subtitle{
+      font-family:'Orbitron',sans-serif;font-weight:500;font-size:10px;letter-spacing:4px;
+      color:var(--paired-soft);text-transform:uppercase;text-align:center;margin-bottom:24px;
+    }
 
-        /* HOME LINK */
-        .home-link {
-            position: fixed;
-            top: 24px; left: 30px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--luna-cold);
-            text-decoration: none;
-            opacity: 0.5;
-            z-index: 100;
-            transition: opacity 0.3s;
-        }
-        .home-link:hover { opacity: 1; }
+    .status-bar{
+      display:flex;align-items:center;gap:10px;justify-content:center;
+      font-family:'Orbitron',sans-serif;font-weight:500;font-size:9px;letter-spacing:2.5px;
+      color:var(--muted);text-transform:uppercase;margin-bottom:24px;padding:8px 12px;
+      border:1px solid var(--line);background:rgba(6,6,10,0.6);
+    }
+    .dot{width:7px;height:7px;border-radius:50%;background:var(--ash);transition:background 0.3s,box-shadow 0.3s}
+    .dot.checking{background:var(--paired);box-shadow:0 0 8px var(--paired);animation:pulse 1.2s ease-in-out infinite}
+    .dot.online{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+    .dot.offline{background:var(--crimson);box-shadow:0 0 8px var(--crimson)}
+    @keyframes pulse{50%{opacity:0.45}}
 
-        /* LOGIN CARD */
-        .login-wrap {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 420px;
-            padding: 20px;
-        }
+    .field{margin-bottom:18px}
+    .field label{
+      display:block;font-family:'Orbitron',sans-serif;font-weight:600;font-size:9.5px;
+      letter-spacing:3px;color:var(--paired-soft);text-transform:uppercase;margin-bottom:8px;
+    }
+    .field input{
+      width:100%;background:rgba(6,6,10,0.7);border:1px solid var(--line);
+      color:var(--bone);font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;
+      padding:12px 14px;outline:none;transition:border-color 0.18s,box-shadow 0.18s;
+    }
+    .field input:focus{border-color:var(--magenta-dim);box-shadow:0 0 0 1px rgba(255,43,214,0.18)}
+    .field input::placeholder{color:var(--ash);font-style:italic}
 
-        .login-card {
-            background: rgba(10, 10, 15, 0.85);
-            border: 1px solid rgba(159, 122, 234, 0.2);
-            padding: 50px 40px 40px;
-            position: relative;
-            backdrop-filter: blur(10px);
-        }
+    #error-msg{
+      font-family:'Orbitron',sans-serif;font-weight:500;font-size:10px;letter-spacing:2px;
+      color:var(--crimson);text-transform:uppercase;min-height:18px;margin-bottom:8px;text-align:center;
+    }
 
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--luna-violet), transparent);
-        }
+    #submit-btn{
+      display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+      padding:14px 28px;
+      background:linear-gradient(180deg,rgba(255,43,214,0.18),rgba(170,30,146,0.06));
+      border:1px solid var(--magenta);color:var(--magenta);
+      font-family:'Orbitron',sans-serif;font-weight:700;font-size:12px;letter-spacing:4px;
+      text-transform:uppercase;transition:all 0.18s;
+      clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+    }
+    #submit-btn:hover:not(:disabled){background:var(--magenta);color:var(--black);box-shadow:0 0 22px rgba(255,43,214,0.5)}
+    #submit-btn:disabled{opacity:0.45;cursor:wait}
+    #submit-btn::before{content:'▶ ';opacity:0.9}
 
-        .moon-icon {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            animation: lunaFloat 4s ease-in-out infinite;
-        }
-        @keyframes lunaFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
+    .login-footer{
+      font-family:'Orbitron',sans-serif;font-weight:500;font-size:9px;letter-spacing:2.5px;
+      color:var(--ash);text-transform:uppercase;margin-top:22px;text-align:center;
+    }
 
-        .login-title {
-            text-align: center;
-            font-size: 1.6rem;
-            font-weight: 300;
-            letter-spacing: 0.2em;
-            background: linear-gradient(135deg, var(--luna-silver), var(--luna-purple), var(--luna-violet));
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: lunarShift 6s ease-in-out infinite;
-            margin-bottom: 8px;
-        }
-        @keyframes lunarShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
+    .theme-toggle{
+      position:fixed;top:22px;right:24px;z-index:10;
+      display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+      border:1px solid var(--ash);color:var(--bone);
+      font-family:'Orbitron',sans-serif;font-weight:600;font-size:9.5px;letter-spacing:2.5px;
+      text-transform:uppercase;transition:all 0.18s;
+    }
+    .theme-toggle:hover{border-color:var(--paired);color:var(--paired)}
+    .theme-toggle .tdot{width:7px;height:7px;border-radius:50%;background:var(--paired);box-shadow:0 0 7px var(--paired)}
 
-        .login-subtitle {
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            color: var(--luna-cold);
-            opacity: 0.5;
-            margin-bottom: 40px;
-        }
-
-        /* STATUS BAR */
-        .status-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 30px;
-            padding: 10px 14px;
-            border: 1px solid rgba(159, 122, 234, 0.1);
-            background: rgba(159, 122, 234, 0.03);
-        }
-
-        .dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .dot.checking { background: var(--luna-purple); animation: pulse 1.5s ease-in-out infinite; }
-        .dot.online { background: #48bb78; }
-        .dot.offline { background: #f56565; }
-        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-
-        #status-msg {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.62rem;
-            letter-spacing: 0.15em;
-            color: var(--luna-cold);
-            opacity: 0.7;
-        }
-
-        /* FORM */
-        .field {
-            margin-bottom: 16px;
-        }
-
-        .field label {
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--luna-cold);
-            opacity: 0.6;
-            margin-bottom: 8px;
-        }
-
-        .field input {
-            width: 100%;
-            background: rgba(159, 122, 234, 0.05);
-            border: 1px solid rgba(159, 122, 234, 0.2);
-            color: var(--luna-silver);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            padding: 12px 14px;
-            
-            transition: border-color 0.3s, box-shadow 0.3s;
-            -webkit-appearance: none;
-        }
-
-        .field input:focus {
-            border-color: var(--luna-violet);
-            box-shadow: 0 0 20px rgba(159, 122, 234, 0.1);
-        }
-
-        .field input::placeholder { opacity: 0.3; }
-
-        #error-msg {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: #f56565;
-            letter-spacing: 0.1em;
-            min-height: 20px;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-
-        #submit-btn {
-            width: 100%;
-            background: transparent;
-            border: 1px solid var(--luna-violet);
-            color: var(--luna-violet);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            padding: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        #submit-btn:hover:not(:disabled) {
-            background: var(--luna-violet);
-            color: var(--void);
-            box-shadow: 0 0 30px var(--luna-glow);
-        }
-
-        #submit-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .login-footer {
-            margin-top: 20px;
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.55rem;
-            letter-spacing: 0.2em;
-            color: var(--luna-cold);
-            opacity: 0.3;
-        }
+    @media(max-width:520px){
+      .login-card{padding:36px 24px}
+      .login-title{font-size:26px}
+      .home-link{top:16px;left:18px;font-size:13px}
+      .theme-toggle{top:14px;right:16px;padding:5px 9px;font-size:9px}
+    }
     </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
-    <div class="moon-glow"></div>
-    <div class="particles" id="particles"></div>
 
-    <a href="../" class="home-link">☽ mi vida como luna</a>
+<div class="bg-image"></div>
+<div class="moon-halo"></div>
+<div class="bg-scrim"></div>
 
-    <div class="login-wrap">
-        <div class="login-card">
-            <div class="moon-icon">☽</div>
-            <h1 class="login-title">Mi Vida Como Luna</h1>
-            <p class="login-subtitle">Restricted Access</p>
+<a href="../" class="home-link"><span class="g">☽</span> mi vida como luna</a>
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle accent color">
+    <span class="tdot"></span>
+    <span id="themeLabel">BLUE</span>
+</button>
 
-            <div class="status-bar">
-                <div class="dot checking" id="gw-dot"></div>
-                <span id="status-msg">⟳ connecting to sar1a...</span>
-            </div>
+<div class="login-wrap">
+    <div class="login-card">
+        <div class="moon-icon">☽</div>
+        <h1 class="login-title">Mi Vida Como <em class="em">Luna</em></h1>
+        <p class="login-subtitle">⟨ RESTRICTED ACCESS ⟩</p>
 
-            <form id="login-form" onsubmit="return false;">
-                <div class="field">
-                    <label for="username">Username</label>
-                    <input id="username" name="username" type="text" placeholder="your username" autocomplete="off" autocapitalize="none">
-                </div>
-                <div class="field">
-                    <label for="password">Password</label>
-                    <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="off">
-                </div>
-                <div id="error-msg"></div>
-                <button id="submit-btn" type="submit">Enter</button>
-            </form>
-
-            <div class="login-footer">sar1a: @ front desk · TLS 1.3</div>
+        <div class="status-bar">
+            <span class="dot checking" id="gw-dot"></span>
+            <span id="status-msg">⟳ CONNECTING TO SAR1A…</span>
         </div>
+
+        <form id="login-form" onsubmit="return false;">
+            <div class="field">
+                <label for="username">Username</label>
+                <input id="username" name="username" type="text" placeholder="your username" autocomplete="off" autocapitalize="none">
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="off">
+            </div>
+            <div id="error-msg"></div>
+            <button id="submit-btn" type="submit">ENTER</button>
+        </form>
+
+        <div class="login-footer">⟨ SAR1A · FRONT DESK · TLS 1.3 ⟩</div>
     </div>
+</div>
 
-    <script>
-        var AUTH = {
-            url: 'https://sar1a.lempyra.com',
-            clientId: 'portal',
-            scope: 'payments,ink,profile',
-            tokenKey: 'luna_token',
-            refreshKey: 'luna_refresh',
-            userKey: 'luna_user'
-        };
+<script>
+// ─ theme toggle (matches landing + dashboard) ─
+(function(){
+  var html = document.documentElement;
+  var btn  = document.getElementById('themeToggle');
+  var lab  = document.getElementById('themeLabel');
+  var saved = localStorage.getItem('mvcl_theme') || 'blue';
+  function apply(m){
+    html.classList.remove('theme-blue','theme-red');
+    html.classList.add('theme-' + m);
+    lab.textContent = m.toUpperCase();
+    localStorage.setItem('mvcl_theme', m);
+  }
+  apply(saved);
+  btn.addEventListener('click', function(){
+    apply(html.classList.contains('theme-blue') ? 'red' : 'blue');
+  });
+})();
 
-        // If already logged in, go to dashboard
-        if (sessionStorage.getItem(AUTH.tokenKey)) {
-            window.location.replace('../dashboard/');
+// ─ auth flow (preserved verbatim from prior chassis) ─
+var AUTH = {
+    url:        'https://sar1a.lempyra.com',
+    clientId:   'portal',
+    scope:      'payments,ink,profile',
+    tokenKey:   'luna_token',
+    refreshKey: 'luna_refresh',
+    userKey:    'luna_user'
+};
+
+if (sessionStorage.getItem(AUTH.tokenKey)) {
+    window.location.replace('../dashboard/');
+}
+
+var gwDot     = document.getElementById('gw-dot');
+var statusMsg = document.getElementById('status-msg');
+var errorMsg  = document.getElementById('error-msg');
+var submitBtn = document.getElementById('submit-btn');
+
+async function checkGateway() {
+    try {
+        var opts = { method: 'GET' };
+        try { opts.signal = AbortSignal.timeout(5000); } catch(_) {}
+        var res = await fetch(AUTH.url + '/auth/health', opts);
+        if (res.ok) {
+            gwDot.className = 'dot online';
+            statusMsg.textContent = 'SAR1A ONLINE · GATEWAY READY';
+            return;
         }
+    } catch(e) {}
+    gwDot.className = 'dot offline';
+    statusMsg.textContent = 'SAR1A UNREACHABLE · CHECK CONNECTION';
+}
 
-        var gwDot = document.getElementById('gw-dot');
-        var statusMsg = document.getElementById('status-msg');
-        var errorMsg = document.getElementById('error-msg');
-        var submitBtn = document.getElementById('submit-btn');
+async function doLogin(username, password) {
+    errorMsg.textContent = '';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'CONNECTING…';
 
-        async function checkGateway() {
-            try {
-                var opts = { method: 'GET' };
-                try { opts.signal = AbortSignal.timeout(5000); } catch(_) {}
-                var res = await fetch(AUTH.url + '/auth/health', opts);
-                if (res.ok) {
-                    gwDot.className = 'dot online';
-                    statusMsg.textContent = 'sar1a online · gateway:4444 → ClearingHouse';
-                    return;
-                }
-            } catch(e) {}
-            gwDot.className = 'dot offline';
-            statusMsg.textContent = 'sar1a unreachable · check connection';
-        }
-
-        async function doLogin(username, password) {
-            errorMsg.textContent = '';
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Connecting...';
-
-            try {
-                // Step 1: authorize
-                var authRes = await fetch(AUTH.url + '/auth/authorize', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: username,
-                        password: password,
-                        client_id: AUTH.clientId,
-                        scope: AUTH.scope
-                    })
-                });
-                var authData = await authRes.json();
-                if (!authRes.ok) {
-                    throw new Error(authData.detail || authData.error || 'Authorization failed');
-                }
-                var code = authData.authorization_code || authData.code;
-                if (!code) throw new Error('No authorization code received');
-
-                // Step 2: token exchange
-                var tokRes = await fetch(AUTH.url + '/auth/token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        grant_type: 'authorization_code',
-                        code: code,
-                        client_id: AUTH.clientId,
-                        client_secret: password
-                    })
-                });
-                var tokData = await tokRes.json();
-                if (!tokRes.ok) {
-                    throw new Error(tokData.detail || tokData.error || 'Token exchange failed');
-                }
-
-                sessionStorage.setItem(AUTH.tokenKey, tokData.access_token);
-                if (tokData.refresh_token) sessionStorage.setItem(AUTH.refreshKey, tokData.refresh_token);
-                sessionStorage.setItem(AUTH.userKey, username);
-
-                submitBtn.textContent = '✓ Access Granted';
-                window.location.replace('../dashboard/');
-
-            } catch(e) {
-                errorMsg.textContent = e.message || 'Login failed';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Enter';
-            }
-        }
-
-        document.getElementById('login-form').addEventListener('submit', function() {
-            var u = document.getElementById('username').value.trim();
-            var p = document.getElementById('password').value;
-            if (!u || !p) { errorMsg.textContent = 'Username and password required'; return; }
-            doLogin(u, p);
+    try {
+        var authRes = await fetch(AUTH.url + '/auth/authorize', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+                client_id: AUTH.clientId,
+                scope: AUTH.scope
+            })
         });
+        var authData = await authRes.json();
+        if (!authRes.ok) {
+            throw new Error(authData.detail || authData.error || 'Authorization failed');
+        }
+        var code = authData.authorization_code || authData.code;
+        if (!code) throw new Error('No authorization code received');
 
-        document.getElementById('password').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') document.getElementById('login-form').dispatchEvent(new Event('submit'));
+        var tokRes = await fetch(AUTH.url + '/auth/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                grant_type:    'authorization_code',
+                code:          code,
+                client_id:     AUTH.clientId,
+                client_secret: password
+            })
         });
+        var tokData = await tokRes.json();
+        if (!tokRes.ok) {
+            throw new Error(tokData.detail || tokData.error || 'Token exchange failed');
+        }
 
-        // Stars
-        (function() {
-            var c = document.getElementById('stars');
-            for (var i = 0; i < 120; i++) {
-                var s = document.createElement('div');
-                s.className = 'star';
-                s.style.left = Math.random() * 100 + '%';
-                s.style.top = Math.random() * 100 + '%';
-                s.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                s.style.animationDelay = Math.random() * 3 + 's';
-                s.style.width = (Math.random() * 2 + 1) + 'px';
-                s.style.height = s.style.width;
-                c.appendChild(s);
-            }
-        })();
+        sessionStorage.setItem(AUTH.tokenKey, tokData.access_token);
+        if (tokData.refresh_token) sessionStorage.setItem(AUTH.refreshKey, tokData.refresh_token);
+        sessionStorage.setItem(AUTH.userKey, username);
 
-        // Particles
-        (function() {
-            var c = document.getElementById('particles');
-            for (var i = 0; i < 15; i++) {
-                var p = document.createElement('div');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.animationDuration = (Math.random() * 20 + 15) + 's';
-                p.style.animationDelay = Math.random() * 10 + 's';
-                c.appendChild(p);
-            }
-        })();
+        submitBtn.textContent = '✓ ACCESS GRANTED';
+        window.location.replace('../dashboard/');
 
-        checkGateway();
-    </script>
+    } catch(e) {
+        errorMsg.textContent = (e.message || 'LOGIN FAILED').toUpperCase();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'ENTER';
+    }
+}
+
+document.getElementById('login-form').addEventListener('submit', function() {
+    var u = document.getElementById('username').value.trim();
+    var p = document.getElementById('password').value;
+    if (!u || !p) { errorMsg.textContent = 'USERNAME AND PASSWORD REQUIRED'; return; }
+    doLogin(u, p);
+});
+
+document.getElementById('password').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('login-form').dispatchEvent(new Event('submit'));
+});
+
+checkGateway();
+</script>
 </body>
 </html>
