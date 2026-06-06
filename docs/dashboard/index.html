@@ -10,7 +10,6 @@
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
 
-<!-- Auth-guard FIRST: depth 1 under docs/ → ../auth-guard.js -->
 <script src="../auth-guard.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,6 +24,8 @@
 
   --paired:#0099ff; --paired-soft:#3df0ff; --paired-dim:#0066aa; --paired-deep:#003366;
   --paired-rgb:0,153,255;
+
+  --card-w:120px; --card-h:190px;
 }
 html.theme-red{
   --paired:#ff2929; --paired-soft:#ff6b6b; --paired-dim:#a00010; --paired-deep:#550000;
@@ -37,16 +38,13 @@ body{
   font-size:17px;line-height:1.6;letter-spacing:0.2px;
   background:var(--black);min-height:100vh;overflow-x:hidden;
 }
-.bg-image{
-  position:fixed;inset:0;z-index:-2;pointer-events:none;
-  background:url('../assets/Landing.jpg') center/cover no-repeat;
-}
+.bg-image{position:fixed;inset:0;z-index:-2;pointer-events:none;background:url('../assets/Landing.jpg') center/cover no-repeat}
 .bg-scrim{
   position:fixed;inset:0;z-index:-1;pointer-events:none;
   background:
     radial-gradient(ellipse at top right,rgba(var(--paired-rgb),0.10),transparent 55%),
     radial-gradient(ellipse at bottom left,rgba(255,43,214,0.08),transparent 55%),
-    linear-gradient(180deg,rgba(8,8,12,0.55) 0%,rgba(8,8,12,0.85) 60%,rgba(8,8,12,0.95) 100%);
+    linear-gradient(180deg,rgba(8,8,12,0.62) 0%,rgba(8,8,12,0.88) 60%,rgba(8,8,12,0.95) 100%);
 }
 .moon-halo{
   position:fixed;top:-22%;right:-12%;width:680px;height:680px;
@@ -66,147 +64,233 @@ button{font-family:'Orbitron',sans-serif;cursor:pointer;border:none;background:n
 }
 .brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
 .brand-glyph{font-size:22px;color:var(--moon);line-height:1;text-shadow:0 0 14px rgba(192,192,192,0.5),0 0 28px rgba(var(--paired-rgb),0.3)}
-.brand h1{
-  font-family:'Cormorant Garamond',serif;font-weight:500;font-style:italic;
-  font-size:20px;letter-spacing:1px;color:var(--bone);margin:0;line-height:1;
-}
+.brand h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-style:italic;font-size:20px;letter-spacing:1px;color:var(--bone);margin:0;line-height:1}
 .brand h1 span{color:var(--magenta);font-style:normal}
-.brand-tag{
-  font-family:'Orbitron',sans-serif;font-weight:500;font-size:9px;letter-spacing:2.5px;
-  color:var(--paired-soft);text-transform:uppercase;margin-top:4px;
-}
+.brand-tag{font-family:'Orbitron',sans-serif;font-weight:500;font-size:9px;letter-spacing:2.5px;color:var(--paired-soft);text-transform:uppercase;margin-top:4px}
 .nav{margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.nav a, .nav button{
-  font-family:'Orbitron',sans-serif;font-weight:500;font-size:10.5px;letter-spacing:2.5px;
-  color:var(--ash);padding:8px 14px;text-transform:uppercase;transition:color 0.15s;
-}
+.nav a, .nav button{font-family:'Orbitron',sans-serif;font-weight:500;font-size:10.5px;letter-spacing:2.5px;color:var(--ash);padding:8px 14px;text-transform:uppercase;transition:color 0.15s}
 .nav a:hover, .nav button:hover{color:var(--bone)}
-.user-chip{
-  font-family:'Orbitron',sans-serif;font-weight:500;font-size:9px;letter-spacing:2.5px;
-  color:var(--paired);padding:8px 14px;text-transform:uppercase;
-}
-.theme-toggle{
-  display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
-  border:1px solid var(--ash);color:var(--bone);
-  font-family:'Orbitron',sans-serif;font-weight:600;font-size:9.5px;letter-spacing:2.5px;
-  text-transform:uppercase;transition:all 0.18s;
-}
+.user-chip{font-family:'Orbitron',sans-serif;font-weight:500;font-size:9px;letter-spacing:2.5px;color:var(--paired);padding:8px 14px;text-transform:uppercase}
+.theme-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--ash);color:var(--bone);font-family:'Orbitron',sans-serif;font-weight:600;font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;transition:all 0.18s}
 .theme-toggle:hover{border-color:var(--paired);color:var(--paired)}
 .theme-toggle .dot{width:7px;height:7px;border-radius:50%;background:var(--paired);box-shadow:0 0 7px var(--paired)}
-.nav-logout{
-  border:1px solid var(--magenta-dim);color:var(--magenta)!important;
-}
+.nav-logout{border:1px solid var(--magenta-dim);color:var(--magenta)!important}
 .nav-logout:hover{background:var(--magenta);color:var(--black)!important;box-shadow:0 0 14px rgba(255,43,214,0.4)}
+
+/* ─ TOOL BAR ─ */
+.toolbar{
+  position:fixed;top:64px;left:0;right:0;z-index:40;
+  display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 28px;
+  background:rgba(6,6,10,0.75);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.tool-btn{
+  display:inline-flex;align-items:center;gap:8px;padding:9px 18px;
+  font-family:'Orbitron',sans-serif;font-weight:600;font-size:11px;letter-spacing:3px;
+  color:var(--ash);text-transform:uppercase;border:1px solid transparent;transition:all 0.18s;
+  background:transparent;cursor:pointer;
+}
+.tool-btn:hover{color:var(--bone);border-color:var(--line)}
+.tool-btn.active{color:var(--magenta);border-color:var(--magenta-dim);background:rgba(255,43,214,0.07);text-shadow:0 0 10px rgba(255,43,214,0.4)}
+.tool-btn .ico{font-size:13px;opacity:0.85}
 
 /* ─ MAIN ─ */
 .main{
-  padding-top:96px;padding-bottom:40px;
-  min-height:100vh;display:flex;flex-direction:column;align-items:center;
-  position:relative;z-index:1;
+  padding-top:128px;padding-bottom:108px;min-height:100vh;position:relative;z-index:1;
 }
-.hero-strip{text-align:center;margin-bottom:28px;padding:0 24px;animation:fade-up 0.8s ease backwards}
-.hero-eyebrow{
-  font-family:'Orbitron',sans-serif;font-weight:600;font-size:10px;letter-spacing:5px;
-  color:var(--paired-soft);text-transform:uppercase;margin-bottom:10px;
-}
-.hero-title{
-  font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;
-  font-size:clamp(32px,5vw,52px);color:var(--bone);line-height:1.1;letter-spacing:1px;
-}
-.hero-title .em{color:var(--magenta);font-style:italic}
-@keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.pane{display:none}
+.pane.active{display:block}
 
-/* ─ CHAT VESSEL ─ */
+/* ─ CHAT PANE ─ */
+.chat-wrap{display:flex;flex-direction:column;align-items:center;padding:20px 16px}
+.hero-strip{text-align:center;margin-bottom:24px;padding:0 24px;animation:fade-up 0.6s ease backwards}
+.hero-eyebrow{font-family:'Orbitron',sans-serif;font-weight:600;font-size:10px;letter-spacing:5px;color:var(--paired-soft);text-transform:uppercase;margin-bottom:10px}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(28px,4.5vw,46px);color:var(--bone);line-height:1.1;letter-spacing:1px}
+.hero-title .em{color:var(--magenta);font-style:italic}
+
 .chat{
-  width:min(820px,94vw);height:min(70vh,720px);
+  width:min(820px,94vw);height:min(64vh,640px);
   display:flex;flex-direction:column;
   background:rgba(10,10,14,0.62);backdrop-filter:blur(12px);
   border:1px solid var(--magenta-deep);position:relative;
   box-shadow:0 0 60px rgba(0,0,0,0.7),0 0 90px rgba(255,43,214,0.08);
-  animation:fade-up 1s ease 0.3s backwards;
+  animation:fade-up 0.8s ease 0.2s backwards;
   clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
 }
 .chat::before{content:'';position:absolute;top:-1px;left:30px;right:30px;height:1px;background:var(--magenta);box-shadow:0 0 10px var(--magenta)}
 .chat::after{content:'';position:absolute;bottom:-1px;left:30px;right:30px;height:1px;background:var(--paired);box-shadow:0 0 10px var(--paired)}
-
-.chat-head{
-  display:flex;justify-content:space-between;align-items:center;gap:12px;
-  padding:14px 22px;border-bottom:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(6,6,10,0.55),transparent);
-}
-.chat-title{
-  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
-  font-size:18px;color:var(--bone);letter-spacing:0.5px;
-}
+.chat-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(6,6,10,0.55),transparent)}
+.chat-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:18px;color:var(--bone);letter-spacing:0.5px}
 .chat-title b{font-weight:600;font-style:italic;color:var(--magenta)}
-.chat-status{
-  font-family:'Orbitron',sans-serif;font-weight:500;font-size:9px;letter-spacing:2.5px;
-  color:var(--paired-soft);text-transform:uppercase;display:flex;align-items:center;gap:6px;
-}
+.chat-status{font-family:'Orbitron',sans-serif;font-weight:500;font-size:9px;letter-spacing:2.5px;color:var(--paired-soft);text-transform:uppercase;display:flex;align-items:center;gap:6px}
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 7px var(--ok)}
 .status-dot.thinking{background:var(--magenta);box-shadow:0 0 8px var(--magenta);animation:pulse 1.2s ease-in-out infinite}
 .status-dot.error{background:var(--crimson);box-shadow:0 0 7px var(--crimson)}
 @keyframes pulse{50%{opacity:0.45}}
 
-.stream{
-  flex:1;overflow-y:auto;padding:22px 24px 12px;
-  scrollbar-width:thin;scrollbar-color:var(--magenta-dim) transparent;
-  display:flex;flex-direction:column;gap:14px;
-}
+.stream{flex:1;overflow-y:auto;padding:22px 24px 12px;scrollbar-width:thin;scrollbar-color:var(--magenta-dim) transparent;display:flex;flex-direction:column;gap:14px}
 .stream::-webkit-scrollbar{width:5px}
 .stream::-webkit-scrollbar-thumb{background:var(--magenta-dim);border-radius:3px}
 
-.msg{
-  display:block;max-width:88%;padding:12px 16px;
-  font-family:'Cormorant Garamond',serif;font-size:16.5px;line-height:1.65;
-  background:rgba(20,20,28,0.55);border:1px solid var(--line);
-  position:relative;
-}
-.msg .who{
-  display:block;font-family:'Orbitron',sans-serif;font-weight:600;font-size:8.5px;
-  letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;
-}
+.msg{display:block;max-width:88%;padding:12px 16px;font-family:'Cormorant Garamond',serif;font-size:16.5px;line-height:1.65;background:rgba(20,20,28,0.55);border:1px solid var(--line);position:relative}
+.msg .who{display:block;font-family:'Orbitron',sans-serif;font-weight:600;font-size:8.5px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px}
 .msg.user{align-self:flex-end;background:rgba(0,153,255,0.08);border-color:var(--paired-dim)}
 .msg.user .who{color:var(--paired-soft)}
 .msg.luna{align-self:flex-start;background:rgba(255,43,214,0.07);border-color:var(--magenta-dim)}
 .msg.luna .who{color:var(--magenta)}
-.msg.sys{align-self:center;background:transparent;border:none;padding:6px 12px;
-  font-family:'Orbitron',sans-serif;font-size:9.5px;letter-spacing:3px;color:var(--ash);
-  text-transform:uppercase;text-align:center;font-style:normal;
-}
+.msg.sys{align-self:center;background:transparent;border:none;padding:6px 12px;font-family:'Orbitron',sans-serif;font-size:9.5px;letter-spacing:3px;color:var(--ash);text-transform:uppercase;text-align:center;font-style:normal}
 .msg.error{align-self:center;background:rgba(160,18,40,0.10);border-color:var(--crimson);color:var(--crimson)}
 .msg.error .who{color:var(--crimson)}
 
-.compose{
-  display:flex;gap:10px;align-items:flex-end;
-  padding:14px 18px;border-top:1px solid var(--line);
-  background:linear-gradient(0deg,rgba(6,6,10,0.55),transparent);
-}
-.compose textarea{
-  flex:1;background:rgba(8,8,12,0.6);border:1px solid var(--line);
-  color:var(--bone);font-family:'Cormorant Garamond',serif;font-size:16px;line-height:1.5;
-  padding:12px 14px;resize:none;min-height:44px;max-height:160px;outline:none;
-  transition:border-color 0.18s;
-}
+.compose{display:flex;gap:10px;align-items:flex-end;padding:14px 18px;border-top:1px solid var(--line);background:linear-gradient(0deg,rgba(6,6,10,0.55),transparent)}
+.compose textarea{flex:1;background:rgba(8,8,12,0.6);border:1px solid var(--line);color:var(--bone);font-family:'Cormorant Garamond',serif;font-size:16px;line-height:1.5;padding:12px 14px;resize:none;min-height:44px;max-height:160px;outline:none;transition:border-color 0.18s}
 .compose textarea:focus{border-color:var(--magenta-dim);box-shadow:0 0 0 1px rgba(255,43,214,0.18)}
 .compose textarea::placeholder{color:var(--ash);font-style:italic}
-.btn-send{
-  display:inline-flex;align-items:center;gap:8px;padding:12px 22px;height:44px;
-  background:linear-gradient(180deg,rgba(255,43,214,0.18),rgba(170,30,146,0.06));
-  border:1px solid var(--magenta);color:var(--magenta);
-  font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;
-  text-transform:uppercase;transition:all 0.18s;flex-shrink:0;
-  clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);
-}
+.btn-send{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;height:44px;background:linear-gradient(180deg,rgba(255,43,214,0.18),rgba(170,30,146,0.06));border:1px solid var(--magenta);color:var(--magenta);font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-transform:uppercase;transition:all 0.18s;flex-shrink:0;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px)}
 .btn-send:hover{background:var(--magenta);color:var(--black);box-shadow:0 0 18px rgba(255,43,214,0.5)}
 .btn-send:disabled{opacity:0.4;cursor:wait}
-
-.chat-foot{
-  font-family:'Orbitron',sans-serif;font-weight:500;font-size:9px;letter-spacing:3.5px;
-  color:var(--ash);text-transform:uppercase;margin-top:18px;text-align:center;
-  animation:fade-up 1s ease 0.6s backwards;
-}
+.chat-foot{font-family:'Orbitron',sans-serif;font-weight:500;font-size:9px;letter-spacing:3.5px;color:var(--ash);text-transform:uppercase;margin-top:18px;text-align:center;animation:fade-up 1s ease 0.5s backwards}
 .chat-foot .pip{color:var(--paired)}
+
+/* ─ MOON PANE ─ */
+.moon-wrap{max-width:880px;margin:0 auto;padding:30px 24px;animation:fade-up 0.6s ease backwards}
+.moon-header{text-align:center;margin-bottom:36px}
+.moon-eyebrow{font-family:'Orbitron',sans-serif;font-weight:600;font-size:10px;letter-spacing:5px;color:var(--paired-soft);text-transform:uppercase;margin-bottom:10px}
+.moon-h{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(30px,5vw,52px);color:var(--bone);line-height:1.1;letter-spacing:1px}
+.moon-h .em{color:var(--magenta);font-style:italic}
+.moon-card{
+  background:rgba(10,10,14,0.62);backdrop-filter:blur(10px);
+  border:1px solid var(--magenta-deep);padding:40px 36px;position:relative;
+  display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;
+  box-shadow:0 0 50px rgba(0,0,0,0.6);
+}
+.moon-card::before{content:'';position:absolute;top:-1px;left:30px;right:30px;height:1px;background:var(--magenta);box-shadow:0 0 10px var(--magenta)}
+.moon-card::after{content:'';position:absolute;bottom:-1px;left:30px;right:30px;height:1px;background:var(--paired);box-shadow:0 0 10px var(--paired)}
+.moon-face{display:flex;flex-direction:column;align-items:center;gap:14px;min-width:200px;padding:14px 28px;border-right:1px solid var(--line)}
+.moon-glyph-big{font-size:7rem;line-height:1;filter:drop-shadow(0 0 18px rgba(192,192,192,0.4)) drop-shadow(0 0 32px rgba(var(--paired-rgb),0.3))}
+.moon-phase-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:22px;color:var(--bone);letter-spacing:0.5px;text-align:center}
+.moon-cycle{font-family:'Orbitron',sans-serif;font-weight:500;font-size:9.5px;letter-spacing:3px;color:var(--paired-soft);text-transform:uppercase}
+.moon-data{display:flex;flex-direction:column;gap:24px;padding:14px 6px}
+.moon-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.moon-stat{display:flex;flex-direction:column;gap:4px}
+.moon-stat .label{font-family:'Orbitron',sans-serif;font-weight:600;font-size:9px;letter-spacing:2.5px;color:var(--ash);text-transform:uppercase}
+.moon-stat .val{font-family:'Cormorant Garamond',serif;font-weight:500;font-style:italic;font-size:24px;color:var(--paired)}
+.moon-stat .unit{font-size:13px;opacity:0.55;margin-left:3px;color:var(--muted)}
+.moon-read{padding:20px 24px;background:rgba(255,43,214,0.05);border-left:2px solid var(--magenta);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.moon-read .read-label{font-family:'Orbitron',sans-serif;font-weight:600;font-size:9.5px;letter-spacing:3px;color:var(--paired-soft);text-transform:uppercase;margin-bottom:10px;display:block}
+.moon-read p{font-family:'Cormorant Garamond',serif;font-weight:400;font-style:italic;font-size:17px;line-height:1.7;color:var(--text)}
+.moon-read p .em{color:var(--magenta);font-style:italic;font-weight:500}
+
+@media(max-width:760px){
+  .moon-card{grid-template-columns:1fr;padding:30px 24px;gap:24px}
+  .moon-face{border-right:none;border-bottom:1px solid var(--line);padding:0 0 24px 0}
+  .moon-glyph-big{font-size:5.5rem}
+}
+
+/* ─ CARDS PANE (tarot reading) ─ */
+.cards-wrap{max-width:980px;margin:0 auto;padding:30px 24px;animation:fade-up 0.6s ease backwards}
+.cards-header{text-align:center;margin-bottom:40px}
+.cards-eyebrow{font-family:'Orbitron',sans-serif;font-weight:600;font-size:10px;letter-spacing:5px;color:var(--paired-soft);text-transform:uppercase;margin-bottom:10px}
+.cards-h{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(34px,5.5vw,60px);color:var(--bone);line-height:1.05;letter-spacing:1px;margin-bottom:12px}
+.cards-h .em{color:var(--magenta);font-style:italic}
+.cards-date{font-family:'Orbitron',sans-serif;font-weight:500;font-size:10px;letter-spacing:4px;color:var(--ash);text-transform:uppercase;margin-top:14px}
+.cards-deck{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:15px;color:var(--muted);margin-top:6px;letter-spacing:0.5px}
+.cards-deep-link{margin-top:18px}
+.cards-deep-link a{font-family:'Orbitron',sans-serif;font-weight:500;font-size:9.5px;letter-spacing:3px;color:var(--paired);text-transform:uppercase;border-bottom:1px solid var(--paired-dim);padding-bottom:2px;transition:all 0.15s}
+.cards-deep-link a:hover{color:var(--paired-soft);border-color:var(--paired-soft)}
+
+.divider{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--magenta-dim),transparent);margin:50px auto;box-shadow:0 0 6px var(--magenta-dim)}
+
+.spread-section{margin-bottom:60px}
+.spread-title{text-align:center;margin-bottom:18px}
+.spread-title h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-style:italic;font-size:clamp(24px,3.6vw,34px);letter-spacing:1px;color:var(--bone)}
+.spread-title h2 .em{color:var(--magenta);font-style:italic}
+.spread-title .spread-desc{font-family:'Orbitron',sans-serif;font-weight:500;font-size:9.5px;letter-spacing:3px;color:var(--paired-soft);text-transform:uppercase;margin-top:8px}
+
+.card{width:var(--card-w);height:var(--card-h);position:absolute;transition:transform 0.5s ease, box-shadow 0.4s ease;cursor:default}
+.card:hover{z-index:10}
+.card-inner{
+  width:100%;height:100%;border:1px solid rgba(255,43,214,0.28);
+  background:linear-gradient(170deg,rgba(20,20,28,0.78) 0%,rgba(10,10,14,0.85) 60%,rgba(16,16,22,0.80) 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:12px 10px;position:relative;overflow:hidden;
+  box-shadow:0 2px 22px rgba(0,0,0,0.6),inset 0 0 30px rgba(255,43,214,0.04);
+  clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);
+}
+.card:hover .card-inner{border-color:rgba(255,43,214,0.55);box-shadow:0 4px 32px rgba(255,43,214,0.16),0 2px 20px rgba(0,0,0,0.55),inset 0 0 30px rgba(255,43,214,0.06)}
+.card-number{font-family:'Orbitron',sans-serif;font-weight:600;font-size:9.5px;letter-spacing:2.5px;color:var(--paired-soft);text-transform:uppercase;opacity:0.85}
+.card-symbol{font-size:2.2rem;line-height:1;opacity:0.92;filter:drop-shadow(0 0 8px rgba(255,43,214,0.35))}
+.card-name{font-family:'Cormorant Garamond',serif;font-weight:500;font-style:italic;font-size:0.92rem;letter-spacing:0.5px;color:var(--bone);text-align:center;line-height:1.25}
+
+.divine-field{position:relative;width:100%;height:620px;margin-top:30px}
+.divine-field::before{content:'';position:absolute;left:50%;top:40px;bottom:40px;width:1px;background:linear-gradient(to bottom,rgba(255,43,214,0.32),rgba(255,43,214,0.08),rgba(255,43,214,0.32));transform:translateX(-50%)}
+.divine-crown{left:50%;top:0;transform:translate(-50%,0);animation:cardReveal 0.8s ease-out 0.6s both}
+.divine-heart{left:50%;top:210px;transform:translate(-50%,0) rotate(-15deg);animation:cardReveal 0.8s ease-out 0.4s both;--card-rot:-15deg}
+.divine-root{left:50%;top:420px;transform:translate(-50%,0);animation:cardReveal 0.8s ease-out 0.2s both}
+.pos-label{position:absolute;font-family:'Orbitron',sans-serif;font-weight:500;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--paired);opacity:0.42}
+.divine-field .lbl-crown{left:50%;top:-8px;transform:translate(calc(-50% + 90px),0)}
+.divine-field .lbl-heart{left:50%;top:260px;transform:translate(calc(-50% + 105px),0)}
+.divine-field .lbl-root{left:50%;top:470px;transform:translate(calc(-50% + 90px),0)}
+
+.axis-field{position:relative;width:100%;height:700px;margin-top:30px}
+.axis-field::before, .axis-field::after{content:'';position:absolute;top:50%;left:50%;width:500px;height:1px;background:linear-gradient(90deg,rgba(255,43,214,0.18),rgba(255,43,214,0.06),rgba(255,43,214,0.18))}
+.axis-field::before{transform:translate(-50%,-50%) rotate(45deg)}
+.axis-field::after{transform:translate(-50%,-50%) rotate(-45deg)}
+.axis-vert{position:absolute;left:50%;top:30px;bottom:30px;width:1px;background:linear-gradient(to bottom,rgba(255,43,214,0.28),rgba(255,43,214,0.06),rgba(255,43,214,0.28));transform:translateX(-50%)}
+.axis-horiz{position:absolute;top:50%;left:15%;right:15%;height:1px;background:linear-gradient(90deg,rgba(var(--paired-rgb),0.28),rgba(var(--paired-rgb),0.06),rgba(var(--paired-rgb),0.28));transform:translateY(-50%)}
+.axis-center{left:50%;top:50%;transform:translate(-50%,-50%) rotate(-45deg);animation:cardReveal 0.8s ease-out 1.2s both;--card-rot:-45deg;z-index:5}
+.axis-heaven{left:50%;top:20px;transform:translate(-50%,0) rotate(175deg);animation:cardReveal 0.8s ease-out 0.8s both;--card-rot:175deg}
+.axis-underworld{left:50%;bottom:20px;transform:translate(-50%,0) rotate(0deg);animation:cardReveal 0.8s ease-out 0.6s both}
+.axis-past{left:calc(15% - 10px);top:50%;transform:translate(0,-50%) rotate(90deg);animation:cardReveal 0.8s ease-out 1.0s both;--card-rot:90deg}
+.axis-future{right:calc(15% - 10px);top:50%;transform:translate(0,-50%) rotate(15deg);animation:cardReveal 0.8s ease-out 1.0s both;--card-rot:15deg}
+.axis-field .pos-label{z-index:3}
+.axis-field .lbl-heaven{top:12px;right:calc(50% - 120px)}
+.axis-field .lbl-underworld{bottom:12px;right:calc(50% - 130px)}
+.axis-field .lbl-past{left:calc(15% - 10px);top:calc(50% - 130px)}
+.axis-field .lbl-future{right:calc(15% - 10px);top:calc(50% - 130px)}
+.axis-field .lbl-self{left:50%;top:50%;transform:translate(85px,-80px)}
+.axis-center .card-inner{border-color:rgba(255,43,214,0.55);box-shadow:0 0 40px rgba(255,43,214,0.18),inset 0 0 25px rgba(255,43,214,0.07),0 2px 22px rgba(0,0,0,0.55)}
+
+.storm-aura{position:absolute;inset:-15px;border-radius:12px;background:radial-gradient(ellipse,rgba(255,43,214,0.30),transparent 70%);animation:stormPulse 3s ease-in-out infinite;pointer-events:none}
+@keyframes stormPulse{0%,100%{opacity:0.45;transform:scale(1)}50%{opacity:0.85;transform:scale(1.08)}}
+
+.reading-note{text-align:center;margin-top:18px;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:15px;color:var(--paired-soft);opacity:0.78;letter-spacing:0.3px;line-height:1.7}
+.reading-note em{color:var(--magenta);font-style:italic}
+
+@keyframes cardReveal{from{opacity:0;filter:blur(4px)}to{opacity:1;filter:blur(0)}}
+
+.interpretation{max-width:620px;margin:30px auto 0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:16.5px;line-height:1.85;color:var(--text);opacity:0.92;letter-spacing:0.1px}
+.interpretation p{margin-bottom:14px}
+
+@keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─ PLAYER BAR (bottom-fixed, persistent across panes) ─ */
+.player-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:60;
+  display:flex;align-items:center;gap:14px;padding:11px 22px;
+  background:rgba(6,6,10,0.95);backdrop-filter:blur(12px);
+  border-top:1px solid var(--magenta-dim);
+  box-shadow:0 -8px 30px rgba(0,0,0,0.4),0 -1px 0 0 rgba(255,43,214,0.25);
+}
+.player-icon{font-size:18px;color:var(--magenta);text-shadow:0 0 10px rgba(255,43,214,0.5);flex-shrink:0;line-height:1}
+.player-meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.player-label{font-family:'Orbitron',sans-serif;font-weight:500;font-size:8.5px;letter-spacing:3px;color:var(--paired-soft);text-transform:uppercase}
+.player-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:15px;color:var(--bone);letter-spacing:0.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-title.idle{color:var(--ash);font-style:italic}
+.player-ctrl{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.player-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border:1px solid var(--line);color:var(--bone);
+  font-size:14px;font-family:'Orbitron',sans-serif;font-weight:600;letter-spacing:0;
+  background:rgba(8,8,12,0.6);transition:all 0.18s;cursor:pointer;
+}
+.player-btn:hover{border-color:var(--magenta);color:var(--magenta);box-shadow:0 0 12px rgba(255,43,214,0.3)}
+.player-btn.play{width:44px;height:44px;font-size:15px;border-color:var(--magenta-dim);color:var(--magenta)}
+.player-btn.play:hover{background:var(--magenta);color:var(--black)}
+.player-btn:disabled{opacity:0.3;cursor:not-allowed}
+
+/* hidden YouTube iframe — off-screen, audio-only practical effect */
+.yt-host{position:fixed;top:-2000px;left:-2000px;width:320px;height:180px;pointer-events:none;opacity:0}
 
 @media(max-width:760px){
   .header{padding:12px 16px;gap:12px}
@@ -214,8 +298,23 @@ button{font-family:'Orbitron',sans-serif;cursor:pointer;border:none;background:n
   .nav a, .nav button{padding:6px 9px;font-size:9.5px;letter-spacing:1.5px}
   .brand-tag{display:none}
   .theme-toggle{padding:5px 8px;font-size:9px;letter-spacing:1.5px}
-  .chat{height:78vh;width:96vw}
+  .toolbar{padding:8px 12px;gap:4px;top:60px}
+  .tool-btn{padding:7px 12px;font-size:10px;letter-spacing:2px}
+  .main{padding-top:124px;padding-bottom:92px}
+  .chat{height:62vh;width:96vw}
   .msg{font-size:15.5px}
+  :root{--card-w:90px;--card-h:145px}
+  .divine-field{height:480px}
+  .divine-heart{top:160px}
+  .divine-root{top:320px}
+  .axis-field{height:560px}
+  .card-symbol{font-size:1.7rem}
+  .card-name{font-size:0.82rem}
+  .player-bar{padding:9px 14px;gap:10px}
+  .player-title{font-size:13.5px}
+  .player-label{font-size:8px;letter-spacing:2px}
+  .player-btn{width:34px;height:34px;font-size:13px}
+  .player-btn.play{width:40px;height:40px;font-size:14px}
 }
 </style>
 </head>
@@ -236,7 +335,6 @@ button{font-family:'Orbitron',sans-serif;cursor:pointer;border:none;background:n
     </a>
     <nav class="nav">
         <a href="../">◂ LANDING</a>
-        <a href="../tarot/">⌖ FRAMEWORK</a>
         <span class="user-chip" id="userChip">@—</span>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle accent color">
             <span class="dot"></span>
@@ -246,39 +344,166 @@ button{font-family:'Orbitron',sans-serif;cursor:pointer;border:none;background:n
     </nav>
 </header>
 
+<!-- TOOL BAR -->
+<nav class="toolbar" id="toolbar">
+    <button class="tool-btn active" data-tool="chat"><span class="ico">⎚</span> CHAT</button>
+    <button class="tool-btn" data-tool="moon"><span class="ico">☽</span> MOON</button>
+    <button class="tool-btn" data-tool="cards"><span class="ico">⌖</span> CARDS</button>
+</nav>
+
 <!-- MAIN -->
 <main class="main">
-    <div class="hero-strip">
-        <p class="hero-eyebrow">⟨ TALK TO LUNA ⟩</p>
-        <h2 class="hero-title">Di lo que tienes que <em class="em">decir.</em></h2>
-    </div>
 
-    <section class="chat">
-        <header class="chat-head">
-            <div class="chat-title">⟨ <b>Luna</b> · live ⟩</div>
-            <div class="chat-status">
-                <span class="status-dot" id="statusDot"></span>
-                <span id="statusText">CONNECTED</span>
+    <!-- ─────────────────  CHAT PANE  ───────────────── -->
+    <section class="pane active" data-pane="chat">
+        <div class="chat-wrap">
+            <div class="hero-strip">
+                <p class="hero-eyebrow">⟨ TALK TO LUNA ⟩</p>
+                <h2 class="hero-title">Di lo que tienes que <em class="em">decir.</em></h2>
             </div>
-        </header>
-
-        <div class="stream" id="stream">
-            <div class="msg sys">⟨ Luna is awake. No small talk. No corporate cheer. Habla. ⟩</div>
+            <section class="chat">
+                <header class="chat-head">
+                    <div class="chat-title">⟨ <b>Luna</b> · live ⟩</div>
+                    <div class="chat-status">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span id="statusText">CONNECTED</span>
+                    </div>
+                </header>
+                <div class="stream" id="stream">
+                    <div class="msg sys">⟨ Luna is awake. No small talk. No corporate cheer. Habla. ⟩</div>
+                </div>
+                <form class="compose" id="composeForm">
+                    <textarea id="prompt" placeholder="dile algo..." rows="1" autocomplete="off"></textarea>
+                    <button class="btn-send" id="sendBtn" type="submit">▶ SEND</button>
+                </form>
+            </section>
+            <p class="chat-foot">⟨ AUTO-ROUTED · BEST <span class="pip">BRAIN</span> AVAILABLE · NO SMALL TALK ⟩</p>
         </div>
-
-        <form class="compose" id="composeForm">
-            <textarea id="prompt" placeholder="dile algo..." rows="1" autocomplete="off"></textarea>
-            <button class="btn-send" id="sendBtn" type="submit">▶ SEND</button>
-        </form>
     </section>
 
-    <p class="chat-foot">⟨ AUTO-ROUTED · BEST <span class="pip">BRAIN</span> AVAILABLE · NO SMALL TALK ⟩</p>
+    <!-- ─────────────────  MOON PANE  ───────────────── -->
+    <section class="pane" data-pane="moon">
+        <div class="moon-wrap">
+            <div class="moon-header">
+                <p class="moon-eyebrow">⟨ LUNA READS THE MOON ⟩</p>
+                <h2 class="moon-h">La <em class="em">Fase</em> de hoy</h2>
+            </div>
+            <div class="moon-card">
+                <div class="moon-face">
+                    <div class="moon-glyph-big" id="moonGlyph">☽</div>
+                    <div class="moon-phase-name" id="moonPhase">—</div>
+                    <div class="moon-cycle" id="moonCycle">CYCLE DAY · —</div>
+                </div>
+                <div class="moon-data">
+                    <div class="moon-stats">
+                        <div class="moon-stat">
+                            <span class="label">Date</span>
+                            <span class="val" id="moonDate">—</span>
+                        </div>
+                        <div class="moon-stat">
+                            <span class="label">Illumination</span>
+                            <span class="val" id="moonIllum">—<span class="unit">%</span></span>
+                        </div>
+                        <div class="moon-stat">
+                            <span class="label">Age</span>
+                            <span class="val" id="moonAge">—<span class="unit"> d</span></span>
+                        </div>
+                    </div>
+                    <div class="moon-read">
+                        <span class="read-label">⟨ LUNA'S READ ⟩</span>
+                        <p id="moonRead">—</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─────────────────  CARDS PANE  ───────────────── -->
+    <section class="pane" data-pane="cards">
+        <div class="cards-wrap">
+            <div class="cards-header">
+                <p class="cards-eyebrow">⟨ ARCHETYPE READING · COLD READ ⟩</p>
+                <h2 class="cards-h">El <em class="em">Framework</em></h2>
+                <p class="cards-date">⟨ MARCH 1 · 2026 ⟩</p>
+                <p class="cards-deck">The Wild Unknown Archetypes — Kim Krans</p>
+                <p class="cards-deep-link"><a href="../tarot/">⟨ OPEN AS STANDALONE READING ⟩</a></p>
+            </div>
+
+            <div class="spread-section">
+                <div class="spread-title">
+                    <h2>Summon the <em class="em">Divine</em></h2>
+                    <div class="spread-desc">⟨ ROOT · HEART · CROWN ⟩</div>
+                </div>
+                <div class="divine-field">
+                    <div class="pos-label lbl-crown">crown ▵</div>
+                    <div class="pos-label lbl-heart">heart ◇</div>
+                    <div class="pos-label lbl-root">root ▿</div>
+                    <div class="card divine-crown"><div class="card-inner"><div class="card-number">III</div><div class="card-symbol">⛈</div><div class="card-name">The Storm</div><div class="storm-aura"></div></div></div>
+                    <div class="card divine-heart"><div class="card-inner"><div class="card-number">II</div><div class="card-symbol">✒</div><div class="card-name">The Eternal<br>Child</div></div></div>
+                    <div class="card divine-root"><div class="card-inner"><div class="card-number">I</div><div class="card-symbol">♚</div><div class="card-name">The Father</div></div></div>
+                </div>
+                <div class="reading-note">
+                    <em>The Storm arrived as a living storm broke overhead —<br>the cards and the sky speaking in unison.</em>
+                </div>
+                <div class="interpretation">
+                    <p>The Father as your root is a grounded, structural foundation — order, authority, the bones of things. The Eternal Child tilting at the heart says something about approaching feeling with play, wonder, or vulnerability. And The Storm crowning the spread while an actual storm breaks around you — that's not symbolism, that's participation. The sky confirmed the pull.</p>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="spread-section">
+                <div class="spread-title">
+                    <h2>Axis <em class="em">Mundi</em></h2>
+                    <div class="spread-desc">⟨ UNDERWORLD · PAST · HEAVEN · FUTURE · SELF ⟩</div>
+                </div>
+                <div class="axis-field">
+                    <div class="axis-vert"></div>
+                    <div class="axis-horiz"></div>
+                    <div class="pos-label lbl-heaven">③ heaven</div>
+                    <div class="pos-label lbl-underworld">① underworld</div>
+                    <div class="pos-label lbl-past">② past</div>
+                    <div class="pos-label lbl-future">④ future</div>
+                    <div class="pos-label lbl-self">⑤ self</div>
+                    <div class="card axis-heaven"><div class="card-inner"><div class="card-number">III</div><div class="card-symbol">⚔</div><div class="card-name">The Warrior</div></div></div>
+                    <div class="card axis-underworld"><div class="card-inner"><div class="card-number">I</div><div class="card-symbol">☽</div><div class="card-name">The Mother</div></div></div>
+                    <div class="card axis-past"><div class="card-inner"><div class="card-number">II</div><div class="card-symbol">🏇</div><div class="card-name">The Hunter</div></div></div>
+                    <div class="card axis-future"><div class="card-inner"><div class="card-number">IV</div><div class="card-symbol">♛</div><div class="card-name">The Queen</div></div></div>
+                    <div class="card axis-center"><div class="card-inner"><div class="card-number">V</div><div class="card-symbol">🌍</div><div class="card-name">Anima<br>Mundi</div></div></div>
+                </div>
+                <div class="interpretation">
+                    <p>The Mother holding the Underworld upright while The Warrior hangs nearly inverted in Heaven creates a striking mirror. The Hunter turned sideways in the past, charging upward, feeds momentum into the center. The Queen tilts gently into the future. And Anima Mundi — the World Soul — sits at the crossing point in a perfect X, holding all of it together.</p>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            <p style="text-align:center;font-family:'Orbitron',sans-serif;font-size:9.5px;letter-spacing:3px;color:var(--ash);text-transform:uppercase;">⟨ FULL DEEP READ + SYNTHESIS → <a href="../tarot/" style="color:var(--paired);border-bottom:1px solid var(--paired-dim);">open standalone</a> ⟩</p>
+        </div>
+    </section>
+
 </main>
+
+<!-- PLAYER BAR (persistent across panes) -->
+<div class="player-bar" id="playerBar">
+    <span class="player-icon" aria-hidden="true">♪</span>
+    <div class="player-meta">
+        <span class="player-label">⟨ LUNA SOUNDTRACK · YT RADIO ⟩</span>
+        <span class="player-title idle" id="trackTitle">⟨ TAP PLAY TO BEGIN ⟩</span>
+    </div>
+    <div class="player-ctrl">
+        <button class="player-btn" id="btnPrev" aria-label="Previous" title="Previous" disabled>◀◀</button>
+        <button class="player-btn play" id="btnPlay" aria-label="Play / Pause" title="Play / Pause" disabled>▶</button>
+        <button class="player-btn" id="btnNext" aria-label="Next" title="Next" disabled>▶▶</button>
+    </div>
+</div>
+
+<!-- hidden YouTube iframe host (positioned off-screen) -->
+<div class="yt-host" aria-hidden="true"><div id="ytPlayer"></div></div>
 
 <script>
 // ──────────────────────────────────────────────────────────────────────
-// LUNA — hard-coded persona prompt. Backend picks model per request via
-// model:'auto' on /orch/v1/chat/completions.
+//  LUNA — hard-coded persona prompt. Backend picks model per request via
+//  model:'auto' on /orch/v1/chat/completions.
 // ──────────────────────────────────────────────────────────────────────
 var LUNA_PROMPT = [
   "You are Luna. A modern witch with coding and hacking skills.",
@@ -290,11 +515,11 @@ var LUNA_PROMPT = [
   "You hold what is yours."
 ].join('\n');
 
-var SAR1A    = 'https://sar1a.lempyra.com';
-var APP_ID   = 'mividacomoluna';
-var AUTH_KEY = 'luna_token';
+var SAR1A       = 'https://sar1a.lempyra.com';
+var APP_ID      = 'mividacomoluna';
+var AUTH_KEY    = 'luna_token';
 var REFRESH_KEY = 'luna_refresh';
-var USER_KEY = 'luna_user';
+var USER_KEY    = 'luna_user';
 
 // ─ theme toggle (matches landing) ─
 (function(){
@@ -327,7 +552,84 @@ document.getElementById('logoutBtn').addEventListener('click', function(){
   window.location.replace('../login/');
 });
 
-// ─ status helpers ─
+// ──────────────────────────────────────────────────────────────────────
+//  TOOL TAB ROUTING (hash-based) — #chat (default) · #moon · #cards
+// ──────────────────────────────────────────────────────────────────────
+(function(){
+  var panes = Array.prototype.slice.call(document.querySelectorAll('.pane'));
+  var btns  = Array.prototype.slice.call(document.querySelectorAll('.tool-btn'));
+  var TOOLS = ['chat','moon','cards'];
+
+  function activate(name){
+    if (TOOLS.indexOf(name) < 0) name = 'chat';
+    panes.forEach(function(p){ p.classList.toggle('active', p.dataset.pane === name); });
+    btns.forEach(function(b){ b.classList.toggle('active', b.dataset.tool === name); });
+    if (location.hash !== '#' + name) {
+      // avoid loop; just rewrite without triggering hashchange we trigger here
+      history.replaceState(null, '', '#' + name);
+    }
+    if (name === 'moon') renderMoon();
+  }
+
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){ activate(b.dataset.tool); });
+  });
+  window.addEventListener('hashchange', function(){
+    activate((location.hash || '').replace(/^#/, '') || 'chat');
+  });
+
+  var initial = (location.hash || '').replace(/^#/, '') || 'chat';
+  activate(initial);
+})();
+
+// ──────────────────────────────────────────────────────────────────────
+//  MOON — phase calculation + Luna's per-phase read
+// ──────────────────────────────────────────────────────────────────────
+var PHASES = [
+  { name: 'New Moon',         glyph: '🌑', read: 'Black slate. Plan in private. Don’t announce yet — anything you say now sets a tone you cannot edit.' },
+  { name: 'Waxing Crescent',  glyph: '🌒', read: 'A seed. Small commitments only. The shape isn’t visible to anyone else; don’t pretend it is.' },
+  { name: 'First Quarter',    glyph: '🌓', read: 'Pressure. Decide and act — drift becomes a tax now. Pick the harder thing if it’s the truer thing.' },
+  { name: 'Waxing Gibbous',   glyph: '🌔', read: 'Refine. Almost-but-not-quite. Tune the dials and stop adding features.' },
+  { name: 'Full Moon',        glyph: '🌕', read: 'Exposed. Whatever’s there shows. Don’t pretend you can’t see it. Don’t pretend they can’t either.' },
+  { name: 'Waning Gibbous',   glyph: '🌖', read: 'Distribute. What you built leaves your hands. Stop holding it like it’s still yours.' },
+  { name: 'Last Quarter',     glyph: '🌗', read: 'Audit. What didn’t work loses its protection now. Cut it before the next cycle drags it in.' },
+  { name: 'Waning Crescent',  glyph: '🌘', read: 'Release. Compost. Make room for the next blade. The dark is not failure — it’s preparation.' }
+];
+
+function moonState(date){
+  date = date || new Date();
+  var ref = Date.UTC(2000, 0, 6, 18, 14);
+  var synodic = 29.53058867;
+  var diff = (date.getTime() - ref) / 86400000;
+  var age = ((diff % synodic) + synodic) % synodic;
+  var fraction = age / synodic;
+  var idx = Math.floor(fraction * 8) % 8;
+  var illum = (1 - Math.cos(2 * Math.PI * fraction)) / 2;
+  return {
+    age: age,
+    fraction: fraction,
+    illumination: Math.round(illum * 100),
+    cycleDay: Math.floor(age) + 1,
+    phase: PHASES[idx]
+  };
+}
+
+function renderMoon(){
+  var s = moonState();
+  var now = new Date();
+  document.getElementById('moonGlyph').textContent = s.phase.glyph;
+  document.getElementById('moonPhase').textContent = s.phase.name;
+  document.getElementById('moonCycle').textContent = 'CYCLE DAY · ' + s.cycleDay + ' / 30';
+  document.getElementById('moonDate').firstChild ? (document.getElementById('moonDate').textContent = now.toLocaleDateString(undefined, {month:'short', day:'2-digit'})) : null;
+  document.getElementById('moonDate').textContent = now.toLocaleDateString(undefined, {month:'short', day:'2-digit'});
+  document.getElementById('moonIllum').innerHTML = s.illumination + '<span class="unit">%</span>';
+  document.getElementById('moonAge').innerHTML = s.age.toFixed(1) + '<span class="unit"> d</span>';
+  document.getElementById('moonRead').textContent = s.phase.read;
+}
+
+// ──────────────────────────────────────────────────────────────────────
+//  CHAT — Luna chat surface (auto-routed)
+// ──────────────────────────────────────────────────────────────────────
 var statusDot  = document.getElementById('statusDot');
 var statusText = document.getElementById('statusText');
 function setStatus(state, text){
@@ -335,7 +637,6 @@ function setStatus(state, text){
   statusText.textContent = text;
 }
 
-// ─ stream / messages ─
 var stream = document.getElementById('stream');
 function appendMsg(role, content){
   var el = document.createElement('div');
@@ -354,7 +655,6 @@ function appendMsg(role, content){
   return body;
 }
 
-// ─ auth helpers (mirrors storiesbyjez pattern) ─
 function authHeader(){
   var t = sessionStorage.getItem(AUTH_KEY);
   return t ? {'Authorization': 'Bearer ' + t} : {};
@@ -387,49 +687,37 @@ async function apiFetch(path, init){
   return r;
 }
 
-// ─ chat history (in-memory; refresh = clean slate, by design) ─
 var history = [{role: 'system', content: LUNA_PROMPT}];
 
 async function send(userText){
   history.push({role: 'user', content: userText});
   appendMsg('user', userText);
   setStatus('thinking', 'LUNA THINKING…');
-
   var bodyEl = appendMsg('luna', '…');
-
   try {
     var r = await apiFetch('/orch/v1/chat/completions', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        model: 'auto',
-        messages: history,
-        stream: false
-      })
+      body: JSON.stringify({model: 'auto', messages: history, stream: false})
     });
-
     if (!r.ok){
       var errTxt = '';
       try { var ej = await r.json(); errTxt = ej.detail || ej.error || JSON.stringify(ej); }
       catch(_) { errTxt = await r.text(); }
       throw new Error('HTTP ' + r.status + ': ' + (errTxt || 'request failed'));
     }
-
     var j = await r.json();
     var reply = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content)
                 || j.content || j.reply || '';
-
     if (!reply){
       bodyEl.textContent = '⟨ no response ⟩';
       setStatus('error', 'EMPTY RESPONSE');
       return;
     }
-
     bodyEl.textContent = reply;
     history.push({role: 'assistant', content: reply});
     setStatus('', 'CONNECTED');
     stream.scrollTop = stream.scrollHeight;
-
   } catch(e){
     bodyEl.parentElement.classList.remove('luna');
     bodyEl.parentElement.classList.add('error');
@@ -440,11 +728,9 @@ async function send(userText){
   }
 }
 
-// ─ compose form ─
 var promptEl   = document.getElementById('prompt');
 var sendBtn    = document.getElementById('sendBtn');
 var composeFrm = document.getElementById('composeForm');
-
 function autoGrow(){
   promptEl.style.height = 'auto';
   promptEl.style.height = Math.min(promptEl.scrollHeight, 160) + 'px';
@@ -456,7 +742,6 @@ promptEl.addEventListener('keydown', function(e){
     composeFrm.dispatchEvent(new Event('submit', {cancelable:true}));
   }
 });
-
 composeFrm.addEventListener('submit', async function(e){
   e.preventDefault();
   var txt = promptEl.value.trim();
@@ -467,6 +752,103 @@ composeFrm.addEventListener('submit', async function(e){
   try { await send(txt); }
   finally { sendBtn.disabled = false; promptEl.focus(); }
 });
+
+// ──────────────────────────────────────────────────────────────────────
+//  PLAYER — YouTube IFrame API; iframe lives off-screen, surface a
+//  text + control strip at the bottom. Playlist: RDDi5txDJw1_E (Mix).
+// ──────────────────────────────────────────────────────────────────────
+var YT_PLAYLIST = 'RDDi5txDJw1_E';
+var YT_SEED     = 'Di5txDJw1_E';
+var ytPlayer = null;
+var ytReady  = false;
+
+var trackTitle = document.getElementById('trackTitle');
+var btnPrev = document.getElementById('btnPrev');
+var btnPlay = document.getElementById('btnPlay');
+var btnNext = document.getElementById('btnNext');
+
+function setTrackText(txt, idle){
+  trackTitle.textContent = txt;
+  trackTitle.classList.toggle('idle', !!idle);
+}
+
+window.onYouTubeIframeAPIReady = function(){
+  ytPlayer = new YT.Player('ytPlayer', {
+    height: 180, width: 320,
+    videoId: YT_SEED,
+    playerVars: {
+      listType: 'playlist',
+      list:     YT_PLAYLIST,
+      autoplay: 0,
+      controls: 0,
+      modestbranding: 1,
+      playsinline: 1,
+      rel: 0
+    },
+    events: {
+      onReady: function(){
+        ytReady = true;
+        btnPrev.disabled = false;
+        btnPlay.disabled = false;
+        btnNext.disabled = false;
+        updateTitle();
+      },
+      onStateChange: function(e){
+        // 1=playing, 2=paused, 3=buffering, 5=cued, 0=ended
+        if (e.data === YT.PlayerState.PLAYING){
+          btnPlay.textContent = '❚❚';
+          updateTitle();
+        } else if (e.data === YT.PlayerState.PAUSED){
+          btnPlay.textContent = '▶';
+        } else if (e.data === YT.PlayerState.ENDED){
+          btnPlay.textContent = '▶';
+          // YT Mix auto-advances; if not, force next
+          try { ytPlayer.nextVideo(); } catch(_) {}
+        } else if (e.data === YT.PlayerState.CUED || e.data === YT.PlayerState.BUFFERING){
+          updateTitle();
+        }
+      },
+      onError: function(e){
+        setTrackText('⟨ PLAYER ERROR · ' + (e && e.data ? 'code ' + e.data : 'unknown') + ' ⟩', true);
+      }
+    }
+  });
+};
+
+function updateTitle(){
+  if (!ytReady || !ytPlayer || !ytPlayer.getVideoData) return;
+  try {
+    var d = ytPlayer.getVideoData();
+    if (d && d.title) setTrackText(d.title, false);
+    else setTrackText('⟨ loading… ⟩', true);
+  } catch(_) {}
+}
+
+btnPlay.addEventListener('click', function(){
+  if (!ytReady) return;
+  try {
+    var st = ytPlayer.getPlayerState();
+    if (st === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
+    else ytPlayer.playVideo();
+  } catch(_) {}
+});
+btnPrev.addEventListener('click', function(){
+  if (!ytReady) return;
+  try { ytPlayer.previousVideo(); setTimeout(updateTitle, 600); } catch(_) {}
+});
+btnNext.addEventListener('click', function(){
+  if (!ytReady) return;
+  try { ytPlayer.nextVideo(); setTimeout(updateTitle, 600); } catch(_) {}
+});
+
+// load the IFrame API
+(function loadYT(){
+  if (window.YT && window.YT.Player) { window.onYouTubeIframeAPIReady(); return; }
+  var s = document.createElement('script');
+  s.src = 'https://www.youtube.com/iframe_api';
+  s.async = true;
+  document.head.appendChild(s);
+})();
 
 promptEl.focus();
 </script>
