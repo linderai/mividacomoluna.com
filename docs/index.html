@@ -52,13 +52,21 @@
     body{
       font-family:'Cormorant Garamond',Georgia,serif;color:var(--text);
       font-size:18px;line-height:1.7;letter-spacing:0.2px;overflow-x:hidden;font-weight:400;
-      background-color:var(--black);
-      background-image:url('assets/Landing.jpg');
-      background-size:cover;background-position:center;
-      background-attachment:fixed;background-repeat:no-repeat;
+      background:var(--black);
       min-height:100vh;
     }
-    /* scrim — sits below ember canvas */
+    /* Luna PNG — fixed-position layer that pans vertically as the page scrolls.
+       JS updates background-position-y proportional to scroll fraction:
+       top of page → top of image, bottom of page → bottom of image. */
+    .bg-image{
+      position:fixed;inset:0;z-index:-2;pointer-events:none;
+      background-image:url('assets/Landing.jpg');
+      background-size:cover;
+      background-position:center 0%;
+      background-repeat:no-repeat;
+      will-change:background-position;
+    }
+    /* scrim — sits above bg-image, below ember canvas */
     .bg-scrim{
       position:fixed;inset:0;z-index:-1;pointer-events:none;
       background:
@@ -400,7 +408,8 @@
 </head>
 <body>
 
-<!-- moon halo + scrim. embers canvas auto-injects. Hero PNG slot is body bg above. -->
+<!-- Luna bg pans with scroll. moon halo + scrim above it. embers canvas auto-injects. -->
+<div class="bg-image"></div>
 <div class="moon-halo"></div>
 <div class="bg-scrim"></div>
 
@@ -614,6 +623,24 @@
 <!-- ember canvas — theme-aware drift (magenta ↔ paired) -->
 <script src="assets/embers.js" defer></script>
 <script>
+// bg-image scroll pan — top of page reveals top of image, bottom reveals bottom
+(function(){
+  var bg = document.querySelector('.bg-image');
+  if (!bg) return;
+  var ticking = false;
+  function update(){
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var p = max > 0 ? Math.max(0, Math.min(1, window.scrollY / max)) : 0;
+    bg.style.backgroundPosition = 'center ' + (p * 100).toFixed(2) + '%';
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if (!ticking){ requestAnimationFrame(update); ticking = true; }
+  }, {passive:true});
+  window.addEventListener('resize', update);
+  update();
+})();
+
 // theme toggle — BLUE ⇄ RED, persisted in localStorage
 (function(){
   var html = document.documentElement;
