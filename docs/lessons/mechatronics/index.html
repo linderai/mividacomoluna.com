@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" class="theme-blue">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechatronics · Lessons · Mi Vida Como Luna</title>
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0a0c0e;--surface:#11161c;--line:#243040;--text:#e8f0f8;--muted:#5a6a7a;--magenta:#ff2bd6;--paired:#0099ff;--paired-soft:#3df0ff}
+html.theme-red{--paired:#ff2929;--paired-soft:#ff6b6b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Rajdhani',sans-serif;color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 24px;letter-spacing:0.3px;
+  background:radial-gradient(ellipse at center,rgba(255,43,214,0.08),transparent 55%),var(--black)}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(255,43,214,0.012) 3px,rgba(255,43,214,0.012) 4px)}
+.card{position:relative;z-index:1;max-width:560px;width:100%;background:var(--surface);border:1px solid var(--line);padding:56px 40px;text-align:center;
+  clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px)}
+.card::before{content:'';position:absolute;top:-1px;left:30px;right:30px;height:2px;background:var(--magenta);box-shadow:0 0 12px var(--magenta)}
+.card::after{content:'';position:absolute;bottom:-1px;left:30px;right:30px;height:2px;background:var(--paired);box-shadow:0 0 12px var(--paired)}
+.num{font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:4px;color:var(--paired-soft);text-transform:uppercase;margin-bottom:14px}
+.glyph{font-family:'Orbitron',sans-serif;font-size:56px;color:var(--magenta);text-shadow:0 0 22px rgba(255,43,214,0.5);margin-bottom:18px;line-height:1}
+.name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;letter-spacing:5px;color:var(--text);text-transform:uppercase;margin-bottom:18px}
+.blurb{font-size:15px;line-height:1.85;color:var(--muted);max-width:420px;margin:0 auto 36px}
+.status{display:inline-block;font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:3px;color:var(--magenta);padding:8px 16px;border:1px solid var(--magenta);margin-bottom:32px;text-transform:uppercase}
+.back{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid var(--paired);color:var(--paired);font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:4px;text-transform:uppercase;text-decoration:none;transition:all 0.18s;
+  clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)}
+.back:hover{background:var(--paired);color:var(--black);box-shadow:0 0 18px var(--paired-soft)}
+</style>
+</head>
+<body>
+<main class="card">
+  <p class="num">LSN · 03</p>
+  <div class="glyph">⌖</div>
+  <h1 class="name">Mechatronics</h1>
+  <p class="blurb">Motores y código en la misma frase. Recordando viejos hábitos — PID, encoders, control de lazo cerrado, microcontroladores. Capítulos por venir: armar antes de simular.</p>
+  <span class="status">⟨ COMING ⟩</span><br>
+  <a href="../../#lessons" class="back">◂ VOLVER AL CÓDICE</a>
+</main>
+<script>(function(){var s=localStorage.getItem('mvcl_theme')||'blue';document.documentElement.classList.remove('theme-blue','theme-red');document.documentElement.classList.add('theme-'+s);})();</script>
+</body>
+</html>

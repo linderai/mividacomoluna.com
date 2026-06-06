@@ -18,6 +18,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   String _time = '';
 
   late MoonData _moon;
+  late ZodiacData _zodiac;
+  late TreePath _path;
   late DateTime _nextNew;
   late DateTime _nextFull;
   late DateTime _nextFirst;
@@ -26,6 +28,13 @@ class _DashboardScreenState extends State<DashboardScreen>
   @override
   void initState() {
     super.initState();
+    // Guard: redirect to landing if not authenticated
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!LunaAuthService.instance.loggedIn) {
+        Navigator.pushReplacementNamed(context, '/');
+      }
+    });
+
     _glowCtrl = AnimationController(
         vsync: this, duration: const Duration(seconds: 5))..repeat(reverse: true);
     _glowAnim = Tween<double>(begin: 0.4, end: 1.0)
@@ -48,11 +57,13 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   void _refreshMoon() {
-    _moon       = MoonEngine.calculate();
-    _nextNew    = MoonEngine.nextNewMoon();
-    _nextFull   = MoonEngine.nextFullMoon();
-    _nextFirst  = MoonEngine.nextFirstQuarter();
-    _nextLast   = MoonEngine.nextLastQuarter();
+    _moon    = MoonEngine.calculate();
+    _zodiac  = MoonEngineExtended.calculateZodiac();
+    _path    = MoonEngineExtended.calculatePath();
+    _nextNew   = MoonEngine.nextNewMoon();
+    _nextFull  = MoonEngine.nextFullMoon();
+    _nextFirst = MoonEngine.nextFirstQuarter();
+    _nextLast  = MoonEngine.nextLastQuarter();
   }
 
   @override
@@ -93,6 +104,12 @@ class _DashboardScreenState extends State<DashboardScreen>
                   ),
                   const SizedBox(height: 20),
                   _KabbalisticInsight(moon: _moon),
+                  const SizedBox(height: 20),
+                  _ShadowCard(moon: _moon),
+                  const SizedBox(height: 20),
+                  _ZodiacCard(zodiac: _zodiac),
+                  const SizedBox(height: 20),
+                  _TreePathCard(path: _path, moonAge: _moon.age),
                   const SizedBox(height: 20),
                   _PortalsGrid(),
                   const SizedBox(height: 32),
@@ -588,6 +605,335 @@ class _PortalCardState extends State<_PortalCard> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ── Shadow Card (Qliphoth) ────────────────────────────────────────────────────
+
+class _ShadowCard extends StatelessWidget {
+  final MoonData moon;
+  const _ShadowCard({required this.moon});
+
+  @override
+  Widget build(BuildContext context) {
+    final waning  = moon.phase.isWaning;
+    final borderC = waning ? const Color(0xFFcc2222) : const Color(0xFF441111);
+    final labelC  = waning ? const Color(0xFFcc4444) : LunaTheme.dimmer;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: LunaTheme.surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border(left: BorderSide(color: borderC, width: 2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                waning ? 'SHADOW · QLIPHOTH · ACTIVE' : 'SHADOW · QLIPHOTH · DORMANT',
+                style: GoogleFonts.jetBrainsMono(
+                  fontSize: 9, color: labelC, letterSpacing: 2),
+              ),
+              const Spacer(),
+              Text(
+                moon.phase.qliphothName,
+                style: GoogleFonts.jetBrainsMono(
+                  fontSize: 9,
+                  color: waning ? const Color(0xFFcc4444) : LunaTheme.dimmer,
+                  letterSpacing: 1,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            moon.phase.qliphothMeaning,
+            style: GoogleFonts.cormorantGaramond(
+              fontSize: 16,
+              fontStyle: FontStyle.italic,
+              color: waning ? const Color(0xFFd4a0a0) : LunaTheme.dimmer,
+              height: 1.6,
+            ),
+          ),
+          if (!waning) ...[
+            const SizedBox(height: 8),
+            Text(
+              'Shadow work deepens as the moon wanes.',
+              style: GoogleFonts.jetBrainsMono(
+                fontSize: 8, color: LunaTheme.dimmer),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+// ── Zodiac Card ───────────────────────────────────────────────────────────────
+
+class _ZodiacCard extends StatelessWidget {
+  final ZodiacData zodiac;
+  const _ZodiacCard({required this.zodiac});
+
+  Color get _elementColor {
+    switch (zodiac.sign.element) {
+      case 'Fire':  return const Color(0xFFcc4422);
+      case 'Earth': return LunaTheme.malkuth;
+      case 'Air':   return LunaTheme.chokmah;
+      case 'Water': return LunaTheme.yesod;
+      default:      return LunaTheme.purple;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final deg = zodiac.degree.floor();
+    final min = ((zodiac.degree - deg) * 60).floor();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: LunaTheme.surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border(left: BorderSide(color: _elementColor, width: 2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'MOON IN ZODIAC',
+            style: GoogleFonts.jetBrainsMono(
+              fontSize: 9, color: _elementColor.withValues(alpha: 0.8),
+              letterSpacing: 2),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                zodiac.sign.glyph,
+                style: TextStyle(fontSize: 36, color: _elementColor),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    zodiac.sign.label.toUpperCase(),
+                    style: GoogleFonts.jetBrainsMono(
+                      fontSize: 14,
+                      color: LunaTheme.white,
+                      letterSpacing: 3,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '$deg°${min.toString().padLeft(2,"0")}′  ·  ${zodiac.sign.element}  ·  ${zodiac.sign.quality}',
+                    style: GoogleFonts.jetBrainsMono(
+                      fontSize: 9, color: LunaTheme.dim),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              _ZodiacPill('Ruler', zodiac.sign.ruler, _elementColor),
+              const SizedBox(width: 8),
+              _ZodiacPill('Element', zodiac.sign.element, _elementColor),
+              const SizedBox(width: 8),
+              _ZodiacPill('Mode', zodiac.sign.quality, _elementColor),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ZodiacPill extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color color;
+  const _ZodiacPill(this.label, this.value, this.color);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(3),
+        border: Border.all(color: color.withValues(alpha: 0.25)),
+      ),
+      child: Column(
+        children: [
+          Text(label.toUpperCase(),
+            style: GoogleFonts.jetBrainsMono(fontSize: 7, color: LunaTheme.dim, letterSpacing: 1)),
+          const SizedBox(height: 1),
+          Text(value,
+            style: GoogleFonts.jetBrainsMono(fontSize: 8, color: color.withValues(alpha: 0.9))),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Tree Path Card ────────────────────────────────────────────────────────────
+
+class _TreePathCard extends StatelessWidget {
+  final TreePath path;
+  final double moonAge;
+  const _TreePathCard({required this.path, required this.moonAge});
+
+  @override
+  Widget build(BuildContext context) {
+    const gold = LunaTheme.tiphareth;
+    final progress = moonAge / 29.53;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: LunaTheme.surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border(left: const BorderSide(color: gold, width: 2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                'PATH ON THE TREE OF LIFE',
+                style: GoogleFonts.jetBrainsMono(
+                  fontSize: 9, color: gold.withValues(alpha: 0.8),
+                  letterSpacing: 2),
+              ),
+              const Spacer(),
+              Text(
+                '${path.number}/32',
+                style: GoogleFonts.jetBrainsMono(
+                  fontSize: 9, color: LunaTheme.dim),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(2),
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: LunaTheme.border,
+              valueColor: const AlwaysStoppedAnimation<Color>(gold),
+              minHeight: 2,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (path.hebrewGlyph != null)
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: gold.withValues(alpha: 0.3)),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Center(
+                    child: Text(
+                      path.hebrewGlyph!,
+                      style: const TextStyle(
+                        fontSize: 30,
+                        color: gold,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: gold.withValues(alpha: 0.3)),
+                    borderRadius: BorderRadius.circular(4),
+                    color: gold.withValues(alpha: 0.05),
+                  ),
+                  child: Center(
+                    child: Text(
+                      '${path.number}',
+                      style: GoogleFonts.jetBrainsMono(
+                        fontSize: 18, color: gold, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (path.tarotCard != null)
+                      Row(
+                        children: [
+                          Text(
+                            path.tarotNumeral!,
+                            style: GoogleFonts.cormorantGaramond(
+                              fontSize: 12,
+                              color: gold.withValues(alpha: 0.6),
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            path.tarotCard!.toUpperCase(),
+                            style: GoogleFonts.jetBrainsMono(
+                              fontSize: 11,
+                              color: gold,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      )
+                    else
+                      Text(
+                        path.name.toUpperCase(),
+                        style: GoogleFonts.jetBrainsMono(
+                          fontSize: 11,
+                          color: gold,
+                          letterSpacing: 2,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    const SizedBox(height: 2),
+                    Text(
+                      path.isSephirah ? 'Sephirah ${path.number} · ${path.name}' : 'Path ${path.number} · ${path.name}',
+                      style: GoogleFonts.jetBrainsMono(
+                        fontSize: 8, color: LunaTheme.dim),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            path.meditation,
+            style: GoogleFonts.cormorantGaramond(
+              fontSize: 15,
+              fontStyle: FontStyle.italic,
+              color: LunaTheme.cream,
+              height: 1.65,
+            ),
+          ),
+        ],
       ),
     );
   }
