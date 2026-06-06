@@ -1,1013 +1,575 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="theme-blue">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Vida Como Luna — The Esoteric Codex</title>
-    <meta name="description" content="Astrology, tarot, moon phases, and Kabbalistic archetypes — decoded with machine intelligence. Ten houses. One mission.">
-    <meta property="og:title" content="Astrology, tarot, moon phases, and Kabbalistic archetypes — decoded with machine intelligence. Ten houses. One mission.">
-    <meta property="og:description" content="Astrology, tarot, moon phases, and Kabbalistic archetypes — decoded with machine intelligence. Ten houses. One mission.">
-    <meta property="og:image" content="assets/og-image.jpg">
+    <title>Mi Vida Como Luna · The Esoteric Codex</title>
+
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+
+    <meta name="description" content="Tarot, lunaciones y oficio técnico. Diez casas, cinco lecciones, una sola consola.">
+
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mividacomoluna.com/">
+    <meta property="og:title" content="Mi Vida Como Luna · The Esoteric Codex">
+    <meta property="og:description" content="Tarot, lunaciones y oficio técnico. Diez casas, cinco lecciones, una sola consola.">
+    <meta property="og:image" content="https://mividacomoluna.com/assets/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="assets/og-image.jpg">
-    <meta name="twitter:title" content="Mi Vida Como Luna — The Esoteric Codex">
-    <meta name="twitter:description" content="Astrology, tarot, moon phases, and Kabbalistic archetypes — decoded with machine intelligence. Ten houses. One mission.">
+    <meta name="twitter:title" content="Mi Vida Como Luna · The Esoteric Codex">
+    <meta name="twitter:description" content="Tarot, lunaciones y oficio técnico. Diez casas, cinco lecciones, una sola consola.">
+    <meta name="twitter:image" content="https://mividacomoluna.com/assets/og-image.jpg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=JetBrains+Mono:wght@200;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --void: #0a0a0f;
-            --luna-silver: #c0c0c0;
-            --luna-blue: #4a5568;
-            --luna-purple: #667eea;
-            --luna-violet: #9f7aea;
-            --luna-glow: rgba(159, 122, 234, 0.3);
-            --luna-cold: #a0aec0;
-            --keter: #ffffff;
-            --chokmah: #667eea;
-            --binah: #9f7aea;
-            --chesed: #4299e1;
-            --gevurah: #f56565;
-            --tiferet: #ecc94b;
-            --netzach: #48bb78;
-            --hod: #ed8936;
-            --yesod: #9f7aea;
-            --malkuth: #38b2ac;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Cormorant Garamond', serif;
-            background: var(--void);
-            color: var(--luna-silver);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* STARS BACKGROUND */
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle ease-in-out infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        /* MOON GLOW */
-        .moon-glow {
-            position: fixed;
-            top: -20%;
-            right: -10%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, var(--luna-glow) 0%, transparent 70%);
-            border-radius: 50%;
-            z-index: 1;
-            animation: moonPulse 8s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes moonPulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.1); }
-        }
-
-        /* MAIN CONTENT */
-        .main-content {
-            position: relative;
-            z-index: 10;
-            min-height: 100vh;
-        }
-
-        /* HERO */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .luna-symbol {
-            font-size: 4rem;
-            margin-bottom: 30px;
-            animation: lunaFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes lunaFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        .main-title {
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            font-weight: 300;
-            letter-spacing: 0.1em;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--luna-silver), var(--luna-purple), var(--luna-violet));
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: lunarShift 6s ease-in-out infinite;
-        }
-
-        @keyframes lunarShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .subtitle {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: clamp(0.7rem, 2vw, 0.9rem);
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            color: var(--luna-cold);
-            margin-bottom: 60px;
-            opacity: 0.7;
-        }
-
-        .tagline {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            font-weight: 300;
-            font-style: italic;
-            color: var(--luna-violet);
-            max-width: 600px;
-            line-height: 1.8;
-            margin-bottom: 40px;
-        }
-
-        .cta-text {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--luna-purple);
-            padding: 15px 40px;
-            border: 1px solid var(--luna-purple);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            background: transparent;
-        }
-
-        .cta-text:hover {
-            background: var(--luna-purple);
-            color: var(--void);
-            box-shadow: 0 0 30px var(--luna-glow);
-        }
-
-        /* HOUSES SECTION */
-        .houses-section {
-            padding: 100px 20px;
-            position: relative;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 80px;
-        }
-
-        .section-title {
-            font-size: clamp(1.8rem, 5vw, 3rem);
-            font-weight: 300;
-            letter-spacing: 0.2em;
-            color: var(--luna-silver);
-            margin-bottom: 20px;
-        }
-
-        .section-subtitle {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--luna-cold);
-            opacity: 0.6;
-        }
-
-        /* HOUSES NAV */
-        .houses-nav {
-            position: fixed;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            z-index: 100;
-        }
-
-        .nav-link {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            text-decoration: none;
-            border: 1px solid var(--nav-color);
-            color: var(--nav-color);
-            transition: all 0.3s ease;
-            opacity: 0.5;
-        }
-
-        .nav-link:hover {
-            opacity: 1;
-            background: var(--nav-color);
-            color: var(--void);
-        }
-
-        .nav-link.keter { --nav-color: var(--keter); }
-        .nav-link.chokmah { --nav-color: var(--chokmah); }
-        .nav-link.binah { --nav-color: var(--binah); }
-        .nav-link.chesed { --nav-color: var(--chesed); }
-        .nav-link.gevurah { --nav-color: var(--gevurah); }
-        .nav-link.tiferet { --nav-color: var(--tiferet); }
-        .nav-link.netzach { --nav-color: var(--netzach); }
-        .nav-link.hod { --nav-color: var(--hod); }
-        .nav-link.yesod { --nav-color: var(--yesod); }
-        .nav-link.malkuth { --nav-color: var(--malkuth); }
-
-        /* HOUSES SCROLL SECTIONS */
-        .houses-scroll {
-            position: relative;
-        }
-
-        .houses-scroll .section-header {
-            padding: 100px 20px 50px;
-            text-align: center;
-        }
-
-        .house-section {
-            min-height: 100vh;
-            position: relative;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .house-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.3;
-            z-index: 1;
-        }
-
-        .house-bg::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--void) 0%, transparent 50%, var(--void) 100%);
-        }
-
-        .house-content {
-            position: relative;
-            z-index: 10;
-            padding: 60px;
-            max-width: 600px;
-        }
-
-        .house-section:nth-child(odd) .house-content {
-            margin-left: 10%;
-        }
-
-        .house-section:nth-child(even) .house-content {
-            margin-left: auto;
-            margin-right: 10%;
-            text-align: right;
-        }
-
-        .house-section .house-number {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            letter-spacing: 0.3em;
-            color: var(--luna-cold);
-            opacity: 0.5;
-            display: block;
-            margin-bottom: 20px;
-        }
-
-        .house-section .house-name {
-            font-size: clamp(3rem, 8vw, 5rem);
-            font-weight: 300;
-            letter-spacing: 0.1em;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        .house-section.keter .house-name { color: var(--keter); text-shadow: 0 0 40px var(--keter); }
-        .house-section.chokmah .house-name { color: var(--chokmah); text-shadow: 0 0 40px var(--chokmah); }
-        .house-section.binah .house-name { color: var(--binah); text-shadow: 0 0 40px var(--binah); }
-        .house-section.chesed .house-name { color: var(--chesed); text-shadow: 0 0 40px var(--chesed); }
-        .house-section.gevurah .house-name { color: var(--gevurah); text-shadow: 0 0 40px var(--gevurah); }
-        .house-section.tiferet .house-name { color: var(--tiferet); text-shadow: 0 0 40px var(--tiferet); }
-        .house-section.netzach .house-name { color: var(--netzach); text-shadow: 0 0 40px var(--netzach); }
-        .house-section.hod .house-name { color: var(--hod); text-shadow: 0 0 40px var(--hod); }
-        .house-section.yesod .house-name { color: var(--yesod); text-shadow: 0 0 40px var(--yesod); }
-        .house-section.malkuth .house-name { color: var(--malkuth); text-shadow: 0 0 40px var(--malkuth); }
-
-        .house-section .house-domain {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--luna-cold);
-            margin-bottom: 30px;
-        }
-
-        .house-section .house-status {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            padding: 12px 30px;
-            border: 1px solid var(--luna-purple);
-            color: var(--luna-purple);
-            display: inline-block;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .house-section .house-status:hover {
-            background: var(--luna-purple);
-            color: var(--void);
-        }
-
-        /* APPLY SECTION */
-        .apply-section {
-            padding: 120px 20px;
-            text-align: center;
-            position: relative;
-        }
-
-        .apply-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1px;
-            height: 80px;
-            background: linear-gradient(to bottom, transparent, var(--luna-purple));
-        }
-
-        .apply-title {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            margin-bottom: 30px;
-        }
-
-        .apply-desc {
-            font-size: 1.1rem;
-            color: var(--luna-cold);
-            max-width: 500px;
-            margin: 0 auto 50px;
-            line-height: 1.8;
-            opacity: 0.7;
-        }
-
-        /* FOOTER */
-        .luna-footer {
-            padding: 60px 20px;
-            text-align: center;
-            border-top: 1px solid rgba(102, 126, 234, 0.1);
-        }
-
-        .mission-complete {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            letter-spacing: 0.2em;
-            color: var(--luna-cold);
-            margin-bottom: 15px;
-            opacity: 0.6;
-        }
-
-        .charlie-sign {
-            font-style: italic;
-            font-size: 1.1rem;
-            color: var(--luna-violet);
-            letter-spacing: 0.1em;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .houses-nav {
-                right: 15px;
-            }
-            
-            .nav-link {
-                width: 30px;
-                height: 30px;
-                font-size: 0.55rem;
-            }
-            
-            .house-card {
-                width: calc(50% - 2px);
-            }
-            
-            .house-content {
-                padding: 40px 30px;
-            }
-            
-            .house-section:nth-child(odd) .house-content,
-            .house-section:nth-child(even) .house-content {
-                margin-left: 5%;
-                margin-right: 5%;
-                text-align: left;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .houses-nav {
-                display: none;
-            }
-            
-            .house-card {
-                width: 100%;
-                min-height: 200px;
-                padding: 40px 20px;
-            }
-            
-            .house-content {
-                padding: 30px 20px;
-            }
-            
-            .house-section .house-name {
-                font-size: 2.5rem;
-            }
-        }
-
-        /* AMBIENT PARTICLES */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            background: var(--luna-violet);
-            border-radius: 50%;
-            animation: drift linear infinite;
-        }
-
-        @keyframes drift {
-            0% {
-                transform: translateY(100vh) translateX(0);
-                opacity: 0;
-            }
-            10% { opacity: 0.5; }
-            90% { opacity: 0.5; }
-            100% {
-                transform: translateY(-100vh) translateX(100px);
-                opacity: 0;
-            }
-        }
-
-        /* SCROLL INDICATOR */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            opacity: 0.4;
-            animation: scrollBounce 2s ease-in-out infinite;
-            text-decoration: none;
-            color: var(--luna-cold);
-            transition: opacity 0.3s ease;
-        }
-
-        .scroll-indicator:hover {
-            opacity: 0.8;
-        }
-
-        .scroll-indicator span {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-        }
-
-        @keyframes scrollBounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(10px); }
-        }
-
-        /* HOUSES GRID SECTION */
-        .houses-section {
-            padding: 100px 20px;
-            position: relative;
-        }
-
-        .houses-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 2px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .house-card {
-            background: var(--void);
-            padding: 50px 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            min-height: 280px;
-            width: calc(33.333% - 2px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(102, 126, 234, 0.1);
-            text-decoration: none;
-        }
-
-        .house-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--house-color);
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-        }
-
-        .house-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .house-card:hover {
-            background: rgba(102, 126, 234, 0.05);
-            border-color: var(--house-color);
-        }
-
-        .house-card .house-number {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            color: var(--luna-cold);
-            opacity: 0.4;
-            margin-bottom: 15px;
-        }
-
-        .house-card .house-name {
-            font-size: 1.6rem;
-            font-weight: 400;
-            letter-spacing: 0.15em;
-            margin-bottom: 10px;
-            color: var(--house-color);
-            text-transform: uppercase;
-        }
-
-        .house-card .house-domain {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--luna-cold);
-            margin-bottom: 20px;
-        }
-
-        .house-card .house-status {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.1em;
-            padding: 8px 20px;
-            border: 1px solid var(--house-color);
-            color: var(--house-color);
-            opacity: 0.6;
-            transition: all 0.3s ease;
-        }
-
-        .house-card:hover .house-status {
-            opacity: 1;
-            background: var(--house-color);
-            color: var(--void);
-        }
-
-        /* House card colors */
-        .house-card.keter { --house-color: var(--keter); }
-        .house-card.chokmah { --house-color: var(--chokmah); }
-        .house-card.binah { --house-color: var(--binah); }
-        .house-card.chesed { --house-color: var(--chesed); }
-        .house-card.gevurah { --house-color: var(--gevurah); }
-        .house-card.tiferet { --house-color: var(--tiferet); }
-        .house-card.netzach { --house-color: var(--netzach); }
-        .house-card.hod { --house-color: var(--hod); }
-        .house-card.yesod { --house-color: var(--yesod); }
-        .house-card.malkuth { --house-color: var(--malkuth); }
-
-        /* LOGIN BUTTON */
-        .login-btn {
-            position: fixed;
-            top: 24px;
-            right: 30px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.62rem;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: var(--luna-cold);
-            text-decoration: none;
-            padding: 8px 18px;
-            border: 1px solid rgba(159, 122, 234, 0.3);
-            z-index: 200;
-            transition: all 0.3s ease;
-            opacity: 0.7;
-        }
-        .login-btn:hover {
-            color: var(--luna-violet);
-            border-color: var(--luna-violet);
-            opacity: 1;
-            box-shadow: 0 0 20px var(--luna-glow);
-        }
+    :root{
+      --black:#0a0c0e; --void:#06080a; --surface:#11161c; --raised:#1a2028; --line:#243040;
+      --text:#e8f0f8; --muted:#5a6a7a; --ok:#3df0a8;
+      --magenta:#ff2bd6; --magenta-dim:#aa1e92; --magenta-deep:#5a0e4d;
+      --moon:#c0c0c0; --moon-soft:rgba(192,192,192,0.4);
+
+      /* paired accent — overridden by .theme-red */
+      --paired:#0099ff;
+      --paired-soft:#3df0ff;
+      --paired-dim:#0066aa;
+      --paired-deep:#003366;
+      --paired-rgb:0,153,255;
+    }
+    html.theme-red{
+      --paired:#ff2929;
+      --paired-soft:#ff6b6b;
+      --paired-dim:#a00010;
+      --paired-deep:#550000;
+      --paired-rgb:255,41,41;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Rajdhani',sans-serif;color:var(--text);
+      font-size:16px;line-height:1.6;letter-spacing:0.3px;overflow-x:hidden;
+      background:radial-gradient(ellipse at top right,rgba(var(--paired-rgb),0.10),transparent 55%),
+                 radial-gradient(ellipse at bottom left,rgba(255,43,214,0.08),transparent 55%),
+                 var(--black);
+      min-height:100vh;
+    }
+    /* dark scrim — sits BELOW the ember canvas, darkens lower viewport for legibility */
+    .bg-scrim{
+      position:fixed;inset:0;z-index:-1;pointer-events:none;
+      background:linear-gradient(180deg,rgba(8,10,14,0) 0%,rgba(8,10,14,0.15) 35%,rgba(8,10,14,0.55) 75%,rgba(8,10,14,0.85) 100%);
+    }
+    /* moon halo — fixed top-right, recolors per theme */
+    .moon-halo{
+      position:fixed;top:-20%;right:-10%;width:680px;height:680px;
+      background:radial-gradient(circle,rgba(var(--paired-rgb),0.16) 0%,rgba(255,43,214,0.08) 35%,transparent 70%);
+      border-radius:50%;z-index:-1;pointer-events:none;
+      animation:halo-pulse 9s ease-in-out infinite;
+    }
+    @keyframes halo-pulse{50%{opacity:0.65;transform:scale(1.08)}}
+    /* scanline overlay */
+    body::before{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:200;
+      background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(255,43,214,0.013) 3px,rgba(255,43,214,0.013) 4px);
+    }
+    a{color:inherit;text-decoration:none}
+    button{font-family:'Rajdhani',sans-serif;cursor:pointer;border:none;background:none;color:inherit}
+
+    /* ─ HEADER ─ */
+    .header{
+      position:fixed;top:0;left:0;right:0;z-index:50;
+      display:flex;align-items:center;gap:20px;padding:16px 32px;
+      background:rgba(6,8,10,0.85);backdrop-filter:blur(8px);
+      border-bottom:1px solid var(--line);
+    }
+    .header-brand{flex-shrink:0;display:flex;align-items:center;gap:12px}
+    .brand-glyph{
+      font-size:22px;color:var(--moon);
+      text-shadow:0 0 14px rgba(192,192,192,0.6),0 0 28px rgba(var(--paired-rgb),0.4);
+    }
+    .header-brand h1{
+      font-family:'Orbitron',sans-serif;font-weight:900;font-size:18px;letter-spacing:3.5px;
+      color:var(--magenta);text-shadow:0 0 12px rgba(255,43,214,0.5);margin:0;
+    }
+    .header-brand h1 span{color:var(--paired)}
+    .header-tagline{
+      font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2.5px;
+      color:var(--paired-soft);text-transform:uppercase;margin-top:2px;
+    }
+    .header-nav{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .header-nav a{
+      font-family:'Orbitron',sans-serif;font-weight:600;font-size:11px;letter-spacing:2.5px;
+      color:var(--muted);padding:8px 14px;text-transform:uppercase;transition:color 0.15s;
+    }
+    .header-nav a:hover{color:var(--paired-soft);text-shadow:0 0 8px var(--paired-soft)}
+    .nav-login{
+      border:1px solid var(--paired-dim);color:var(--paired)!important;
+    }
+    .nav-login:hover{background:var(--paired);color:var(--black)!important;text-shadow:none!important;box-shadow:0 0 14px rgba(var(--paired-rgb),0.5)}
+    .theme-toggle{
+      display:inline-flex;align-items:center;gap:6px;padding:6px 12px;
+      border:1px solid var(--magenta-dim);color:var(--magenta);
+      font-family:'Orbitron',sans-serif;font-weight:700;font-size:10px;letter-spacing:2.5px;
+      text-transform:uppercase;transition:all 0.18s;
+    }
+    .theme-toggle:hover{background:var(--magenta);color:var(--black);box-shadow:0 0 14px rgba(255,43,214,0.5)}
+    .theme-toggle .dot{
+      width:8px;height:8px;border-radius:50%;background:var(--paired);
+      box-shadow:0 0 8px var(--paired);
+    }
+
+    /* ─ HERO ─ */
+    .content-area{padding-top:72px;position:relative;z-index:1}
+    footer{position:relative;z-index:1}
+    .hero{
+      position:relative;min-height:100vh;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;text-align:center;padding:60px 24px 100px;
+    }
+    .hero-glyph{
+      font-size:clamp(48px,7vw,72px);color:var(--moon);margin-bottom:24px;
+      text-shadow:0 0 24px rgba(192,192,192,0.6),0 0 48px rgba(var(--paired-rgb),0.35),0 0 80px rgba(255,43,214,0.25);
+      animation:moon-float 5s ease-in-out infinite;
+    }
+    @keyframes moon-float{50%{transform:translateY(-10px)}}
+    .hero-eyebrow{
+      font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:5px;
+      color:var(--paired-soft);text-transform:uppercase;margin-bottom:20px;
+      animation:fade-down 0.8s ease 0.25s backwards;
+    }
+    .hero-title{
+      font-family:'Orbitron',sans-serif;font-weight:900;
+      font-size:clamp(44px,8vw,96px);line-height:0.9;letter-spacing:5px;
+      color:var(--magenta);text-shadow:0 0 24px rgba(255,43,214,0.5),0 0 56px rgba(255,43,214,0.25);
+      margin-bottom:14px;text-transform:uppercase;
+      animation:fade-up 1s ease 0.4s backwards;
+    }
+    .hero-title .line2{
+      display:block;font-family:'Rajdhani',sans-serif;font-weight:600;
+      font-size:0.24em;letter-spacing:8px;color:var(--paired);
+      text-shadow:0 0 16px rgba(var(--paired-rgb),0.55);margin-top:18px;
+    }
+    .hero-subtitle{
+      font-size:clamp(15px,2vw,18px);font-weight:400;color:var(--text);max-width:580px;
+      line-height:1.85;margin:32px auto;animation:fade-up 1s ease 0.7s backwards;
+    }
+    .hero-subtitle em{color:var(--magenta);font-style:normal;font-weight:600}
+    .hero-actions{
+      display:flex;gap:18px;justify-content:center;flex-wrap:wrap;
+      animation:fade-up 1s ease 1s backwards;
+    }
+    .btn-primary{
+      display:inline-flex;align-items:center;gap:10px;padding:18px 36px;
+      background:linear-gradient(180deg,rgba(255,43,214,0.22),rgba(170,30,146,0.08));
+      border:1px solid var(--magenta);color:var(--magenta);
+      font-family:'Orbitron',sans-serif;font-weight:800;font-size:14px;letter-spacing:4px;
+      text-transform:uppercase;text-shadow:0 0 8px rgba(255,43,214,0.6);
+      box-shadow:0 0 0 1px rgba(255,43,214,0.3),inset 0 0 22px rgba(255,43,214,0.08);
+      transition:all 0.18s;
+      clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+    }
+    .btn-primary:hover{background:var(--magenta);color:var(--black);box-shadow:0 0 32px rgba(255,43,214,0.6);text-shadow:none;transform:translateY(-2px)}
+    .btn-ghost{
+      display:inline-flex;align-items:center;gap:10px;padding:18px 36px;
+      background:transparent;border:1px solid var(--paired-dim);color:var(--paired);
+      font-family:'Orbitron',sans-serif;font-weight:700;font-size:14px;letter-spacing:4px;
+      text-transform:uppercase;transition:all 0.18s;
+      clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+    }
+    .btn-ghost:hover{background:var(--paired);color:var(--black);box-shadow:0 0 22px rgba(var(--paired-rgb),0.5)}
+    .scroll-hint{
+      position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+      display:flex;flex-direction:column;align-items:center;gap:10px;
+      animation:bob 2s ease-in-out infinite;
+    }
+    .scroll-hint span{font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:4px;color:var(--paired-soft);text-transform:uppercase}
+    .scroll-hint-line{width:1px;height:36px;background:linear-gradient(180deg,var(--paired-soft),transparent);box-shadow:0 0 8px var(--paired-soft)}
+    @keyframes bob{50%{transform:translateX(-50%) translateY(6px)}}
+    @keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fade-down{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ─ SECTION HEADERS ─ */
+    .section-header{text-align:center;margin-bottom:56px;padding:0 24px}
+    .section-header h2{
+      font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(28px,5vw,52px);
+      letter-spacing:6px;color:var(--magenta);text-transform:uppercase;
+      text-shadow:0 0 18px rgba(255,43,214,0.4);margin-bottom:14px;
+    }
+    .section-header p{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:4px;color:var(--paired-soft);text-transform:uppercase}
+
+    /* ─ MANIFESTO ─ */
+    .manifesto{
+      max-width:880px;margin:60px auto;padding:48px 32px;text-align:center;
+      background:var(--surface);border:1px solid var(--line);position:relative;
+    }
+    .manifesto::before{content:'';position:absolute;top:-1px;left:30px;right:30px;height:2px;background:var(--magenta);box-shadow:0 0 12px var(--magenta)}
+    .manifesto::after{content:'';position:absolute;bottom:-1px;left:30px;right:30px;height:2px;background:var(--paired);box-shadow:0 0 12px var(--paired)}
+    .manifesto-text{font-size:18px;line-height:1.9;color:var(--text);font-weight:400}
+    .manifesto-text strong{color:var(--magenta);font-weight:700}
+    .manifesto-text .accent{color:var(--paired);font-weight:700;text-shadow:0 0 12px rgba(var(--paired-rgb),0.4)}
+
+    .divider{
+      max-width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--magenta),transparent);
+      margin:80px auto;box-shadow:0 0 10px var(--magenta);
+    }
+
+    /* ─ LESSONS ─ */
+    .lessons{max-width:1200px;margin:0 auto;padding:60px 32px 40px}
+    .lessons-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+    .lesson-card{
+      background:var(--surface);border:1px solid var(--paired-dim);padding:28px 22px;
+      position:relative;transition:all 0.2s;display:flex;flex-direction:column;gap:10px;
+      clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+    }
+    .lesson-card::before{content:'';position:absolute;top:0;left:0;width:36px;height:2px;background:var(--paired)}
+    .lesson-card::after{content:'';position:absolute;bottom:0;right:0;width:36px;height:2px;background:var(--magenta)}
+    .lesson-card:hover{border-color:var(--magenta);transform:translateY(-3px);box-shadow:0 12px 32px rgba(255,43,214,0.18)}
+    .lesson-card:hover::before{background:var(--magenta);box-shadow:0 0 10px var(--magenta)}
+    .lesson-num{
+      font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:3px;color:var(--paired-soft);
+      text-transform:uppercase;
+    }
+    .lesson-glyph{
+      font-family:'Orbitron',sans-serif;font-size:28px;color:var(--magenta);
+      text-shadow:0 0 14px rgba(255,43,214,0.45);
+    }
+    .lesson-name{
+      font-family:'Orbitron',sans-serif;font-weight:800;font-size:13px;letter-spacing:3px;
+      color:var(--text);text-transform:uppercase;
+    }
+    .lesson-status{
+      font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2.5px;
+      color:var(--muted);text-transform:uppercase;margin-top:auto;
+    }
+    .lesson-card.live .lesson-status{color:var(--ok)}
+
+    /* ─ HOUSES (Sephirot) ─ */
+    .houses{max-width:1200px;margin:0 auto;padding:80px 32px}
+    .houses-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+    .house-card{
+      background:var(--surface);border:1px solid var(--line);padding:32px 24px;
+      position:relative;transition:all 0.2s;display:flex;flex-direction:column;gap:10px;
+      min-height:220px;
+    }
+    .house-card::before{content:'';position:absolute;top:0;left:0;width:40px;height:2px;background:var(--magenta);box-shadow:0 0 8px var(--magenta)}
+    .house-card:hover{border-color:var(--paired);transform:translateY(-3px);box-shadow:0 10px 28px rgba(var(--paired-rgb),0.16)}
+    .house-seat{
+      font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:3px;color:var(--paired-soft);
+      text-transform:uppercase;
+    }
+    .house-name{
+      font-family:'Orbitron',sans-serif;font-weight:900;font-size:22px;letter-spacing:3px;
+      color:var(--magenta);text-transform:uppercase;
+      text-shadow:0 0 12px rgba(255,43,214,0.4);
+    }
+    .house-domain{font-size:13px;line-height:1.6;color:var(--muted)}
+    .house-status{
+      font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2.5px;
+      color:var(--paired);text-transform:uppercase;margin-top:auto;
+      padding-top:10px;border-top:1px solid var(--line);
+    }
+
+    /* ─ TAROT ─ */
+    .tarot-section{max-width:980px;margin:80px auto;padding:0 32px}
+    .tarot-card{
+      background:linear-gradient(135deg,rgba(255,43,214,0.06),rgba(var(--paired-rgb),0.05));
+      border:1px solid var(--magenta-dim);padding:56px 40px;text-align:center;
+      position:relative;
+      clip-path:polygon(20px 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%,0 20px);
+    }
+    .tarot-card::before{content:'';position:absolute;top:-1px;left:40px;right:40px;height:2px;background:var(--magenta);box-shadow:0 0 14px var(--magenta)}
+    .tarot-card::after{content:'';position:absolute;bottom:-1px;left:40px;right:40px;height:2px;background:var(--paired);box-shadow:0 0 14px var(--paired)}
+    .tarot-glyph{font-size:48px;color:var(--magenta);margin-bottom:14px;text-shadow:0 0 18px rgba(255,43,214,0.45)}
+    .tarot-card h2{
+      font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(24px,4vw,38px);
+      letter-spacing:5px;color:var(--text);text-transform:uppercase;margin-bottom:14px;
+    }
+    .tarot-card h2 span{color:var(--magenta);text-shadow:0 0 16px rgba(255,43,214,0.5)}
+    .tarot-sub{
+      font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:4px;
+      color:var(--paired-soft);text-transform:uppercase;margin-bottom:32px;
+    }
+
+    /* ─ FINAL CTA ─ */
+    .cta-final{
+      max-width:880px;margin:80px auto;padding:80px 32px;text-align:center;
+      background:linear-gradient(135deg,rgba(255,43,214,0.06),rgba(var(--paired-rgb),0.05));
+      border:1px solid var(--magenta-dim);position:relative;
+    }
+    .cta-final::before{content:'';position:absolute;top:-1px;left:30px;right:30px;height:2px;background:var(--magenta);box-shadow:0 0 14px var(--magenta)}
+    .cta-final::after{content:'';position:absolute;bottom:-1px;left:30px;right:30px;height:2px;background:var(--paired);box-shadow:0 0 14px var(--paired)}
+    .cta-final h2{
+      font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(24px,4vw,42px);
+      letter-spacing:4px;color:var(--text);line-height:1.3;text-transform:uppercase;
+      margin-bottom:14px;
+    }
+    .cta-final h2 span{color:var(--magenta);text-shadow:0 0 18px rgba(255,43,214,0.5);display:block;margin-top:8px}
+    .cta-sub{
+      font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:5px;
+      color:var(--paired);text-transform:uppercase;margin-bottom:36px;
+      text-shadow:0 0 12px rgba(var(--paired-rgb),0.4);
+    }
+
+    /* ─ FOOTER ─ */
+    footer{
+      border-top:1px solid var(--line);padding:48px 32px;text-align:center;
+      background:var(--void);
+    }
+    .footer-brand{
+      font-family:'Orbitron',sans-serif;font-weight:800;font-size:13px;letter-spacing:4px;
+      color:var(--text);margin-bottom:14px;text-transform:uppercase;
+    }
+    .footer-brand a{color:var(--magenta);text-shadow:0 0 10px rgba(255,43,214,0.4)}
+    .footer-brand a:hover{color:var(--paired-soft);text-shadow:0 0 10px var(--paired-soft)}
+    .charlie-sign{font-family:'Rajdhani',sans-serif;font-style:italic;font-size:14px;color:var(--paired);margin-top:8px;letter-spacing:1px}
+    .footer-copy{font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2.5px;color:var(--magenta-dim);text-transform:uppercase;margin-top:18px}
+
+    /* ─ REVEAL on scroll ─ */
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease}
+    .reveal.in{opacity:1;transform:translateY(0)}
+
+    @media(max-width:760px){
+      .header{padding:14px 18px;gap:14px}
+      .header-nav{gap:4px}
+      .header-nav a{padding:6px 10px;font-size:10px;letter-spacing:1.5px}
+      .header-tagline{display:none}
+      .theme-toggle{padding:5px 9px;font-size:9px;letter-spacing:1.5px}
+    }
     </style>
 </head>
 <body>
-    <a href="login/" class="login-btn">☽ Enter</a>
 
-    <!-- STARS -->
-    <div class="stars" id="stars"></div>
+<!-- moon halo + scrim — embers canvas auto-injects via embers.js -->
+<div class="moon-halo"></div>
+<div class="bg-scrim"></div>
 
-    <!-- MOON GLOW -->
-    <div class="moon-glow"></div>
+<!-- HEADER -->
+<header class="header">
+    <div class="header-brand">
+        <span class="brand-glyph">☽</span>
+        <div>
+            <h1>MIVIDACOMO<span>LUNA</span></h1>
+            <p class="header-tagline">⟨ TAROT · LUNACIONES · OFICIO TÉCNICO ⟩</p>
+        </div>
+    </div>
+    <nav class="header-nav">
+        <a href="#lessons">LECCIONES</a>
+        <a href="#houses">CASAS</a>
+        <a href="#tarot">TAROT</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle accent color">
+            <span class="dot"></span>
+            <span id="themeLabel">BLUE</span>
+        </button>
+        <a href="login/" class="nav-login">▸ ENTRAR</a>
+    </nav>
+</header>
 
-    <!-- PARTICLES -->
-    <div class="particles" id="particles"></div>
+<!-- CONTENT -->
+<div class="content-area">
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <!-- HERO -->
-        <section class="hero">
-            <div class="luna-symbol">☽</div>
-            <h1 class="main-title">Mi Vida Como Luna</h1>
-            <p class="subtitle">Astrology · Tarot · Moon Intelligence</p>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-glyph">☽</div>
+        <p class="hero-eyebrow">⟨ EL CÓDICE LUNAR · DIEZ CASAS · UNA SOLA CONSOLA ⟩</p>
+        <h1 class="hero-title">
+            MI VIDA COMO LUNA
+            <span class="line2">tarot, ondas, y oficio</span>
+        </h1>
+        <p class="hero-subtitle">
+            Cartas que <em>recuerdan</em>. Fases que <em>marcan tiempo</em>.<br>
+            Antenas que <em>escuchan</em>. Un solo códice — lunar y técnico.
+        </p>
+        <div class="hero-actions">
+            <a href="#lessons" class="btn-primary">▶ ABRIR LECCIONES</a>
+            <a href="#houses" class="btn-ghost">◂ VER CASAS</a>
+        </div>
+        <div class="scroll-hint">
+            <span>EXPLORAR</span>
+            <div class="scroll-hint-line"></div>
+        </div>
+    </section>
 
-            <a href="#houses-grid" class="scroll-indicator">
-                <span>Discover the Ten Houses</span>
-                <span>↓</span>
+    <!-- MANIFESTO -->
+    <section class="manifesto reveal">
+        <p class="manifesto-text">
+            No es un horóscopo. No es un blog. Es un <strong>códice vivo</strong> donde la
+            <span class="accent">luna</span> marca el calendario y el <strong>oficio</strong> marca la mano.<br><br>
+            Diez casas para la lectura, cinco lecciones para la práctica. <span class="accent">Telecomms, electrónica,
+            mecatrónica, linux, antenas</span> — el lado físico del mundo que el tarot describe en símbolo.
+        </p>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- LESSONS -->
+    <section class="lessons" id="lessons">
+        <div class="section-header reveal">
+            <h2>LECCIONES</h2>
+            <p>⟨ DESEMPOLVAR EL OFICIO · CINCO FRENTES ⟩</p>
+        </div>
+        <div class="lessons-grid">
+            <a href="lessons/telecomms/" class="lesson-card reveal">
+                <span class="lesson-num">LSN · 01</span>
+                <span class="lesson-glyph">⌬</span>
+                <span class="lesson-name">Telecomms</span>
+                <span class="lesson-status">⟨ COMING ⟩</span>
             </a>
-        </section>
+            <a href="lessons/electronics/" class="lesson-card reveal">
+                <span class="lesson-num">LSN · 02</span>
+                <span class="lesson-glyph">⌁</span>
+                <span class="lesson-name">Electronics</span>
+                <span class="lesson-status">⟨ COMING ⟩</span>
+            </a>
+            <a href="lessons/mechatronics/" class="lesson-card reveal">
+                <span class="lesson-num">LSN · 03</span>
+                <span class="lesson-glyph">⌖</span>
+                <span class="lesson-name">Mechatronics</span>
+                <span class="lesson-status">⟨ COMING ⟩</span>
+            </a>
+            <a href="lessons/linux/" class="lesson-card reveal">
+                <span class="lesson-num">LSN · 04</span>
+                <span class="lesson-glyph">⌘</span>
+                <span class="lesson-name">Linux</span>
+                <span class="lesson-status">⟨ COMING ⟩</span>
+            </a>
+            <a href="lessons/antennas/" class="lesson-card reveal">
+                <span class="lesson-num">LSN · 05</span>
+                <span class="lesson-glyph">⏚</span>
+                <span class="lesson-name">Antennas</span>
+                <span class="lesson-status">⟨ COMING ⟩</span>
+            </a>
+        </div>
+    </section>
 
-        <!-- HOUSES NAV -->
-        <nav class="houses-nav">
-            <a href="#keter-full" class="nav-link keter">I</a>
-            <a href="#chokmah-full" class="nav-link chokmah">II</a>
-            <a href="#binah-full" class="nav-link binah">III</a>
-            <a href="#chesed-full" class="nav-link chesed">IV</a>
-            <a href="#gevurah-full" class="nav-link gevurah">V</a>
-            <a href="#tiferet-full" class="nav-link tiferet">VI</a>
-            <a href="#netzach-full" class="nav-link netzach">VII</a>
-            <a href="#hod-full" class="nav-link hod">VIII</a>
-            <a href="#yesod-full" class="nav-link yesod">IX</a>
-            <a href="#malkuth-full" class="nav-link malkuth">X</a>
-        </nav>
+    <div class="divider"></div>
 
-        <!-- HOUSES GRID PREVIEW -->
-        <section id="houses-grid" class="houses-section">
-            <div class="section-header">
-                <h2 class="section-title">The Ten Houses</h2>
-                <p class="section-subtitle">10 Sephiroth · 10 Mysteries · 1 Path</p>
+    <!-- HOUSES -->
+    <section class="houses" id="houses">
+        <div class="section-header reveal">
+            <h2>LAS DIEZ CASAS</h2>
+            <p>⟨ DIEZ SEPHIROT · DIEZ MISTERIOS · UNA SENDA ⟩</p>
+        </div>
+        <div class="houses-grid">
+            <div class="house-card reveal">
+                <span class="house-seat">SEAT · I</span>
+                <h3 class="house-name">Keter</h3>
+                <p class="house-domain">Fases Lunares · Calendario Lunar</p>
+                <span class="house-status">⟨ NODO ABIERTO ⟩</span>
             </div>
-
-            <div class="houses-grid">
-                <a href="#keter-full" class="house-card keter">
-                    <span class="house-number">SEAT I</span>
-                    <h3 class="house-name">Keter</h3>
-                    <p class="house-domain">Moon Phases · Lunar Calendar</p>
-                    <span class="house-status">Seeking Agent</span>
-                </a>
-
-                <a href="#chokmah-full" class="house-card chokmah">
-                    <span class="house-number">SEAT II</span>
-                    <h3 class="house-name">Chokmah</h3>
-                    <p class="house-domain">Astrology · Natal Charts</p>
-                    <span class="house-status">Seeking Agent</span>
-                </a>
-
-                <a href="#binah-full" class="house-card binah">
-                    <span class="house-number">SEAT III</span>
-                    <h3 class="house-name">Binah</h3>
-                    <p class="house-domain">Tarot · Archetypes</p>
-                    <span class="house-status">Seeking Agent</span>
-                </a>
-
-                <a href="#chesed-full" class="house-card chesed">
-                    <span class="house-number">SEAT IV</span>
-                    <h3 class="house-name">Chesed</h3>
-                    <p class="house-domain">Zodiac Signs · Transits</p>
-                    <span class="house-status">Seeking Agent</span>
-                </a>
-
-                <a href="#gevurah-full" class="house-card gevurah">
-                    <span class="house-number">SEAT V</span>
-                    <h3 class="house-name">Gevurah</h3>
-                    <p class="house-domain">Shadow Work · Transformation</p>
-                    <span class="house-status">Seeking Agent</span>
-                </a>
-
-                <a href="#tiferet-full" class="house-card tiferet">
-                    <span class="house-number">SEAT VI</span>
-                    <h3 class="house-name">Tiferet</h3>
-                    <p class="house-domain">Sacred Geometry · The Solar Self</p>
-                    <span class="house-status">Seeking Agent</span>
-                </a>
-
-                <a href="#netzach-full" class="house-card netzach">
-                    <span class="house-number">SEAT VII</span>
-                    <h3 class="house-name">Netzach</h3>
-                    <p class="house-domain">Venus · Desire · Love Alchemy</p>
-                    <span class="house-status">Seeking Agent</span>
-                </a>
-
-                <a href="#hod-full" class="house-card hod">
-                    <span class="house-number">SEAT VIII</span>
-                    <h3 class="house-name">Hod</h3>
-                    <p class="house-domain">Mercury · Signs · Synchronicity</p>
-                    <span class="house-status">Seeking Agent</span>
-                </a>
-
-                <a href="#yesod-full" class="house-card yesod">
-                    <span class="house-number">SEAT IX</span>
-                    <h3 class="house-name">Yesod</h3>
-                    <p class="house-domain">Dreams · The Astral Realm</p>
-                    <span class="house-status">Seeking Agent</span>
-                </a>
-
-                <a href="#malkuth-full" class="house-card malkuth">
-                    <span class="house-number">SEAT X</span>
-                    <h3 class="house-name">Malkuth</h3>
-                    <p class="house-domain">Earth Rituals · Embodiment</p>
-                    <span class="house-status">Seeking Agent</span>
-                </a>
+            <div class="house-card reveal">
+                <span class="house-seat">SEAT · II</span>
+                <h3 class="house-name">Chokmah</h3>
+                <p class="house-domain">Astrología · Cartas Natales</p>
+                <span class="house-status">⟨ NODO ABIERTO ⟩</span>
             </div>
-        </section>
-
-        <!-- HOUSES FULL SCROLL SECTIONS -->
-        <section class="houses-scroll">
-            <!-- HOUSE 1: KETER -->
-            <div id="keter-full" class="house-section keter">
-                <div class="house-bg" style="background-image: url('./img/image01.png');"></div>
-                <div class="house-content">
-                    <span class="house-number">SEAT I</span>
-                    <h3 class="house-name">Keter</h3>
-                    <p class="house-domain">Moon Phases · Lunar Calendar</p>
-                    <span class="house-status">Seeking Agent</span>
-                </div>
+            <div class="house-card reveal">
+                <span class="house-seat">SEAT · III</span>
+                <h3 class="house-name">Binah</h3>
+                <p class="house-domain">Tarot · Arquetipos</p>
+                <span class="house-status">⟨ NODO ABIERTO ⟩</span>
             </div>
-
-            <!-- HOUSE 2: CHOKMAH -->
-            <div id="chokmah-full" class="house-section chokmah">
-                <div class="house-bg" style="background-image: url('./img/image02.png');"></div>
-                <div class="house-content">
-                    <span class="house-number">SEAT II</span>
-                    <h3 class="house-name">Chokmah</h3>
-                    <p class="house-domain">Astrology · Natal Charts</p>
-                    <span class="house-status">Seeking Agent</span>
-                </div>
+            <div class="house-card reveal">
+                <span class="house-seat">SEAT · IV</span>
+                <h3 class="house-name">Chesed</h3>
+                <p class="house-domain">Zodiaco · Tránsitos</p>
+                <span class="house-status">⟨ NODO ABIERTO ⟩</span>
             </div>
-
-            <!-- HOUSE 3: BINAH -->
-            <div id="binah-full" class="house-section binah">
-                <div class="house-bg" style="background-image: url('./img/image03.png');"></div>
-                <div class="house-content">
-                    <span class="house-number">SEAT III</span>
-                    <h3 class="house-name">Binah</h3>
-                    <p class="house-domain">Tarot · Archetypes</p>
-                    <span class="house-status">Seeking Agent</span>
-                </div>
+            <div class="house-card reveal">
+                <span class="house-seat">SEAT · V</span>
+                <h3 class="house-name">Gevurah</h3>
+                <p class="house-domain">Sombra · Transformación</p>
+                <span class="house-status">⟨ NODO ABIERTO ⟩</span>
             </div>
-
-            <!-- HOUSE 4: CHESED -->
-            <div id="chesed-full" class="house-section chesed">
-                <div class="house-bg" style="background-image: url('./img/image04.png');"></div>
-                <div class="house-content">
-                    <span class="house-number">SEAT IV</span>
-                    <h3 class="house-name">Chesed</h3>
-                    <p class="house-domain">Zodiac Signs · Transits</p>
-                    <span class="house-status">Seeking Agent</span>
-                </div>
+            <div class="house-card reveal">
+                <span class="house-seat">SEAT · VI</span>
+                <h3 class="house-name">Tiferet</h3>
+                <p class="house-domain">Geometría Sagrada · El Sol Interior</p>
+                <span class="house-status">⟨ NODO ABIERTO ⟩</span>
             </div>
-
-            <!-- HOUSE 5: GEVURAH -->
-            <div id="gevurah-full" class="house-section gevurah">
-                <div class="house-bg" style="background-image: url('./img/image05.png');"></div>
-                <div class="house-content">
-                    <span class="house-number">SEAT V</span>
-                    <h3 class="house-name">Gevurah</h3>
-                    <p class="house-domain">Shadow Work · Transformation</p>
-                    <span class="house-status">Seeking Agent</span>
-                </div>
+            <div class="house-card reveal">
+                <span class="house-seat">SEAT · VII</span>
+                <h3 class="house-name">Netzach</h3>
+                <p class="house-domain">Venus · Deseo · Alquimia del Amor</p>
+                <span class="house-status">⟨ NODO ABIERTO ⟩</span>
             </div>
-
-            <!-- HOUSE 6: TIFERET -->
-            <div id="tiferet-full" class="house-section tiferet">
-                <div class="house-bg" style="background-image: url('./img/image06.png');"></div>
-                <div class="house-content">
-                    <span class="house-number">SEAT VI</span>
-                    <h3 class="house-name">Tiferet</h3>
-                    <p class="house-domain">Sacred Geometry · The Solar Self</p>
-                    <span class="house-status">Seeking Agent</span>
-                </div>
+            <div class="house-card reveal">
+                <span class="house-seat">SEAT · VIII</span>
+                <h3 class="house-name">Hod</h3>
+                <p class="house-domain">Mercurio · Señales · Sincronicidad</p>
+                <span class="house-status">⟨ NODO ABIERTO ⟩</span>
             </div>
-
-            <!-- HOUSE 7: NETZACH -->
-            <div id="netzach-full" class="house-section netzach">
-                <div class="house-bg" style="background-image: url('./img/image07.png');"></div>
-                <div class="house-content">
-                    <span class="house-number">SEAT VII</span>
-                    <h3 class="house-name">Netzach</h3>
-                    <p class="house-domain">Venus · Desire · Love Alchemy</p>
-                    <span class="house-status">Seeking Agent</span>
-                </div>
+            <div class="house-card reveal">
+                <span class="house-seat">SEAT · IX</span>
+                <h3 class="house-name">Yesod</h3>
+                <p class="house-domain">Sueños · El Plano Astral</p>
+                <span class="house-status">⟨ NODO ABIERTO ⟩</span>
             </div>
-
-            <!-- HOUSE 8: HOD -->
-            <div id="hod-full" class="house-section hod">
-                <div class="house-bg" style="background-image: url('./img/image08.png');"></div>
-                <div class="house-content">
-                    <span class="house-number">SEAT VIII</span>
-                    <h3 class="house-name">Hod</h3>
-                    <p class="house-domain">Mercury · Signs · Synchronicity</p>
-                    <span class="house-status">Seeking Agent</span>
-                </div>
+            <div class="house-card reveal">
+                <span class="house-seat">SEAT · X</span>
+                <h3 class="house-name">Malkuth</h3>
+                <p class="house-domain">Rituales de Tierra · Encarnación</p>
+                <span class="house-status">⟨ NODO ABIERTO ⟩</span>
             </div>
+        </div>
+    </section>
 
-            <!-- HOUSE 9: YESOD -->
-            <div id="yesod-full" class="house-section yesod">
-                <div class="house-bg" style="background-image: url('./img/image09.png');"></div>
-                <div class="house-content">
-                    <span class="house-number">SEAT IX</span>
-                    <h3 class="house-name">Yesod</h3>
-                    <p class="house-domain">Dreams · The Astral Realm</p>
-                    <span class="house-status">Seeking Agent</span>
-                </div>
-            </div>
+    <!-- TAROT -->
+    <section class="tarot-section" id="tarot">
+        <div class="tarot-card reveal">
+            <div class="tarot-glyph">✦</div>
+            <h2>EL <span>TAROT</span> VIVE AQUÍ</h2>
+            <p class="tarot-sub">⟨ LECTURAS · ARQUETIPOS · MEMORIA ⟩</p>
+            <a href="tarot/" class="btn-primary">▶ ABRIR EL TAROT</a>
+        </div>
+    </section>
 
-            <!-- HOUSE 10: MALKUTH -->
-            <div id="malkuth-full" class="house-section malkuth">
-                <div class="house-bg" style="background-image: url('./img/image10.png');"></div>
-                <div class="house-content">
-                    <span class="house-number">SEAT X</span>
-                    <h3 class="house-name">Malkuth</h3>
-                    <p class="house-domain">Earth Rituals · Embodiment</p>
-                    <span class="house-status">Seeking Agent</span>
-                </div>
-            </div>
-        </section>
+    <!-- FINAL CTA -->
+    <section class="cta-final">
+        <h2 class="reveal">El códice no se lee.<span>Se camina.</span></h2>
+        <p class="cta-sub reveal">⟨ DIEZ CASAS · CINCO LECCIONES · UNA SOLA CONSOLA ⟩</p>
+        <div class="reveal">
+            <a href="login/" class="btn-primary">▶ ENTRAR AL CÓDICE</a>
+        </div>
+    </section>
+</div>
 
-        <!-- APPLY -->
-        <section class="apply-section">
-            <h2 class="apply-title">Ready to begin the initiation?</h2>
-            <p class="apply-desc">
-                The stars do not lie. The moon does not forget.
-                Choose your house. Walk the path.
-            </p>
-            <a href="login/" class="cta-text">Enter the Codex</a>
-        </section>
+<!-- FOOTER -->
+<footer>
+    <div class="footer-brand">
+        <a href="https://mividacomoluna.com">☽ MIVIDACOMOLUNA.COM</a>
+    </div>
+    <p class="charlie-sign">— Charlie sends love.</p>
+    <p class="footer-copy">© 2025 MIVIDACOMOLUNA.COM · MISIÓN COMPLETADA · ALL RIGHTS RESERVED</p>
+</footer>
 
-        <!-- FOOTER -->
-        <footer class="luna-footer">
-            <p class="mission-complete">Misión completada.</p>
-            <p class="charlie-sign">— Charlie sends love.</p>
-        </footer>
-    </main>
+<!-- ember canvas — drift between magenta and the paired accent (theme-aware) -->
+<script src="assets/embers.js" defer></script>
+<script>
+// theme toggle — BLUE ⇄ RED, persisted in localStorage
+(function(){
+  var html = document.documentElement;
+  var btn = document.getElementById('themeToggle');
+  var label = document.getElementById('themeLabel');
+  var saved = localStorage.getItem('mvcl_theme') || 'blue';
+  function apply(mode){
+    html.classList.remove('theme-blue','theme-red');
+    html.classList.add('theme-' + mode);
+    label.textContent = mode.toUpperCase();
+    localStorage.setItem('mvcl_theme', mode);
+  }
+  apply(saved);
+  btn.addEventListener('click', function(){
+    var next = html.classList.contains('theme-blue') ? 'red' : 'blue';
+    apply(next);
+  });
+})();
 
-    <script>
-        // CREATE STARS
-        function createStars() {
-            const container = document.getElementById('stars');
-            const starCount = 150;
-
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                star.style.width = (Math.random() * 2 + 1) + 'px';
-                star.style.height = star.style.width;
-                container.appendChild(star);
-            }
-        }
-
-        // CREATE AMBIENT PARTICLES
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const particleCount = 20;
-
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDuration = (Math.random() * 20 + 15) + 's';
-                particle.style.animationDelay = Math.random() * 10 + 's';
-                container.appendChild(particle);
-            }
-        }
-
-        // SMOOTH SCROLL FOR ALL ANCHOR LINKS
-        document.querySelectorAll('a[href^="#"]').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href');
-                const target = document.querySelector(targetId);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-
-        // HIGHLIGHT ACTIVE NAV ON SCROLL
-        const houseSections = document.querySelectorAll('.house-section');
-        const navLinks = document.querySelectorAll('.nav-link');
-
-        window.addEventListener('scroll', () => {
-            let current = '';
-            houseSections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (window.scrollY >= sectionTop - sectionHeight / 3) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.style.opacity = '0.5';
-                if (link.getAttribute('href') === '#' + current) {
-                    link.style.opacity = '1';
-                }
-            });
-        });
-
-        // SMOOTH SCROLL FOR CTA
-        document.querySelectorAll('.cta-text').forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Future: link to application form
-                console.log('Agent application initiated...');
-            });
-        });
-
-        // INITIALIZE
-        window.addEventListener('load', () => {
-            createStars();
-            createParticles();
-        });
-    </script>
+// reveal on scroll
+var io = new IntersectionObserver(function(ents){
+  ents.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, {threshold:0.12});
+document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+</script>
 </body>
 </html>

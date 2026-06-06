@@ -4,204 +4,175 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Vida Como Luna — Dashboard</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@200;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --void: #0a0a0f;
-            --luna-silver: #c0c0c0;
-            --luna-purple: #667eea;
-            --luna-violet: #9f7aea;
-            --luna-glow: rgba(159,122,234,0.3);
-            --luna-cold: #a0aec0;
-            --tiferet: #ecc94b;
-            --gevurah: #f56565;
-            --binah: #9f7aea;
-            --malkuth: #38b2ac;
-            --netzach: #48bb78;
+            --void:       #0a0a0f;
+            --surface:    #111118;
+            --border:     rgba(159,122,234,.12);
+            --luna-silver:#c0c0c0;
+            --luna-purple:#667eea;
+            --luna-violet:#9f7aea;
+            --luna-glow:  rgba(159,122,234,0.3);
+            --luna-cold:  #a0aec0;
+            --dim:        #555566;
+            --gold:       #ecc94b;
+            --red:        #cc3333;
+            --red-dim:    #441111;
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            font-family: 'Cormorant Garamond', serif;
-            background: var(--void);
-            color: var(--luna-silver);
-            min-height: 100vh;
-            display: flex;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Cormorant Garamond',serif;background:var(--void);color:var(--luna-silver);min-height:100vh;display:flex;}
 
-        /* ── STARS / PARTICLES ── */
-        .stars, .particles {
-            position: fixed; top:0; left:0;
-            width:100%; height:100%;
-            pointer-events:none;
-        }
-        .stars { z-index:1; }
-        .particles { z-index:2; }
-        .star {
-            position:absolute; width:2px; height:2px;
-            background:white; border-radius:50%;
-            animation: twinkle ease-in-out infinite;
-        }
-        @keyframes twinkle { 0%,100%{opacity:.2} 50%{opacity:.7} }
-        .particle {
-            position:absolute; width:1px; height:1px;
-            background:var(--luna-violet); border-radius:50%;
-            animation: drift linear infinite;
-        }
-        @keyframes drift {
-            0%   { transform:translateY(100vh) translateX(0);   opacity:0 }
-            10%  { opacity:.4 }
-            90%  { opacity:.4 }
-            100% { transform:translateY(-100vh) translateX(60px); opacity:0 }
-        }
-        .moon-glow {
-            position:fixed; top:-20%; right:-10%;
-            width:600px; height:600px;
-            background:radial-gradient(circle,var(--luna-glow) 0%,transparent 70%);
-            border-radius:50%; z-index:1;
-            animation:moonPulse 8s ease-in-out infinite; pointer-events:none;
-        }
-        @keyframes moonPulse { 0%,100%{opacity:.4;transform:scale(1)} 50%{opacity:.7;transform:scale(1.1)} }
+        /* ── AMBIENT ── */
+        .stars,.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+        .stars{z-index:1;}.particles{z-index:2;}
+        .star{position:absolute;width:2px;height:2px;background:white;border-radius:50%;animation:twinkle ease-in-out infinite;}
+        @keyframes twinkle{0%,100%{opacity:.2}50%{opacity:.7}}
+        .particle{position:absolute;width:1px;height:1px;background:var(--luna-violet);border-radius:50%;animation:drift linear infinite;}
+        @keyframes drift{0%{transform:translateY(100vh) translateX(0);opacity:0}10%{opacity:.4}90%{opacity:.4}100%{transform:translateY(-100vh) translateX(60px);opacity:0}}
+        .moon-glow{position:fixed;top:-20%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,var(--luna-glow) 0%,transparent 70%);border-radius:50%;z-index:1;animation:moonPulse 8s ease-in-out infinite;pointer-events:none;}
+        @keyframes moonPulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:.7;transform:scale(1.1)}}
 
         /* ── SIDEBAR ── */
-        .sidebar {
-            position:fixed; top:0; left:0;
-            width:220px; height:100vh;
-            background:rgba(10,10,15,.96);
-            border-right:1px solid rgba(159,122,234,.15);
-            z-index:50; display:flex; flex-direction:column; padding:30px 0;
-        }
-        .sidebar-brand { padding:0 24px 28px; border-bottom:1px solid rgba(159,122,234,.1); margin-bottom:18px; }
-        .sidebar-moon { font-size:1.8rem; display:block; margin-bottom:8px; animation:lunaFloat 4s ease-in-out infinite; }
-        @keyframes lunaFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-        .sidebar-title {
-            font-size:.9rem; font-weight:300; letter-spacing:.1em;
-            background:linear-gradient(135deg,var(--luna-silver),var(--luna-violet));
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-        }
-        .sidebar-user { font-family:'JetBrains Mono',monospace; font-size:.55rem; letter-spacing:.2em; color:var(--luna-cold); opacity:.5; margin-top:4px; }
-        .sidebar-nav { flex:1; padding:0 12px; display:flex; flex-direction:column; gap:4px; }
-        .nav-section-label { font-family:'JetBrains Mono',monospace; font-size:.5rem; letter-spacing:.4em; text-transform:uppercase; color:var(--luna-cold); opacity:.3; padding:12px 12px 6px; }
-        .nav-item {
-            display:flex; align-items:center; gap:10px; padding:10px 12px;
-            text-decoration:none; color:var(--luna-cold);
-            border:1px solid transparent; transition:all .3s;
-            font-family:'JetBrains Mono',monospace; font-size:.7rem; letter-spacing:.1em;
-            cursor:pointer; background:transparent; width:100%; text-align:left;
-        }
-        .nav-item .ni { font-size:.9rem; opacity:.7; flex-shrink:0; }
-        .nav-item:hover { color:var(--luna-violet); border-color:rgba(159,122,234,.2); background:rgba(159,122,234,.05); }
-        .nav-item.active { color:var(--luna-violet); border-color:rgba(159,122,234,.3); background:rgba(159,122,234,.08); }
-        .nav-item.logout { margin-top:8px; color:rgba(245,101,101,.6); }
-        .nav-item.logout:hover { color:#f56565; border-color:rgba(245,101,101,.2); background:rgba(245,101,101,.05); }
-        .sidebar-footer { padding:16px 24px 0; border-top:1px solid rgba(159,122,234,.08); }
-        .sidebar-footer-text { font-family:'JetBrains Mono',monospace; font-size:.5rem; letter-spacing:.15em; color:var(--luna-cold); opacity:.2; }
+        .sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:rgba(10,10,15,.97);border-right:1px solid var(--border);z-index:50;display:flex;flex-direction:column;padding:30px 0;}
+        .sidebar-brand{padding:0 24px 24px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+        .sidebar-moon{font-size:1.8rem;display:block;margin-bottom:8px;animation:lunaFloat 4s ease-in-out infinite;}
+        @keyframes lunaFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        .sidebar-title{font-size:.9rem;font-weight:300;letter-spacing:.1em;background:linear-gradient(135deg,var(--luna-silver),var(--luna-violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .sidebar-user{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.2em;color:var(--luna-cold);opacity:.5;margin-top:4px;}
+        .sidebar-nav{flex:1;padding:0 12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
+        .nav-section-label{font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.4em;text-transform:uppercase;color:var(--luna-cold);opacity:.3;padding:14px 12px 5px;}
+        .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;text-decoration:none;color:var(--luna-cold);border:1px solid transparent;transition:all .25s;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.08em;cursor:pointer;background:transparent;width:100%;text-align:left;}
+        .nav-item .ni{font-size:.9rem;opacity:.7;flex-shrink:0;width:18px;text-align:center;}
+        .nav-item:hover{color:var(--luna-violet);border-color:rgba(159,122,234,.2);background:rgba(159,122,234,.05);}
+        .nav-item.active{color:var(--luna-violet);border-color:rgba(159,122,234,.3);background:rgba(159,122,234,.08);}
+        .nav-item.logout{margin-top:6px;color:rgba(204,51,51,.6);}
+        .nav-item.logout:hover{color:#cc3333;border-color:rgba(204,51,51,.2);background:rgba(204,51,51,.05);}
+        .sidebar-footer{padding:14px 24px 0;border-top:1px solid var(--border);}
+        .sidebar-footer-text{font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.15em;color:var(--luna-cold);opacity:.2;}
 
         /* ── MAIN ── */
-        .main { margin-left:220px; flex:1; position:relative; z-index:10; padding:44px 44px 60px; min-height:100vh; }
+        .main{margin-left:220px;flex:1;position:relative;z-index:10;padding:40px 44px 60px;min-height:100vh;}
+        .page-header{margin-bottom:32px;padding-bottom:18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;}
+        .page-greeting{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--luna-cold);opacity:.5;margin-bottom:8px;}
+        .page-title{font-size:2.2rem;font-weight:300;letter-spacing:.1em;background:linear-gradient(135deg,var(--luna-silver),var(--luna-purple),var(--luna-violet));background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:lunarShift 6s ease-in-out infinite;}
+        @keyframes lunarShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+        .page-date{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:var(--luna-cold);opacity:.4;text-align:right;}
 
-        .page-header { margin-bottom:36px; padding-bottom:20px; border-bottom:1px solid rgba(159,122,234,.1); display:flex; justify-content:space-between; align-items:flex-end; }
-        .page-header-left {}
-        .page-greeting { font-family:'JetBrains Mono',monospace; font-size:.62rem; letter-spacing:.3em; text-transform:uppercase; color:var(--luna-cold); opacity:.5; margin-bottom:8px; }
-        .page-title {
-            font-size:2.2rem; font-weight:300; letter-spacing:.1em;
-            background:linear-gradient(135deg,var(--luna-silver),var(--luna-purple),var(--luna-violet));
-            background-size:200% 200%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-            animation:lunarShift 6s ease-in-out infinite;
+        /* ── PANES ── */
+        .pane{display:none;}
+        .pane.active-pane{display:block;}
+
+        /* ── OVERVIEW: MOON WIDGET ── */
+        .moon-widget{display:grid;grid-template-columns:auto 1fr;gap:0;border:1px solid rgba(159,122,234,.2);background:rgba(10,10,20,.6);margin-bottom:28px;overflow:hidden;position:relative;}
+        .moon-widget::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--luna-violet),transparent);}
+        .moon-face{padding:36px 40px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid rgba(159,122,234,.1);min-width:180px;}
+        .moon-emoji{font-size:5rem;line-height:1;margin-bottom:14px;filter:drop-shadow(0 0 20px rgba(159,122,234,.5));}
+        .moon-phase-name{font-size:1.1rem;font-weight:300;letter-spacing:.15em;text-align:center;color:var(--luna-silver);margin-bottom:4px;}
+        .moon-cycle-day{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--luna-cold);opacity:.5;text-align:center;}
+        .moon-data{padding:28px 32px;display:flex;flex-direction:column;gap:20px;}
+        .moon-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+        .stat-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:var(--luna-cold);opacity:.4;margin-bottom:6px;}
+        .stat-value{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:200;color:var(--luna-silver);}
+        .stat-unit{font-size:.6rem;opacity:.5;margin-left:2px;}
+        .cycle-bar-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:var(--luna-cold);opacity:.4;margin-bottom:10px;display:flex;justify-content:space-between;}
+        .cycle-bar-track{height:3px;background:rgba(159,122,234,.1);position:relative;border-radius:2px;}
+        .cycle-bar-fill{height:100%;background:linear-gradient(90deg,var(--luna-purple),var(--luna-violet));border-radius:2px;transition:width .5s;position:relative;}
+        .cycle-bar-fill::after{content:'';position:absolute;right:-3px;top:-3px;width:9px;height:9px;border-radius:50%;background:var(--luna-violet);box-shadow:0 0 10px var(--luna-glow);}
+        .cycle-phases{display:flex;justify-content:space-between;margin-top:8px;}
+        .cycle-phase-marker{font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--luna-cold);opacity:.35;display:flex;flex-direction:column;align-items:center;gap:3px;}
+        .cycle-phase-marker span{font-size:.75rem;}
+
+        /* ── OVERVIEW: UPCOMING ── */
+        .upcoming-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+        .upcoming-card{border:1px solid rgba(159,122,234,.1);padding:16px 18px;background:rgba(10,10,15,.5);transition:border-color .3s;}
+        .upcoming-card:hover{border-color:rgba(159,122,234,.3);}
+        .upcoming-icon{font-size:1.4rem;margin-bottom:8px;}
+        .upcoming-name{font-size:.85rem;font-weight:300;letter-spacing:.1em;color:var(--luna-silver);margin-bottom:4px;}
+        .upcoming-date{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--luna-cold);opacity:.5;}
+        .upcoming-in{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.1em;color:var(--luna-violet);opacity:.7;margin-top:4px;}
+
+        /* ── OVERVIEW: PORTALS ── */
+        .section-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;color:var(--luna-cold);opacity:.35;margin-bottom:14px;}
+        .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+        .portal-card{background:rgba(10,10,15,.5);border:1px solid rgba(102,126,234,.1);padding:24px 20px;text-decoration:none;display:flex;flex-direction:column;gap:8px;transition:all .3s;position:relative;overflow:hidden;}
+        .portal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--card-color);transform:scaleX(0);transition:transform .4s;}
+        .portal-card:hover::before{transform:scaleX(1);}
+        .portal-card:hover{border-color:var(--card-color);background:rgba(102,126,234,.04);}
+        .card-icon{font-size:1.3rem;}
+        .card-title{font-size:1.05rem;font-weight:400;letter-spacing:.1em;color:var(--card-color);}
+        .card-desc{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.08em;color:var(--luna-cold);opacity:.45;line-height:1.5;}
+
+        /* ── INSIGHT CARD (shared base) ── */
+        .insight-card{border:1px solid var(--border);background:rgba(10,10,20,.6);padding:28px 32px;margin-bottom:24px;position:relative;overflow:hidden;}
+        .insight-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;}
+        .insight-card.violet::before{background:var(--luna-violet);}
+        .insight-card.gold::before{background:var(--gold);}
+        .insight-card.shadow-active::before{background:var(--red);}
+        .insight-card.shadow-dormant::before{background:var(--red-dim);}
+        .insight-card.fire::before{background:#e07040;}
+        .insight-card.earth::before{background:#a08060;}
+        .insight-card.air::before{background:var(--luna-purple);}
+        .insight-card.water::before{background:var(--luna-violet);}
+
+        .ins-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;margin-bottom:16px;}
+        .ins-label.violet{color:var(--luna-violet);}
+        .ins-label.gold{color:var(--gold);opacity:.8;}
+        .ins-label.shadow-active{color:#cc5555;}
+        .ins-label.shadow-dormant{color:var(--dim);}
+        .ins-title{font-size:1.9rem;font-weight:300;letter-spacing:.06em;color:var(--luna-silver);margin-bottom:6px;}
+        .ins-sub{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;color:var(--luna-cold);opacity:.5;margin-bottom:16px;}
+        .ins-text{font-size:1.15rem;font-weight:300;font-style:italic;color:#c8bdb5;line-height:1.75;}
+        .ins-note{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.12em;color:var(--dim);margin-top:12px;}
+
+        /* ── PILLS ── */
+        .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+        .pill{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.15em;padding:4px 10px;border:1px solid;border-radius:2px;}
+        .pill.violet{color:var(--luna-violet);border-color:rgba(159,122,234,.3);background:rgba(159,122,234,.06);}
+        .pill.gold{color:var(--gold);border-color:rgba(236,201,75,.3);background:rgba(236,201,75,.05);}
+        .pill.red{color:#cc5555;border-color:rgba(204,51,51,.3);background:rgba(204,51,51,.05);}
+        .pill.dim{color:var(--luna-cold);border-color:rgba(160,174,192,.15);background:rgba(160,174,192,.04);}
+
+        /* ── TREE PATH ── */
+        .path-progress{margin-bottom:20px;}
+        .path-progress-track{height:2px;background:rgba(236,201,75,.1);border-radius:1px;position:relative;}
+        .path-progress-fill{height:100%;background:linear-gradient(90deg,rgba(236,201,75,.4),var(--gold));border-radius:1px;transition:width .6s;}
+        .path-header{display:flex;align-items:flex-start;gap:20px;margin-bottom:16px;}
+        .hebrew-box{width:64px;height:64px;border:1px solid rgba(236,201,75,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .hebrew-glyph{font-size:2.2rem;color:var(--gold);}
+        .path-number-box{width:64px;height:64px;border:1px solid rgba(236,201,75,.2);background:rgba(236,201,75,.04);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .path-number-txt{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:200;color:var(--gold);}
+        .path-tarot-numeral{font-size:1rem;font-style:italic;color:rgba(236,201,75,.5);margin-bottom:4px;}
+        .path-tarot-name{font-family:'JetBrains Mono',monospace;font-size:.85rem;letter-spacing:.25em;color:var(--gold);font-weight:700;}
+        .path-sub{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--dim);letter-spacing:.1em;margin-top:4px;}
+
+        /* ── KABBALISTIC STRIPE ── */
+        .kabba-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:20px;}
+        .kabba-cell{padding:10px 8px;border:1px solid rgba(159,122,234,.08);display:flex;flex-direction:column;gap:4px;background:rgba(10,10,20,.4);}
+        .kabba-cell.current-path{border-color:var(--gold);background:rgba(236,201,75,.05);}
+        .kabba-cell-n{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--dim);}
+        .kabba-cell-name{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--luna-cold);letter-spacing:.05em;}
+        .kabba-cell.current-path .kabba-cell-name{color:var(--gold);}
+
+        /* ── RESPONSIVE ── */
+        @media(max-width:900px){
+            .moon-widget{grid-template-columns:1fr;}
+            .moon-face{border-right:none;border-bottom:1px solid rgba(159,122,234,.1);padding:28px;flex-direction:row;gap:24px;}
+            .moon-stats{grid-template-columns:repeat(3,1fr);}
+            .upcoming-row{grid-template-columns:repeat(2,1fr);}
         }
-        @keyframes lunarShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
-        .page-date { font-family:'JetBrains Mono',monospace; font-size:.62rem; letter-spacing:.15em; color:var(--luna-cold); opacity:.4; text-align:right; }
-
-        /* ── MOON WIDGET ── */
-        .moon-widget {
-            display:grid; grid-template-columns:auto 1fr; gap:0;
-            border:1px solid rgba(159,122,234,.2);
-            background:rgba(10,10,20,.6);
-            margin-bottom:28px; overflow:hidden;
-            position:relative;
+        @media(max-width:700px){
+            .sidebar{width:180px;}
+            .main{margin-left:180px;padding:24px 18px;}
         }
-        .moon-widget::before {
-            content:''; position:absolute; top:0; left:0; right:0; height:2px;
-            background:linear-gradient(90deg,transparent,var(--luna-violet),transparent);
-        }
-
-        /* left: big moon */
-        .moon-face {
-            padding:36px 40px; display:flex; flex-direction:column;
-            align-items:center; justify-content:center;
-            border-right:1px solid rgba(159,122,234,.1);
-            min-width:180px;
-        }
-        .moon-emoji { font-size:5rem; line-height:1; margin-bottom:14px; filter:drop-shadow(0 0 20px rgba(159,122,234,.5)); }
-        .moon-phase-name { font-size:1.1rem; font-weight:300; letter-spacing:.15em; text-align:center; color:var(--luna-silver); margin-bottom:4px; }
-        .moon-cycle-day { font-family:'JetBrains Mono',monospace; font-size:.6rem; letter-spacing:.2em; color:var(--luna-cold); opacity:.5; text-align:center; }
-
-        /* right: stats + arc */
-        .moon-data { padding:28px 32px; display:flex; flex-direction:column; gap:20px; }
-
-        .moon-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-        .stat-block {}
-        .stat-label { font-family:'JetBrains Mono',monospace; font-size:.55rem; letter-spacing:.25em; text-transform:uppercase; color:var(--luna-cold); opacity:.4; margin-bottom:6px; }
-        .stat-value { font-family:'JetBrains Mono',monospace; font-size:1.4rem; font-weight:200; color:var(--luna-silver); }
-        .stat-unit { font-size:.6rem; opacity:.5; margin-left:2px; }
-
-        /* cycle arc */
-        .cycle-bar-wrap { }
-        .cycle-bar-label { font-family:'JetBrains Mono',monospace; font-size:.55rem; letter-spacing:.25em; text-transform:uppercase; color:var(--luna-cold); opacity:.4; margin-bottom:10px; display:flex; justify-content:space-between; }
-        .cycle-bar-track { height:3px; background:rgba(159,122,234,.1); position:relative; border-radius:2px; }
-        .cycle-bar-fill { height:100%; background:linear-gradient(90deg,var(--luna-purple),var(--luna-violet)); border-radius:2px; transition:width .5s; position:relative; }
-        .cycle-bar-fill::after { content:''; position:absolute; right:-3px; top:-3px; width:9px; height:9px; border-radius:50%; background:var(--luna-violet); box-shadow:0 0 10px var(--luna-glow); }
-        .cycle-phases { display:flex; justify-content:space-between; margin-top:8px; }
-        .cycle-phase-marker { font-family:'JetBrains Mono',monospace; font-size:.5rem; color:var(--luna-cold); opacity:.35; display:flex; flex-direction:column; align-items:center; gap:3px; }
-        .cycle-phase-marker span { font-size:.75rem; }
-
-        /* upcoming */
-        .upcoming-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
-        .upcoming-card {
-            border:1px solid rgba(159,122,234,.1);
-            padding:16px 18px;
-            background:rgba(10,10,15,.5);
-            transition:border-color .3s;
-        }
-        .upcoming-card:hover { border-color:rgba(159,122,234,.3); }
-        .upcoming-icon { font-size:1.4rem; margin-bottom:8px; }
-        .upcoming-name { font-size:.85rem; font-weight:300; letter-spacing:.1em; color:var(--luna-silver); margin-bottom:4px; }
-        .upcoming-date { font-family:'JetBrains Mono',monospace; font-size:.6rem; letter-spacing:.1em; color:var(--luna-cold); opacity:.5; }
-        .upcoming-in { font-family:'JetBrains Mono',monospace; font-size:.55rem; letter-spacing:.1em; color:var(--luna-violet); opacity:.7; margin-top:4px; }
-
-        /* portals */
-        .section-label { font-family:'JetBrains Mono',monospace; font-size:.58rem; letter-spacing:.4em; text-transform:uppercase; color:var(--luna-cold); opacity:.35; margin-bottom:14px; }
-        .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-bottom:40px; }
-        .portal-card {
-            background:rgba(10,10,15,.5); border:1px solid rgba(102,126,234,.1);
-            padding:24px 20px; text-decoration:none;
-            display:flex; flex-direction:column; gap:8px;
-            transition:all .3s; position:relative; overflow:hidden;
-        }
-        .portal-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--card-color); transform:scaleX(0); transition:transform .4s; }
-        .portal-card:hover::before { transform:scaleX(1); }
-        .portal-card:hover { border-color:var(--card-color); background:rgba(102,126,234,.04); }
-        .card-icon { font-size:1.3rem; }
-        .card-title { font-size:1.05rem; font-weight:400; letter-spacing:.1em; color:var(--card-color); }
-        .card-desc { font-family:'JetBrains Mono',monospace; font-size:.58rem; letter-spacing:.08em; color:var(--luna-cold); opacity:.45; line-height:1.5; }
-
-        @media(max-width:900px) {
-            .moon-widget { grid-template-columns:1fr; }
-            .moon-face { border-right:none; border-bottom:1px solid rgba(159,122,234,.1); padding:28px; flex-direction:row; gap:24px; }
-            .moon-stats { grid-template-columns:repeat(3,1fr); }
-            .upcoming-row { grid-template-columns:repeat(2,1fr); }
-        }
-        @media(max-width:700px) {
-            .sidebar { width:180px; }
-            .main { margin-left:180px; padding:24px 18px; }
-            .page-header { flex-direction:column; align-items:flex-start; gap:8px; }
-        }
-        @media(max-width:560px) {
-            .sidebar { display:none; }
-            .main { margin-left:0; }
-            .moon-stats { grid-template-columns:repeat(2,1fr); }
-            .upcoming-row { grid-template-columns:repeat(2,1fr); }
+        @media(max-width:560px){
+            .sidebar{display:none;}
+            .main{margin-left:0;}
+            .moon-stats{grid-template-columns:repeat(2,1fr);}
+            .upcoming-row{grid-template-columns:repeat(2,1fr);}
         }
     </style>
 </head>
@@ -217,13 +188,26 @@
             <div class="sidebar-user" id="sidebar-user">—</div>
         </div>
         <nav class="sidebar-nav">
-            <div class="nav-section-label">Navigation</div>
-            <a href="../" class="nav-item"><span class="ni">◎</span>Home</a>
-            <div class="nav-section-label" style="margin-top:8px;">Protected</div>
-            <a href="../tarot/" class="nav-item"><span class="ni">✦</span>Tarot Reading</a>
+            <div class="nav-section-label">Lunar Cycle</div>
+            <button class="nav-item active" data-pane="pane-overview">
+                <span class="ni">☽</span>Overview
+            </button>
+            <button class="nav-item" data-pane="pane-zodiac">
+                <span class="ni">♈</span>Zodiac
+            </button>
+            <button class="nav-item" data-pane="pane-shadow">
+                <span class="ni">◆</span>Shadow
+            </button>
+            <button class="nav-item" data-pane="pane-tree">
+                <span class="ni">✦</span>Tree of Life
+            </button>
+
+            <div class="nav-section-label" style="margin-top:6px;">Portals</div>
+            <a href="../tarot/"        class="nav-item"><span class="ni">✦</span>Tarot Reading</a>
             <a href="../darkvalentine/" class="nav-item"><span class="ni">♥</span>Dark Valentine</a>
-            <a href="../entities/" class="nav-item"><span class="ni">◈</span>Entities</a>
-            <a href="../app/reader/" class="nav-item"><span class="ni">◉</span>App Reader</a>
+            <a href="../entities/"      class="nav-item"><span class="ni">◈</span>Entities</a>
+            <a href="../app/reader/"    class="nav-item"><span class="ni">◉</span>App Reader</a>
+
             <button class="nav-item logout" id="logout-btn"><span class="ni">⊗</span>Logout</button>
         </nav>
         <div class="sidebar-footer"><div class="sidebar-footer-text">SESSION · LUNA PROTOCOL</div></div>
@@ -233,79 +217,137 @@
         <div class="page-header">
             <div class="page-header-left">
                 <div class="page-greeting" id="page-greeting">Welcome back</div>
-                <h1 class="page-title">Dashboard</h1>
+                <h1 class="page-title" id="page-title">Overview</h1>
             </div>
             <div class="page-date" id="page-date"></div>
         </div>
 
-        <!-- MOON WIDGET -->
-        <div class="moon-widget" id="moon-widget">
-            <div class="moon-face">
-                <div class="moon-emoji" id="moon-emoji">☽</div>
-                <div class="moon-phase-name" id="moon-phase-name">—</div>
-                <div class="moon-cycle-day" id="moon-cycle-day">Day — of 29.5</div>
+        <!-- ── PANE: OVERVIEW ── -->
+        <div id="pane-overview" class="pane active-pane">
+            <div class="moon-widget">
+                <div class="moon-face">
+                    <div class="moon-emoji" id="moon-emoji">☽</div>
+                    <div class="moon-phase-name" id="moon-phase-name">—</div>
+                    <div class="moon-cycle-day" id="moon-cycle-day">Day — of 29.5</div>
+                </div>
+                <div class="moon-data">
+                    <div class="moon-stats">
+                        <div class="stat-block">
+                            <div class="stat-label">Illumination</div>
+                            <div class="stat-value" id="stat-illum">—<span class="stat-unit">%</span></div>
+                        </div>
+                        <div class="stat-block">
+                            <div class="stat-label">To Full Moon</div>
+                            <div class="stat-value" id="stat-to-full">—<span class="stat-unit">d</span></div>
+                        </div>
+                        <div class="stat-block">
+                            <div class="stat-label">To New Moon</div>
+                            <div class="stat-value" id="stat-to-new">—<span class="stat-unit">d</span></div>
+                        </div>
+                    </div>
+                    <div class="cycle-bar-wrap">
+                        <div class="cycle-bar-label">
+                            <span>Lunar Cycle</span>
+                            <span id="cycle-pct">—%</span>
+                        </div>
+                        <div class="cycle-bar-track">
+                            <div class="cycle-bar-fill" id="cycle-bar" style="width:0%"></div>
+                        </div>
+                        <div class="cycle-phases">
+                            <div class="cycle-phase-marker"><span>🌑</span>New</div>
+                            <div class="cycle-phase-marker"><span>🌓</span>Quarter</div>
+                            <div class="cycle-phase-marker"><span>🌕</span>Full</div>
+                            <div class="cycle-phase-marker"><span>🌗</span>Quarter</div>
+                            <div class="cycle-phase-marker"><span>🌑</span>New</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="moon-data">
-                <div class="moon-stats">
-                    <div class="stat-block">
-                        <div class="stat-label">Illumination</div>
-                        <div class="stat-value" id="stat-illum">—<span class="stat-unit">%</span></div>
-                    </div>
-                    <div class="stat-block">
-                        <div class="stat-label">To Full Moon</div>
-                        <div class="stat-value" id="stat-to-full">—<span class="stat-unit">d</span></div>
-                    </div>
-                    <div class="stat-block">
-                        <div class="stat-label">To New Moon</div>
-                        <div class="stat-value" id="stat-to-new">—<span class="stat-unit">d</span></div>
-                    </div>
-                </div>
-                <div class="cycle-bar-wrap">
-                    <div class="cycle-bar-label">
-                        <span>Lunar Cycle</span>
-                        <span id="cycle-pct">—%</span>
-                    </div>
-                    <div class="cycle-bar-track">
-                        <div class="cycle-bar-fill" id="cycle-bar" style="width:0%"></div>
-                    </div>
-                    <div class="cycle-phases">
-                        <div class="cycle-phase-marker"><span>🌑</span>New</div>
-                        <div class="cycle-phase-marker"><span>🌓</span>Quarter</div>
-                        <div class="cycle-phase-marker"><span>🌕</span>Full</div>
-                        <div class="cycle-phase-marker"><span>🌗</span>Quarter</div>
-                        <div class="cycle-phase-marker"><span>🌑</span>New</div>
-                    </div>
-                </div>
+
+            <div class="section-label">Upcoming Phases</div>
+            <div class="upcoming-row" id="upcoming-row"></div>
+
+            <div class="section-label">Your Portals</div>
+            <div class="cards-grid">
+                <a href="../tarot/" class="portal-card" style="--card-color:#ecc94b">
+                    <div class="card-icon">✦</div>
+                    <div class="card-title">Tarot Reading</div>
+                    <div class="card-desc">Archetype readings · Wild Unknown · The deep read</div>
+                </a>
+                <a href="../darkvalentine/" class="portal-card" style="--card-color:#f56565">
+                    <div class="card-icon">♥</div>
+                    <div class="card-title">Dark Valentine</div>
+                    <div class="card-desc">Ritual · Shadow work · The beloved and the wound</div>
+                </a>
+                <a href="../entities/" class="portal-card" style="--card-color:#9f7aea">
+                    <div class="card-icon">◈</div>
+                    <div class="card-title">Entities</div>
+                    <div class="card-desc">Beings · Archetypes · The gallery of forces</div>
+                </a>
+                <a href="../app/reader/" class="portal-card" style="--card-color:#38b2ac">
+                    <div class="card-icon">◉</div>
+                    <div class="card-title">App Reader</div>
+                    <div class="card-desc">Interactive reader · Animations · Paganini</div>
+                </a>
             </div>
         </div>
 
-        <!-- UPCOMING PHASES -->
-        <div class="section-label">Upcoming Phases</div>
-        <div class="upcoming-row" id="upcoming-row"></div>
+        <!-- ── PANE: ZODIAC ── -->
+        <div id="pane-zodiac" class="pane">
+            <div class="insight-card" id="zodiac-card">
+                <div class="ins-label violet">Moon in Zodiac</div>
+                <div style="display:flex;align-items:baseline;gap:16px;margin-bottom:10px;">
+                    <div style="font-size:3.2rem;line-height:1;" id="zodiac-glyph">♈</div>
+                    <div>
+                        <div class="ins-title" id="zodiac-name">—</div>
+                        <div class="ins-sub" id="zodiac-degree">—</div>
+                    </div>
+                </div>
+                <div class="pills" id="zodiac-pills"></div>
+                <div class="ins-note" id="zodiac-note"></div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.25em;color:var(--dim);margin-bottom:14px;text-transform:uppercase;">Zodiac Wheel</div>
+            <div id="zodiac-wheel" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;"></div>
+        </div>
 
-        <!-- PORTALS -->
-        <div class="section-label">Your Portals</div>
-        <div class="cards-grid">
-            <a href="../tarot/" class="portal-card" style="--card-color:var(--tiferet)">
-                <div class="card-icon">✦</div>
-                <div class="card-title">Tarot Reading</div>
-                <div class="card-desc">Archetype readings · Wild Unknown · The deep read</div>
-            </a>
-            <a href="../darkvalentine/" class="portal-card" style="--card-color:var(--gevurah)">
-                <div class="card-icon">♥</div>
-                <div class="card-title">Dark Valentine</div>
-                <div class="card-desc">Ritual · Shadow work · The beloved and the wound</div>
-            </a>
-            <a href="../entities/" class="portal-card" style="--card-color:var(--binah)">
-                <div class="card-icon">◈</div>
-                <div class="card-title">Entities</div>
-                <div class="card-desc">Beings · Archetypes · The gallery of forces</div>
-            </a>
-            <a href="../app/reader/" class="portal-card" style="--card-color:var(--malkuth)">
-                <div class="card-icon">◉</div>
-                <div class="card-title">App Reader</div>
-                <div class="card-desc">Interactive reader · Animations · Paganini</div>
-            </a>
+        <!-- ── PANE: SHADOW ── -->
+        <div id="pane-shadow" class="pane">
+            <div class="insight-card" id="shadow-card">
+                <div class="ins-label" id="shadow-label">Shadow · Qliphoth</div>
+                <div class="ins-title" id="shadow-name">—</div>
+                <div class="ins-sub" id="shadow-sub">—</div>
+                <div class="ins-text" id="shadow-text">—</div>
+                <div class="ins-note" id="shadow-note"></div>
+            </div>
+            <div class="insight-card violet">
+                <div class="ins-label violet">Light · Sephirah</div>
+                <div class="ins-sub" id="sephirah-name" style="margin-bottom:8px;font-size:.75rem;letter-spacing:.2em;color:var(--luna-cold);font-family:'JetBrains Mono',monospace;"></div>
+                <div class="ins-text" id="sephirah-text"></div>
+            </div>
+        </div>
+
+        <!-- ── PANE: TREE OF LIFE ── -->
+        <div id="pane-tree" class="pane">
+            <div class="insight-card gold">
+                <div class="ins-label gold" id="tree-label">Path on the Tree of Life · —/32</div>
+                <div class="path-progress">
+                    <div class="path-progress-track">
+                        <div class="path-progress-fill" id="tree-bar" style="width:0%"></div>
+                    </div>
+                </div>
+                <div class="path-header">
+                    <div id="tree-glyph-box"></div>
+                    <div>
+                        <div class="path-tarot-numeral" id="tree-numeral"></div>
+                        <div class="path-tarot-name" id="tree-card-name"></div>
+                        <div class="path-sub" id="tree-path-sub"></div>
+                    </div>
+                </div>
+                <div class="ins-text" id="tree-meditation"></div>
+                <div class="pills" id="tree-pills"></div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.25em;color:var(--dim);margin-bottom:12px;text-transform:uppercase;">Cycle Map — 32 Paths</div>
+            <div class="kabba-grid" id="kabba-grid"></div>
         </div>
     </main>
 
@@ -314,7 +356,7 @@
     var token = sessionStorage.getItem('luna_token');
     if (!token) { window.location.replace('../login/'); }
 
-    var user = sessionStorage.getItem('luna_user') || 'agent';
+    var user = sessionStorage.getItem('luna_user') || 'seeker';
     document.getElementById('sidebar-user').textContent = user;
     var h = new Date().getHours();
     document.getElementById('page-greeting').textContent =
@@ -325,139 +367,301 @@
         window.location.replace('../login/');
     });
 
-    // ── DATE DISPLAY ─────────────────────────────────────────────────────────
+    // ── DATE ─────────────────────────────────────────────────────────────────
     (function() {
         var now = new Date();
-        var opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
         document.getElementById('page-date').textContent =
-            now.toLocaleDateString('en-US', opts).toUpperCase();
+            now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
     })();
 
-    // ── MOON PHASE ENGINE ────────────────────────────────────────────────────
-    // Reference new moon: 2000-01-06 18:14 UTC (well-validated epoch)
+    // ── PANE SWITCHING ───────────────────────────────────────────────────────
+    var PANE_TITLES = {
+        'pane-overview': 'Overview',
+        'pane-zodiac':   'Moon in Zodiac',
+        'pane-shadow':   'Shadow Work',
+        'pane-tree':     'Tree of Life'
+    };
+
+    document.querySelectorAll('.nav-item[data-pane]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.nav-item[data-pane]').forEach(function(b){ b.classList.remove('active'); });
+            btn.classList.add('active');
+            var paneId = btn.getAttribute('data-pane');
+            document.querySelectorAll('.pane').forEach(function(p){ p.classList.remove('active-pane'); });
+            document.getElementById(paneId).classList.add('active-pane');
+            document.getElementById('page-title').textContent = PANE_TITLES[paneId] || 'Dashboard';
+        });
+    });
+
+    // ── MOON ENGINE ──────────────────────────────────────────────────────────
     var KNOWN_NEW = new Date('2000-01-06T18:14:00Z');
-    var CYCLE     = 29.530588853; // mean synodic month in days
+    var CYCLE     = 29.530588853;
     var MS_DAY    = 86400000;
 
     var PHASES = [
-        { name:'New Moon',        emoji:'🌑', from:0,      to:1.85  },
-        { name:'Waxing Crescent', emoji:'🌒', from:1.85,   to:7.38  },
-        { name:'First Quarter',   emoji:'🌓', from:7.38,   to:11.07 },
-        { name:'Waxing Gibbous',  emoji:'🌔', from:11.07,  to:14.77 },
-        { name:'Full Moon',       emoji:'🌕', from:14.77,  to:16.62 },
-        { name:'Waning Gibbous',  emoji:'🌖', from:16.62,  to:20.32 },
-        { name:'Last Quarter',    emoji:'🌗', from:20.32,  to:23.99 },
-        { name:'Waning Crescent', emoji:'🌘', from:23.99,  to:29.53 }
+        {name:'New Moon',        emoji:'🌑', from:0,      to:1.85,  seph:'Kether',   sephMeaning:'Primordial light. The first cause before all causes. Pure being that cannot be named.'},
+        {name:'Waxing Crescent', emoji:'🌒', from:1.85,   to:7.38,  seph:'Chokmah',  sephMeaning:'Raw divine force. The flash before thought. Father principle — wisdom without form.'},
+        {name:'First Quarter',   emoji:'🌓', from:7.38,   to:11.07, seph:'Binah',    sephMeaning:'The great dark sea. Form receives force. The mother womb that shapes all understanding.'},
+        {name:'Waxing Gibbous',  emoji:'🌔', from:11.07,  to:14.77, seph:'Chesed',   sephMeaning:'Divine love in boundless abundance. Structure as gift. The benevolent king who gives freely.'},
+        {name:'Full Moon',       emoji:'🌕', from:14.77,  to:16.62, seph:'Tiphareth',sephMeaning:'Harmony of all opposites. The solar heart. The self that holds the cross of matter and spirit.'},
+        {name:'Waning Gibbous',  emoji:'🌖', from:16.62,  to:20.32, seph:'Netzach',  sephMeaning:'Desire and nature as divine expression. Astral fire. The green world where instinct is sacred.'},
+        {name:'Last Quarter',    emoji:'🌗', from:20.32,  to:23.99, seph:'Hod',      sephMeaning:'Intellect and precision. Language as magic. The messenger who gives name and form to force.'},
+        {name:'Waning Crescent', emoji:'🌘', from:23.99,  to:29.53, seph:'Yesod',    sephMeaning:'Lunar tides and dreaming. The etheric body. The astral mirror between worlds.'}
     ];
 
-    // Phase targets (cycle day) for "upcoming" display
+    var QLIPHOTH = [
+        {name:'Thaumiel',     meaning:'The Twin Gods. Duality fractures where there was only One. The false crown casts two shadows.'},
+        {name:'Ghagiel',      meaning:'The Hinderers. Wisdom scattered into noise. The divine flash becomes static.'},
+        {name:'Satariel',     meaning:'The Concealers. Understanding withheld. The dark womb becomes the sealed tomb.'},
+        {name:"Gha'agsheblah",meaning:"The Smiters. Mercy without discernment. Love turns to possession; abundance to excess."},
+        {name:'Thagirion',    meaning:'The Disputers. Beauty inverted into discord. Harmony collapses at its own center.'},
+        {name:'Harab Serapel',meaning:'Ravens of Death. Desire consumes what it touches. The gift becomes the wound that never closes.'},
+        {name:'Samael',       meaning:'Poison of God. Intellect weaponized against the soul. Truth becomes the blade that slanders.'},
+        {name:'Gamaliel',     meaning:'The Obscene Ones. Foundation dissolves into illusion. The thinning veil reveals the hungry dark.'}
+    ];
+
     var TARGETS = [
-        { name:'New Moon',      emoji:'🌑', day:0      },
-        { name:'First Quarter', emoji:'🌓', day:7.38   },
-        { name:'Full Moon',     emoji:'🌕', day:14.77  },
-        { name:'Last Quarter',  emoji:'🌗', day:20.32  }
+        {name:'New Moon',      emoji:'🌑', day:0    },
+        {name:'First Quarter', emoji:'🌓', day:7.38 },
+        {name:'Full Moon',     emoji:'🌕', day:14.77},
+        {name:'Last Quarter',  emoji:'🌗', day:20.32}
     ];
 
     function getCycleDay(date) {
-        var elapsed = (date - KNOWN_NEW) / MS_DAY;
-        return ((elapsed % CYCLE) + CYCLE) % CYCLE;
+        return (((date - KNOWN_NEW) / MS_DAY) % CYCLE + CYCLE) % CYCLE;
+    }
+    function getPhaseIdx(cd) {
+        for (var i=0;i<PHASES.length;i++) if(cd>=PHASES[i].from&&cd<PHASES[i].to) return i;
+        return 0;
+    }
+    function getIllum(cd) { return (1-Math.cos((cd/CYCLE)*2*Math.PI))/2; }
+    function daysUntil(cd,tgt) { var d=(tgt-cd+CYCLE)%CYCLE; return d<0.5?0:d; }
+    function nextPhaseDate(now,tgt) { return new Date(now.getTime()+daysUntil(getCycleDay(now),tgt)*MS_DAY); }
+    function fmtDate(d){ return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+    function fmtIn(d,now){ var diff=Math.round((d-now)/MS_DAY); return diff<=0?'Today':diff===1?'Tomorrow':'in '+diff+' days'; }
+
+    // ── ZODIAC ENGINE ────────────────────────────────────────────────────────
+    var SIGNS = [
+        {name:'Aries',       glyph:'♈', el:'Fire',  mode:'Cardinal', ruler:'Mars'},
+        {name:'Taurus',      glyph:'♉', el:'Earth', mode:'Fixed',    ruler:'Venus'},
+        {name:'Gemini',      glyph:'♊', el:'Air',   mode:'Mutable',  ruler:'Mercury'},
+        {name:'Cancer',      glyph:'♋', el:'Water', mode:'Cardinal', ruler:'Moon'},
+        {name:'Leo',         glyph:'♌', el:'Fire',  mode:'Fixed',    ruler:'Sun'},
+        {name:'Virgo',       glyph:'♍', el:'Earth', mode:'Mutable',  ruler:'Mercury'},
+        {name:'Libra',       glyph:'♎', el:'Air',   mode:'Cardinal', ruler:'Venus'},
+        {name:'Scorpio',     glyph:'♏', el:'Water', mode:'Fixed',    ruler:'Mars · Pluto'},
+        {name:'Sagittarius', glyph:'♐', el:'Fire',  mode:'Mutable',  ruler:'Jupiter'},
+        {name:'Capricorn',   glyph:'♑', el:'Earth', mode:'Cardinal', ruler:'Saturn'},
+        {name:'Aquarius',    glyph:'♒', el:'Air',   mode:'Fixed',    ruler:'Saturn · Uranus'},
+        {name:'Pisces',      glyph:'♓', el:'Water', mode:'Mutable',  ruler:'Jupiter · Neptune'}
+    ];
+    var EL_CLASS = {Fire:'fire', Earth:'earth', Air:'air', Water:'water'};
+
+    function calcZodiac(date) {
+        var j2000 = new Date('2000-01-01T12:00:00Z');
+        var days  = (date - j2000) / MS_DAY;
+        var lng   = ((218.3165 + 13.17639648 * days) % 360 + 360) % 360;
+        return {sign: SIGNS[Math.floor(lng/30)%12], degree: lng % 30};
     }
 
-    function getPhase(cycleDay) {
-        for (var i = 0; i < PHASES.length; i++) {
-            if (cycleDay >= PHASES[i].from && cycleDay < PHASES[i].to) return PHASES[i];
-        }
-        return PHASES[0];
-    }
+    // ── TREE OF LIFE PATHS ───────────────────────────────────────────────────
+    var PATHS = [
+        {n:1,  name:'Kether',    heb:null, tarot:null,                num:null,   med:'Primordial light. The first cause before all causes. Pure being that cannot be named.'},
+        {n:2,  name:'Chokmah',   heb:null, tarot:null,                num:null,   med:'Raw divine force. The flash before thought. Father principle — wisdom without form.'},
+        {n:3,  name:'Binah',     heb:null, tarot:null,                num:null,   med:'The great dark sea. Form receives force. The mother womb that shapes all understanding.'},
+        {n:4,  name:'Chesed',    heb:null, tarot:null,                num:null,   med:'Divine love in boundless abundance. Structure as gift. The benevolent king.'},
+        {n:5,  name:'Geburah',   heb:null, tarot:null,                num:null,   med:'Sacred will and focused power. The pruning flame. Justice without malice.'},
+        {n:6,  name:'Tiphareth', heb:null, tarot:null,                num:null,   med:'Harmony of all opposites. The solar heart. The self that holds matter and spirit.'},
+        {n:7,  name:'Netzach',   heb:null, tarot:null,                num:null,   med:'Desire and nature as divine expression. Astral fire. The green world.'},
+        {n:8,  name:'Hod',       heb:null, tarot:null,                num:null,   med:'Intellect and precision. Language as magic. The messenger who names all things.'},
+        {n:9,  name:'Yesod',     heb:null, tarot:null,                num:null,   med:'Lunar tides and dreaming. The etheric body. The astral mirror between worlds.'},
+        {n:10, name:'Malkuth',   heb:null, tarot:null,                num:null,   med:'The world made manifest. Earth. The bride who receives all above.'},
+        {n:11, name:'Aleph',     heb:'א',  tarot:'The Fool',          num:'0',    med:'Pure spirit leaping into the void. Beginnings without fear. The holy breath before the first word.'},
+        {n:12, name:'Beth',      heb:'ב',  tarot:'The Magician',      num:'I',    med:'Will focused to a single point. The creative word spoken. All tools lie ready on the altar.'},
+        {n:13, name:'Gimel',     heb:'ג',  tarot:'The High Priestess',num:'II',   med:'The lunar veil. Hidden knowledge sustains the revealed. What is not said holds the most power.'},
+        {n:14, name:'Daleth',    heb:'ד',  tarot:'The Empress',       num:'III',  med:'Venus opens the doorway of abundance. Nature at her fullest. The flesh as sacred scripture.'},
+        {n:15, name:'He',        heb:'ה',  tarot:'The Emperor',       num:'IV',   med:'Structure holds what force has built. Aries raises the throne. Form given dominion over form.'},
+        {n:16, name:'Vau',       heb:'ו',  tarot:'The Hierophant',    num:'V',    med:'The sacred teaching passes hand to hand. Taurus grounds the divine word into living tradition.'},
+        {n:17, name:'Zayin',     heb:'ז',  tarot:'The Lovers',        num:'VI',   med:'The eternal choice between two paths. Gemini divides to unite. Love is the path of gnosis.'},
+        {n:18, name:'Cheth',     heb:'ח',  tarot:'The Chariot',       num:'VII',  med:'Cancer drives the chariot of light. Opposing forces harnessed. Victory belongs to directed will.'},
+        {n:19, name:'Teth',      heb:'ט',  tarot:'Strength',          num:'VIII', med:"Leo's primal fire tamed by love. Inner dominion over appetite. The serpent power rises gently."},
+        {n:20, name:'Yod',       heb:'י',  tarot:'The Hermit',        num:'IX',   med:'Virgo holds the lantern inward. Wisdom found in chosen solitude. The inner teacher speaks.'},
+        {n:21, name:'Kaph',      heb:'כ',  tarot:'Wheel of Fortune',  num:'X',    med:'Jupiter spins the living wheel. The law of return in motion. Destiny is mathematics made sacred.'},
+        {n:22, name:'Lamed',     heb:'ל',  tarot:'Justice',           num:'XI',   med:'Libra weighs without favor. The sword of truth cuts clean. Karma is neither punishment nor reward.'},
+        {n:23, name:'Mem',       heb:'מ',  tarot:'The Hanged Man',    num:'XII',  med:'Water surrenders to stillness. The initiatory pause. New sight born only through willing sacrifice.'},
+        {n:24, name:'Nun',       heb:'נ',  tarot:'Death',             num:'XIII', med:'Scorpio transforms without mercy. The great crossing. What dies in you was never truly you.'},
+        {n:25, name:'Samekh',    heb:'ס',  tarot:'Temperance',        num:'XIV',  med:'Sagittarius flows between the vessels. Art as living alchemy. The angel of perfect measure.'},
+        {n:26, name:'Ayin',      heb:'ע',  tarot:'The Devil',         num:'XV',   med:'Capricorn binds in matter. The chains are illusion believed. Shadow work demands to be seen.'},
+        {n:27, name:'Pe',        heb:'פ',  tarot:'The Tower',         num:'XVI',  med:'Mars strikes the false crown from the tower. The necessary collapse. Truth arrives as lightning.'},
+        {n:28, name:'Tzaddi',    heb:'צ',  tarot:'The Star',          num:'XVII', med:'Aquarius pours hope renewed upon the dark earth. After the tower falls — the star holds steady.'},
+        {n:29, name:'Qoph',      heb:'ק',  tarot:'The Moon',          num:'XVIII',med:'Pisces in the deep. The lunar illusion shimmers. Fear is the final veil before the dawn.'},
+        {n:30, name:'Resh',      heb:'ר',  tarot:'The Sun',           num:'XIX',  med:'Clarity rises without shadow. The solar child dances unguarded. Consciousness knows itself.'},
+        {n:31, name:'Shin',      heb:'ש',  tarot:'Judgement',         num:'XX',   med:'The fire of awakening sounds. The trumpet is not a warning — it is an invitation. Rise.'},
+        {n:32, name:'Tau',       heb:'ת',  tarot:'The World',         num:'XXI',  med:'Saturn completes the dance. The whole is made whole. Return and beginning were always one.'}
+    ];
 
-    function getIllumination(cycleDay) {
-        // 0 at new, 1 at full, 0 at new again
-        return (1 - Math.cos((cycleDay / CYCLE) * 2 * Math.PI)) / 2;
-    }
-
-    function daysUntilPhaseDay(cycleDay, targetDay) {
-        var diff = targetDay - cycleDay;
-        if (diff < 0) diff += CYCLE;
-        // if we're already past and it's < 0.5 day away (just happened), show as 0
-        return diff < 0.5 ? 0 : diff;
-    }
-
-    function dateOfNextPhase(now, targetDay) {
-        var cycleDay = getCycleDay(now);
-        var days = daysUntilPhaseDay(cycleDay, targetDay);
-        return new Date(now.getTime() + days * MS_DAY);
-    }
-
-    function fmtDate(d) {
-        return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-    }
-
-    function fmtDaysIn(d, now) {
-        var diff = Math.round((d - now) / MS_DAY);
-        if (diff === 0) return 'Today';
-        if (diff === 1) return 'Tomorrow';
-        return 'in ' + diff + ' days';
-    }
-
-    // ── RENDER ───────────────────────────────────────────────────────────────
-    (function renderMoon() {
+    // ── RENDER: OVERVIEW ─────────────────────────────────────────────────────
+    (function renderOverview() {
         var now = new Date();
-        var cycleDay = getCycleDay(now);
-        var phase    = getPhase(cycleDay);
-        var illum    = getIllumination(cycleDay);
-        var pct      = cycleDay / CYCLE * 100;
+        var cd  = getCycleDay(now);
+        var pi  = getPhaseIdx(cd);
+        var ph  = PHASES[pi];
+        var ill = getIllum(cd);
+        var pct = cd / CYCLE * 100;
 
-        // Days to full / new
-        var dToFull = daysUntilPhaseDay(cycleDay, 14.77);
-        var dToNew  = daysUntilPhaseDay(cycleDay, 0);
-
-        document.getElementById('moon-emoji').textContent      = phase.emoji;
-        document.getElementById('moon-phase-name').textContent = phase.name;
-        document.getElementById('moon-cycle-day').textContent  =
-            'Day ' + cycleDay.toFixed(1) + ' of 29.5';
-        document.getElementById('stat-illum').innerHTML  =
-            Math.round(illum * 100) + '<span class="stat-unit">%</span>';
-        document.getElementById('stat-to-full').innerHTML =
-            (dToFull < 0.5 ? '0' : dToFull.toFixed(1)) + '<span class="stat-unit">d</span>';
-        document.getElementById('stat-to-new').innerHTML  =
-            (dToNew  < 0.5 ? '0' : dToNew.toFixed(1))  + '<span class="stat-unit">d</span>';
+        document.getElementById('moon-emoji').textContent      = ph.emoji;
+        document.getElementById('moon-phase-name').textContent = ph.name;
+        document.getElementById('moon-cycle-day').textContent  = 'Day ' + cd.toFixed(1) + ' of 29.5';
+        document.getElementById('stat-illum').innerHTML  = Math.round(ill*100) + '<span class="stat-unit">%</span>';
+        document.getElementById('stat-to-full').innerHTML = daysUntil(cd,14.77).toFixed(1) + '<span class="stat-unit">d</span>';
+        document.getElementById('stat-to-new').innerHTML  = daysUntil(cd,0).toFixed(1)  + '<span class="stat-unit">d</span>';
         document.getElementById('cycle-pct').textContent  = Math.round(pct) + '%';
+        requestAnimationFrame(function(){ document.getElementById('cycle-bar').style.width = Math.round(pct)+'%'; });
 
-        // Animate bar on next frame
-        requestAnimationFrame(function() {
-            document.getElementById('cycle-bar').style.width = Math.round(pct) + '%';
-        });
-
-        // Upcoming phases
         var rows = document.getElementById('upcoming-row');
         TARGETS.forEach(function(t) {
-            var d   = dateOfNextPhase(now, t.day);
-            var div = document.createElement('div');
-            div.className = 'upcoming-card';
-            div.innerHTML =
-                '<div class="upcoming-icon">' + t.emoji + '</div>' +
-                '<div class="upcoming-name">' + t.name + '</div>' +
-                '<div class="upcoming-date">' + fmtDate(d) + '</div>' +
-                '<div class="upcoming-in">'  + fmtDaysIn(d, now) + '</div>';
+            var d = nextPhaseDate(now, t.day);
+            var div = document.createElement('div'); div.className='upcoming-card';
+            div.innerHTML='<div class="upcoming-icon">'+t.emoji+'</div>'+
+                '<div class="upcoming-name">'+t.name+'</div>'+
+                '<div class="upcoming-date">'+fmtDate(d)+'</div>'+
+                '<div class="upcoming-in">'+fmtIn(d,now)+'</div>';
             rows.appendChild(div);
+        });
+    })();
+
+    // ── RENDER: ZODIAC ───────────────────────────────────────────────────────
+    (function renderZodiac() {
+        var now = new Date();
+        var z   = calcZodiac(now);
+        var s   = z.sign;
+        var deg = Math.floor(z.degree);
+        var min = Math.floor((z.degree - deg) * 60);
+        var elCls = EL_CLASS[s.el];
+
+        var card = document.getElementById('zodiac-card');
+        card.classList.add(elCls);
+        document.getElementById('zodiac-glyph').textContent = s.glyph;
+        document.getElementById('zodiac-name').textContent  = s.name;
+        document.getElementById('zodiac-degree').textContent =
+            deg + '°' + String(min).padStart(2,'0') + '\u2032  ·  ' + s.el + '  ·  ' + s.mode;
+
+        var pills = document.getElementById('zodiac-pills');
+        [['Ruler', s.ruler], ['Element', s.el], ['Mode', s.mode]].forEach(function(p) {
+            var span = document.createElement('span');
+            span.className = 'pill violet';
+            span.textContent = p[0].toUpperCase() + ' · ' + p[1];
+            pills.appendChild(span);
+        });
+
+        document.getElementById('zodiac-note').textContent =
+            'Approximate position · Mean lunar longitude · Updates each cycle day';
+
+        // Wheel grid
+        var wheel = document.getElementById('zodiac-wheel');
+        SIGNS.forEach(function(sg, i) {
+            var div = document.createElement('div');
+            div.style.cssText = 'padding:10px 8px;border:1px solid rgba(159,122,234,.08);background:rgba(10,10,20,.4);display:flex;flex-direction:column;gap:3px;';
+            if (sg.name === s.name) {
+                div.style.borderColor = 'rgba(159,122,234,.4)';
+                div.style.background  = 'rgba(159,122,234,.08)';
+            }
+            div.innerHTML =
+                '<div style="font-size:1.1rem;opacity:'+(sg.name===s.name?'1':'.45')+'">'+sg.glyph+'</div>'+
+                '<div style="font-family:\'JetBrains Mono\',monospace;font-size:.56rem;color:'+(sg.name===s.name?'var(--luna-violet)':'var(--dim)')+'">'+sg.name+'</div>'+
+                '<div style="font-family:\'JetBrains Mono\',monospace;font-size:.5rem;color:var(--dim);opacity:.6">'+sg.el+'</div>';
+            wheel.appendChild(div);
+        });
+    })();
+
+    // ── RENDER: SHADOW ───────────────────────────────────────────────────────
+    (function renderShadow() {
+        var now  = new Date();
+        var cd   = getCycleDay(now);
+        var pi   = getPhaseIdx(cd);
+        var ph   = PHASES[pi];
+        var qli  = QLIPHOTH[pi];
+        var waning = (ph.name === 'Waning Gibbous' || ph.name === 'Last Quarter' || ph.name === 'Waning Crescent');
+
+        var card   = document.getElementById('shadow-card');
+        var label  = document.getElementById('shadow-label');
+        var status = waning ? 'Active' : 'Dormant';
+
+        card.classList.add(waning ? 'shadow-active' : 'shadow-dormant');
+        label.className    = 'ins-label ' + (waning ? 'shadow-active' : 'shadow-dormant');
+        label.textContent  = 'Shadow · Qliphoth · ' + status;
+
+        document.getElementById('shadow-name').textContent  = qli.name;
+        document.getElementById('shadow-sub').textContent   = 'Mirror of ' + ph.seph + ' · ' + ph.name;
+        document.getElementById('shadow-text').textContent  = qli.meaning;
+        document.getElementById('shadow-note').textContent  = waning
+            ? 'Shadow work is active. The descending arc reveals what must be integrated.'
+            : 'Shadow is present but dormant. The ascending arc builds the light.';
+
+        document.getElementById('sephirah-name').textContent = ph.seph.toUpperCase() + ' — ' + ph.name;
+        document.getElementById('sephirah-text').textContent = ph.sephMeaning;
+    })();
+
+    // ── RENDER: TREE OF LIFE ─────────────────────────────────────────────────
+    (function renderTree() {
+        var now = new Date();
+        var cd  = getCycleDay(now);
+        var idx = Math.min(Math.floor(cd / CYCLE * 32), 31);
+        var p   = PATHS[idx];
+        var pct = (cd / CYCLE) * 100;
+
+        requestAnimationFrame(function(){ document.getElementById('tree-bar').style.width = pct.toFixed(1)+'%'; });
+
+        document.getElementById('tree-label').textContent = 'Path on the Tree of Life · ' + p.n + '/32';
+
+        var glyphBox = document.getElementById('tree-glyph-box');
+        if (p.heb) {
+            glyphBox.className  = 'hebrew-box';
+            glyphBox.innerHTML  = '<span class="hebrew-glyph">'+p.heb+'</span>';
+        } else {
+            glyphBox.className  = 'path-number-box';
+            glyphBox.innerHTML  = '<span class="path-number-txt">'+p.n+'</span>';
+        }
+
+        document.getElementById('tree-numeral').textContent   = p.num || '';
+        document.getElementById('tree-card-name').textContent = p.tarot ? p.tarot.toUpperCase() : p.name.toUpperCase();
+        document.getElementById('tree-path-sub').textContent  =
+            (p.heb ? 'Path ' : 'Sephirah ') + p.n + ' · ' + p.name;
+        document.getElementById('tree-meditation').textContent = p.med;
+
+        var pills = document.getElementById('tree-pills');
+        if (p.tarot) {
+            var sp = document.createElement('span'); sp.className='pill gold';
+            sp.textContent = 'Tarot · ' + p.tarot; pills.appendChild(sp);
+        }
+        var sp2 = document.createElement('span'); sp2.className='pill dim';
+        sp2.textContent = 'Day ' + cd.toFixed(1) + ' · Position ' + (idx+1) + ' of 32';
+        pills.appendChild(sp2);
+
+        // Cycle map grid
+        var grid = document.getElementById('kabba-grid');
+        PATHS.forEach(function(pp) {
+            var div = document.createElement('div');
+            div.className = 'kabba-cell' + (pp.n === p.n ? ' current-path' : '');
+            div.innerHTML =
+                '<div class="kabba-cell-n">' + pp.n + '</div>'+
+                '<div class="kabba-cell-name">' + (pp.heb ? pp.heb + ' ' : '') + pp.name + '</div>';
+            grid.appendChild(div);
         });
     })();
 
     // ── BACKGROUND ───────────────────────────────────────────────────────────
     (function() {
-        var s = document.getElementById('stars');
-        for (var i = 0; i < 100; i++) {
-            var el = document.createElement('div'); el.className = 'star';
-            el.style.cssText = 'left:' + Math.random()*100 + '%;top:' + Math.random()*100 +
-                '%;width:' + (Math.random()*2+1) + 'px;height:' + el.style.width +
-                ';animation-duration:' + (Math.random()*3+2) + 's;animation-delay:' + Math.random()*3 + 's';
+        var s=document.getElementById('stars');
+        for(var i=0;i<100;i++){
+            var el=document.createElement('div');el.className='star';
+            el.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;width:'+(Math.random()*2+1)+'px;height:'+el.style.width+';animation-duration:'+(Math.random()*3+2)+'s;animation-delay:'+Math.random()*3+'s';
             s.appendChild(el);
         }
-        var p = document.getElementById('particles');
-        for (var j = 0; j < 12; j++) {
-            var pe = document.createElement('div'); pe.className = 'particle';
-            pe.style.cssText = 'left:' + Math.random()*100 + '%;animation-duration:' +
-                (Math.random()*20+15) + 's;animation-delay:' + Math.random()*10 + 's';
+        var p=document.getElementById('particles');
+        for(var j=0;j<12;j++){
+            var pe=document.createElement('div');pe.className='particle';
+            pe.style.cssText='left:'+Math.random()*100+'%;animation-duration:'+(Math.random()*20+15)+'s;animation-delay:'+Math.random()*10+'s';
             p.appendChild(pe);
         }
     })();
