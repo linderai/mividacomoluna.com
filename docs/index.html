@@ -55,16 +55,19 @@
       background:var(--black);
       min-height:100vh;
     }
-    /* Luna PNG — fixed-position layer that pans vertically as the page scrolls.
-       JS updates background-position-y proportional to scroll fraction:
-       top of page → top of image, bottom of page → bottom of image. */
+    /* Luna PNG — img inside fixed container, panned via GPU translate3d.
+       Image is 2:3 portrait. width:max(100vw, 100vh*2/3) covers both
+       landscape + portrait viewports. JS translates Y from 0 to -extraPx on scroll. */
     .bg-image{
-      position:fixed;inset:0;z-index:-2;pointer-events:none;
-      background-image:url('assets/Landing.jpg');
-      background-size:cover;
-      background-position:center 0%;
-      background-repeat:no-repeat;
-      will-change:background-position;
+      position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;
+      background:var(--black);
+    }
+    .bg-image img{
+      position:absolute;left:50%;top:0;
+      width:max(100vw,calc(100vh * 2 / 3));height:auto;
+      transform:translate3d(-50%,0,0);
+      will-change:transform;
+      display:block;
     }
     /* scrim — sits above bg-image, below ember canvas */
     .bg-scrim{
@@ -409,7 +412,7 @@
 <body>
 
 <!-- Luna bg pans with scroll. moon halo + scrim above it. embers canvas auto-injects. -->
-<div class="bg-image"></div>
+<div class="bg-image"><img src="assets/Landing.jpg" alt="" aria-hidden="true"></div>
 <div class="moon-halo"></div>
 <div class="bg-scrim"></div>
 
@@ -623,22 +626,24 @@
 <!-- ember canvas — theme-aware drift (magenta ↔ paired) -->
 <script src="assets/embers.js" defer></script>
 <script>
-// bg-image scroll pan — top of page reveals top of image, bottom reveals bottom
+// bg-image scroll pan — GPU translate3d on inner <img>
 (function(){
-  var bg = document.querySelector('.bg-image');
-  if (!bg) return;
+  var img = document.querySelector('.bg-image img');
+  if (!img) return;
   var ticking = false;
   function update(){
     var max = document.documentElement.scrollHeight - window.innerHeight;
     var p = max > 0 ? Math.max(0, Math.min(1, window.scrollY / max)) : 0;
-    bg.style.backgroundPosition = 'center ' + (p * 100).toFixed(2) + '%';
+    var extra = Math.max(0, img.offsetHeight - window.innerHeight);
+    var dy = -p * extra;
+    img.style.transform = 'translate3d(-50%, ' + dy.toFixed(0) + 'px, 0)';
     ticking = false;
   }
   window.addEventListener('scroll', function(){
     if (!ticking){ requestAnimationFrame(update); ticking = true; }
   }, {passive:true});
   window.addEventListener('resize', update);
-  update();
+  if (img.complete) update(); else img.addEventListener('load', update);
 })();
 
 // theme toggle — BLUE ⇄ RED, persisted in localStorage
