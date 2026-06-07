@@ -1092,10 +1092,6 @@
 
         ctx.strokeStyle = color;
         ctx.lineWidth = 1 + brightness * 2;
-        if (brightness > 0.1) {
-            ctx.shadowBlur = 10 * brightness;
-            ctx.shadowColor = color;
-        }
         ctx.stroke();
         ctx.restore();
     }
