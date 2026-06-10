@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRUDEL — pattern deck · IO</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Orbitron:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --black:#0a0a0c; --void:#06060a; --surface:#101015; --raised:#16161c; --line:#1f1f28;
+      --text:#dcd9d5; --muted:#7a7780; --bone:#e8d8d0; --ash:#5c5862; --ok:#3df0a8;
+      --magenta:#ff2bd6; --magenta-dim:#aa1e92; --magenta-deep:#5a0e4d;
+      --moon:#c0c0c0; --moon-soft:rgba(192,192,192,0.4);
+      --err:#ff4757;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Cormorant Garamond', Georgia, serif;
+      background:var(--black); color:var(--text); min-height:100vh; overflow-x:hidden;
+    }
+
+    /* ── matrix-rain bg (ported from lempyra dashboard) ─────────────── */
+    .matrix-rain{
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      z-index:0; pointer-events:none; overflow:hidden; opacity:0.45;
+    }
+    .matrix-column{
+      position:absolute; top:-100%;
+      font-family:'JetBrains Mono', monospace;
+      font-size:14px; white-space:nowrap;
+      animation:matrixFall linear infinite;
+    }
+    @keyframes matrixFall { to { top:100%; } }
+
+    /* dark vignette so the UI reads against the rain */
+    .bg-scrim{
+      position:fixed; inset:0; z-index:1; pointer-events:none;
+      background:
+        radial-gradient(ellipse at center, rgba(6,6,10,0.55) 0%, rgba(6,6,10,0.78) 60%, rgba(6,6,10,0.92) 100%);
+    }
+
+    /* ── chassis ──────────────────────────────────────────────────── */
+    .header{
+      position:sticky; top:0; z-index:100;
+      border-bottom:1px solid var(--line);
+      background:rgba(6,6,10,0.92);
+      padding:14px 24px; backdrop-filter:blur(10px);
+    }
+    .header-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+    .title{
+      font-family:'Cormorant Garamond', serif; font-style:italic; font-weight:500;
+      font-size:22px; letter-spacing:2px; color:var(--bone);
+      text-shadow:0 0 18px rgba(255,43,214,0.28);
+    }
+    .title .accent{ color:var(--magenta); font-style:normal; font-weight:600; }
+    .meta{
+      font-family:'Orbitron', sans-serif; font-weight:500;
+      font-size:9.5px; letter-spacing:2.5px; text-transform:uppercase; color:var(--ash);
+    }
+    .meta .val{ color:var(--ok); }
+    .meta .val.err{ color:var(--err); }
+    .meta .val.warn{ color:#ffb84d; }
+
+    .main{
+      position:relative; z-index:10;
+      max-width:1100px; margin:0 auto; padding:16px;
+      display:flex; flex-direction:column; gap:14px;
+    }
+    .back{
+      display:inline-block; padding:4px 0 8px;
+      color:var(--ash); font-size:9.5px; letter-spacing:2.5px;
+      text-decoration:none; font-family:'Orbitron', sans-serif; text-transform:uppercase;
+    }
+    .back:hover{ color:var(--bone); }
+
+    .panel{
+      background:rgba(16,16,21,0.86);
+      border:1px solid var(--line);
+      padding:14px 16px;
+    }
+    .label{
+      font-family:'Orbitron', sans-serif; font-size:10px;
+      color:var(--moon); letter-spacing:2px; text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    /* ── pattern bank row ─────────────────────────────────────────── */
+    .bank{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .bank select{
+      flex:1; min-width:180px;
+      background:rgba(6,6,10,0.9); color:var(--bone);
+      border:1px solid var(--line); padding:7px 10px;
+      font-family:'JetBrains Mono', monospace; font-size:12px;
+      letter-spacing:0.5px;
+    }
+    .bank select:focus{ outline:none; border-color:var(--magenta-dim); }
+
+    /* ── code editor ──────────────────────────────────────────────── */
+    .code-wrap{ position:relative; }
+    #code{
+      width:100%; min-height:260px;
+      background:rgba(6,6,10,0.92); color:var(--bone);
+      border:1px solid var(--line); padding:14px;
+      font-family:'JetBrains Mono', monospace; font-size:13px;
+      line-height:1.55; letter-spacing:0.2px;
+      resize:vertical; tab-size:2;
+    }
+    #code:focus{ outline:none; border-color:var(--magenta-dim); box-shadow:0 0 0 1px rgba(255,43,214,0.15); }
+
+    /* ── transport ────────────────────────────────────────────────── */
+    .transport{
+      display:flex; gap:10px; justify-content:center;
+      padding:14px 0 4px;
+    }
+    .btn{
+      font-family:'Courier New', monospace; font-size:11px;
+      background:rgba(20,0,10,0.85); border:1px solid var(--magenta-dim);
+      color:var(--magenta); padding:8px 18px; cursor:pointer;
+      transition:all 0.2s; letter-spacing:1.5px;
+    }
+    .btn:hover{ background:rgba(255,43,214,0.18); border-color:var(--bone); color:var(--bone); }
+    .btn:disabled{ opacity:0.3; cursor:not-allowed; }
+    .btn.primary{ font-size:13px; padding:10px 28px; }
+    .btn.danger{ border-color:#5a1a1a; color:#ff7a7a; background:rgba(40,5,10,0.85); }
+    .btn.danger:hover{ background:rgba(255,71,87,0.15); border-color:var(--err); color:var(--err); }
+
+    /* ── help ────────────────────────────────────────────────────── */
+    details summary{
+      cursor:pointer; font-family:'Orbitron', sans-serif;
+      font-size:10px; letter-spacing:2px; color:var(--ash);
+      padding:4px 0;
+    }
+    details summary:hover{ color:var(--bone); }
+    details[open] summary{ color:var(--magenta); }
+    .cheat{
+      font-family:'JetBrains Mono', monospace; font-size:11.5px;
+      color:var(--muted); line-height:1.7; padding:10px 0 4px;
+    }
+    .cheat code{
+      background:rgba(6,6,10,0.7); color:var(--bone);
+      padding:1px 6px; border:1px solid var(--line);
+    }
+    .cheat a{ color:var(--magenta); text-decoration:none; }
+    .cheat a:hover{ color:var(--bone); }
+
+    @media (max-width:640px){
+      .main{ padding:10px; }
+      .title{ font-size:18px; letter-spacing:1.5px; }
+      .btn.primary{ padding:8px 18px; font-size:12px; }
+      #code{ min-height:200px; font-size:12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <script>
+    // ── luna_token gate (mvcl auth pattern, matches /io/mixer + /io/voice0) ──
+    (function(){ if (!sessionStorage.getItem('luna_token')) { location.replace('../../login/'); } })();
+  </script>
+
+  <div class="matrix-rain" id="matrixRain"></div>
+  <div class="bg-scrim"></div>
+
+  <header class="header">
+    <div class="header-row">
+      <div class="title">⌬ <span class="accent">STRUDEL</span> <span style="color:var(--ash);font-size:14px;letter-spacing:3px;">— PATTERN DECK</span></div>
+      <div class="meta">STATUS <span class="val" id="status">idle</span></div>
+    </div>
+  </header>
+
+  <main class="main">
+    <a class="back" href="../">← IO</a>
+
+    <section class="panel">
+      <div class="label">⌬ Pattern Bank</div>
+      <div class="bank">
+        <select id="patternSelect"></select>
+        <button class="btn" id="loadBtn">LOAD</button>
+        <button class="btn" id="saveBtn">SAVE AS</button>
+        <button class="btn danger" id="deleteBtn">DELETE</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="label">▤ Code</div>
+      <div class="code-wrap">
+        <textarea id="code" spellcheck="false">// strudel mini-notation — edit, then ▶ PLAY
+// docs: https://strudel.cc/learn/
+
+note("c3 [eb3 g3] bb3 [g3 eb3]")
+  .s("sawtooth")
+  .lpf(800)
+  .room(0.4)
+</textarea>
+      </div>
+      <div class="transport">
+        <button class="btn primary" id="playBtn">▶ PLAY</button>
+        <button class="btn primary" id="stopBtn">❚❚ STOP</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <details>
+        <summary>▸ MINI-NOTATION CHEAT</summary>
+        <div class="cheat">
+          <p><code>note("c e g")</code> — three notes, one cycle</p>
+          <p><code>[a b]</code> — subdivide into a single step</p>
+          <p><code>a*4</code> — repeat 4× · <code>a/2</code> — half speed</p>
+          <p><code>&lt;a b c&gt;</code> — alternate one per cycle</p>
+          <p><code>.s("sawtooth"|"sine"|"square"|"bd"|"sd"|"hh")</code> — sound source</p>
+          <p><code>.lpf(800)</code> <code>.hpf(200)</code> — filters · <code>.room(0.5)</code> reverb · <code>.delay(0.25)</code></p>
+          <p><code>.gain(0.7)</code> <code>.pan(0.3)</code> <code>.speed(1.5)</code></p>
+          <p>Full reference: <a href="https://strudel.cc/learn/" target="_blank" rel="noopener">strudel.cc/learn</a></p>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <!-- ── MATRIX RAIN INIT (ported from lempyra dashboard) ──────────────── -->
+  <script>
+    (function createMatrixRain(){
+      const container = document.getElementById('matrixRain');
+      const chars = '01ΛΣΘΞΨ▓▒░█{}[]<>/\\|';
+      const colors = ['#cc0033', '#9d00ff', '#ff0066', '#00ff00', '#00d4ff'];
+      for (let i = 0; i < 70; i++) {
+        const col = document.createElement('div');
+        col.className = 'matrix-column';
+        col.style.left = Math.random() * 100 + '%';
+        col.style.animationDuration = (Math.random() * 4 + 3) + 's';
+        col.style.animationDelay = Math.random() * 6 + 's';
+        col.style.fontSize = (Math.random() * 6 + 11) + 'px';
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        col.style.color = color;
+        col.style.textShadow = `0 0 8px ${color}`;
+        let text = '';
+        const len = Math.floor(Math.random() * 25) + 12;
+        for (let j = 0; j < len; j++) {
+          text += chars[Math.floor(Math.random() * chars.length)] + '\n';
+        }
+        col.textContent = text;
+        container.appendChild(col);
+        setInterval(() => {
+          if (Math.random() > 0.75) {
+            const c = colors[Math.floor(Math.random() * colors.length)];
+            col.style.color = c;
+            col.style.textShadow = `0 0 8px ${c}`;
+          }
+        }, Math.random() * 2000 + 1000);
+      }
+    })();
+  </script>
+
+  <!-- ── STRUDEL ENGINE + UI WIRING ────────────────────────────────────── -->
+  <script type="module">
+    // @strudel/web exposes initStrudel() which attaches `evaluate` + `hush`
+    // to window. Sample bank optional; sawtooth/sine/square synths work
+    // without any samples being loaded.
+    import { initStrudel } from 'https://unpkg.com/@strudel/web@latest';
+
+    const $ = (id) => document.getElementById(id);
+    const codeEl   = $('code');
+    const statusEl = $('status');
+    const playBtn  = $('playBtn');
+    const stopBtn  = $('stopBtn');
+    const selectEl = $('patternSelect');
+    const loadBtn  = $('loadBtn');
+    const saveBtn  = $('saveBtn');
+    const delBtn   = $('deleteBtn');
+
+    const LS_PATTERNS = 'mvcl_strudel_patterns';
+    const LS_LAST     = 'mvcl_strudel_last';
+
+    function setStatus(msg, cls){
+      statusEl.textContent = msg;
+      statusEl.className = 'val' + (cls ? ' ' + cls : '');
+    }
+
+    // ── pattern bank (localStorage) ──────────────────────────────────
+    function loadBank(){
+      try { return JSON.parse(localStorage.getItem(LS_PATTERNS) || '[]'); }
+      catch { return []; }
+    }
+    function saveBank(bank){
+      localStorage.setItem(LS_PATTERNS, JSON.stringify(bank));
+    }
+    function refreshSelect(){
+      const bank = loadBank();
+      selectEl.innerHTML = '<option value="">— bank empty —</option>';
+      bank.forEach((p, i) => {
+        const opt = document.createElement('option');
+        opt.value = String(i);
+        opt.textContent = p.name;
+        selectEl.appendChild(opt);
+      });
+    }
+
+    loadBtn.onclick = () => {
+      const i = selectEl.value;
+      if (i === '') return setStatus('nothing to load', 'warn');
+      const p = loadBank()[Number(i)];
+      if (!p) return setStatus('not found', 'err');
+      codeEl.value = p.code;
+      setStatus('loaded: ' + p.name);
+    };
+    saveBtn.onclick = () => {
+      const name = prompt('pattern name?');
+      if (!name) return;
+      const bank = loadBank();
+      const existing = bank.findIndex(p => p.name === name);
+      const entry = { name, code: codeEl.value, savedAt: Date.now() };
+      if (existing >= 0) bank[existing] = entry;
+      else bank.push(entry);
+      saveBank(bank);
+      refreshSelect();
+      selectEl.value = String(bank.findIndex(p => p.name === name));
+      setStatus('saved: ' + name);
+    };
+    delBtn.onclick = () => {
+      const i = selectEl.value;
+      if (i === '') return setStatus('nothing to delete', 'warn');
+      const bank = loadBank();
+      const removed = bank.splice(Number(i), 1)[0];
+      saveBank(bank);
+      refreshSelect();
+      setStatus('deleted: ' + (removed?.name || '?'));
+    };
+
+    // ── transport ────────────────────────────────────────────────────
+    let strudelReady = false;
+    let isPlaying = false;
+
+    async function ensureReady(){
+      if (strudelReady) return;
+      setStatus('booting strudel…');
+      await initStrudel();
+      strudelReady = true;
+    }
+
+    playBtn.onclick = async () => {
+      try {
+        await ensureReady();
+        localStorage.setItem(LS_LAST, codeEl.value);
+        setStatus('evaluating…');
+        await window.evaluate(codeEl.value);
+        isPlaying = true;
+        setStatus('▶ playing');
+        // ── EFFECTS HOOK ─────────────────────────────────────────────
+        // Future: register onTrigger callbacks here to pulse matrix-rain,
+        // shift palette per chord, push events to a visualizer layer.
+        // ─────────────────────────────────────────────────────────────
+      } catch (err) {
+        console.error(err);
+        setStatus('error · see console', 'err');
+      }
+    };
+
+    stopBtn.onclick = () => {
+      if (window.hush) window.hush();
+      isPlaying = false;
+      setStatus('stopped');
+    };
+
+    // ── boot ─────────────────────────────────────────────────────────
+    refreshSelect();
+    const last = localStorage.getItem(LS_LAST);
+    if (last) codeEl.value = last;
+    setStatus('idle · press ▶ to boot audio');
+  </script>
+
+</body>
+</html>
