@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOICE⁰ — Your Voice Is Hexadecimal · IO</title>
+    <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Orbitron:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{
+          --black:#0a0a0c; --void:#06060a; --surface:#101015; --raised:#16161c; --line:#1f1f28;
+          --text:#dcd9d5; --muted:#7a7780; --bone:#e8d8d0; --ash:#5c5862; --ok:#3df0a8;
+          --magenta:#ff2bd6; --magenta-dim:#aa1e92; --magenta-deep:#5a0e4d;
+          --moon:#c0c0c0; --moon-soft:rgba(192,192,192,0.4);
+          --paired:#ff2929; --paired-soft:#ff6b6b; --paired-dim:#a00010; --paired-rgb:255,41,41;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            background: var(--black); color: var(--text); min-height: 100vh;
+            overflow-x: hidden;
+            display: flex; flex-direction: column;
+        }
+        /* Luna PNG — same chassis as mixer */
+        .bg-image{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;background:var(--black);}
+        .bg-image img{position:absolute;left:50%;top:0;width:max(100vw,100lvh);height:auto;transform:translate3d(-50%,0,0);will-change:transform;display:block;}
+        .bg-scrim{position:fixed;inset:0;z-index:-1;pointer-events:none;
+          background:
+            radial-gradient(ellipse at top right,rgba(var(--paired-rgb),0.08),transparent 55%),
+            radial-gradient(ellipse at bottom left,rgba(255,43,214,0.06),transparent 55%),
+            linear-gradient(180deg,rgba(8,8,12,0.55) 0%,rgba(8,8,12,0.75) 35%,rgba(8,8,12,0.88) 75%,rgba(8,8,12,0.94) 100%);
+        }
+        .hex-bg { position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none; opacity: 0.05; }
+
+        .header {
+            position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid var(--line);
+            background: rgba(6, 6, 10, 0.88);
+            padding: 14px 24px; backdrop-filter: blur(10px);
+        }
+        .header-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .title {
+            font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
+            font-size: 22px; letter-spacing: 2px; color: var(--bone);
+            text-shadow: 0 0 18px rgba(255, 43, 214, 0.28);
+        }
+        .title .accent { color: var(--magenta); font-style: normal; font-weight: 600; }
+        .meta {
+            font-family: 'Orbitron', sans-serif; font-weight: 500;
+            font-size: 9.5px; letter-spacing: 2.5px; text-transform: uppercase;
+            color: var(--ash);
+        }
+        .meta .val { color: var(--ok); }
+
+        .main {
+            position: relative; z-index: 10; flex: 1;
+            max-width: 1100px; width: 100%; margin: 0 auto; padding: 20px;
+            display: flex; flex-direction: column; gap: 16px;
+        }
+
+        /* MIC BUTTON */
+        .mic-area { text-align: center; padding: 16px 0; }
+
+        .mic-btn {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: rgba(20, 0, 10, 0.9); border: 3px solid var(--magenta-dim);
+            color: var(--magenta); font-size: 28px; cursor: pointer;
+            transition: all 0.3s; position: relative;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .mic-btn:hover { border-color: var(--magenta); box-shadow: 0 0 30px rgba(255, 43, 214, 0.3); }
+        .mic-btn.recording {
+            border-color: var(--ok); background: rgba(0, 255, 0, 0.1);
+            animation: micPulse 1s infinite;
+        }
+        @keyframes micPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 0, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(0, 255, 0, 0.5); }
+        }
+        .mic-btn.recording .mic-icon { color: var(--ok); }
+        .mic-label {
+            font-size: 10px; color: #444; letter-spacing: 2px;
+            margin-top: 8px;
+        }
+
+        /* STATUS */
+        .status-bar {
+            display: flex; gap: 20px; justify-content: center;
+            font-size: 10px; letter-spacing: 1px; flex-wrap: wrap;
+        }
+        .status-item { color: #444; }
+        .status-item .sv { color: var(--moon); }
+
+        /* WAVEFORM */
+        .waveform-wrap {
+            border: 1px solid #1a1a1a; background: rgba(0,0,0,0.6);
+            padding: 0; position: relative; height: 120px;
+        }
+        canvas.waveform { width: 100%; height: 100%; display: block; }
+        .waveform-label {
+            position: absolute; top: 4px; left: 8px;
+            font-size: 9px; color: #333; letter-spacing: 1px;
+        }
+
+        /* FREQUENCY BARS */
+        .freq-wrap {
+            border: 1px solid #1a1a1a; background: rgba(0,0,0,0.6);
+            padding: 0; position: relative; height: 100px;
+        }
+        canvas.freq { width: 100%; height: 100%; display: block; }
+        .freq-label {
+            position: absolute; top: 4px; left: 8px;
+            font-size: 9px; color: #333; letter-spacing: 1px;
+        }
+
+        /* HEX STREAM */
+        .hex-stream-wrap {
+            border: 1px solid #1a1a1a; background: rgba(0,0,0,0.8);
+            padding: 12px; flex: 1; min-height: 150px; max-height: 300px;
+            overflow-y: auto; position: relative;
+        }
+        .hex-stream-label {
+            font-size: 9px; color: #333; letter-spacing: 1px; margin-bottom: 8px;
+        }
+        .hex-stream {
+            font-size: 12px; color: var(--ok); letter-spacing: 2px;
+            line-height: 1.8; word-break: break-all;
+            font-variant-numeric: tabular-nums;
+        }
+        .hex-stream .silence { color: #111; }
+        .hex-stream .low { color: #1565c0; }
+        .hex-stream .mid { color: var(--ok); }
+        .hex-stream .high { color: var(--magenta); }
+        .hex-stream .peak { color: #ff9900; text-shadow: 0 0 6px rgba(255, 153, 0, 0.4); }
+
+        /* LIVE BYTE */
+        .live-byte {
+            text-align: center; padding: 10px;
+        }
+        .live-byte-val {
+            font-size: 48px; color: var(--magenta); letter-spacing: 6px;
+            text-shadow: 0 0 20px rgba(255, 43, 214, 0.3);
+            transition: all 0.05s;
+            min-height: 58px;
+        }
+        .live-byte-dec { font-size: 14px; color: var(--ok); margin-top: 2px; }
+        .live-byte-bin { font-size: 11px; color: #1565c0; letter-spacing: 1px; margin-top: 2px; }
+        .live-byte-label { font-size: 9px; color: #333; letter-spacing: 1px; margin-top: 4px; }
+
+        /* VOLUME METER */
+        .volume-meter {
+            display: flex; align-items: center; gap: 8px; justify-content: center;
+        }
+        .vm-label { font-size: 10px; color: #444; min-width: 30px; text-align: right; }
+        .vm-bar-wrap {
+            width: 200px; height: 8px; background: #111; border: 1px solid #1a1a1a;
+            overflow: hidden;
+        }
+        .vm-bar {
+            height: 100%; background: var(--ok); transition: width 0.05s;
+            width: 0%;
+        }
+        .vm-val { font-size: 10px; color: var(--ok); min-width: 40px; }
+
+        /* CONTROLS */
+        .controls {
+            display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+        }
+        .btn {
+            font-family: 'Courier New', monospace; font-size: 11px;
+            background: rgba(20, 0, 10, 0.9); border: 1px solid var(--magenta-dim);
+            color: var(--magenta); padding: 6px 14px; cursor: pointer;
+            transition: all 0.2s; letter-spacing: 1px;
+        }
+        .btn:hover { background: rgba(255, 43, 214, 0.18); border-color: var(--moon); }
+        .btn.active { background: var(--magenta-dim); color: #000; }
+
+        /* INFO */
+        .info {
+            font-size: 10px; color: #333; letter-spacing: 1px;
+            text-align: center; padding: 8px; line-height: 1.8;
+        }
+        .info .hl { color: var(--magenta); }
+        .info .hex { color: var(--ok); }
+        .info .key { color: var(--moon); }
+
+        .footer {
+            text-align: center; padding: 12px; font-size: 9px;
+            color: #222; letter-spacing: 1px;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--magenta-dim); border-radius: 3px; }
+
+        @media (max-width: 600px) {
+            .live-byte-val { font-size: 32px; }
+            .hex-stream { font-size: 10px; }
+        }
+    </style>
+</head>
+<body>
+<script>
+  // ─ luna_token gate — kick to login if not authed (mvcl auth pattern) ─
+  (function(){ if (!sessionStorage.getItem('luna_token')) { location.replace('../../login/'); } })();
+</script>
+
+<div class="bg-image"><img src="../../assets/Landing.jpg" alt="" aria-hidden="true"></div>
+<div class="bg-scrim"></div>
+<canvas class="hex-bg" id="hexBg"></canvas>
+
+<div class="header">
+    <a href="../" style="display:inline-block;padding:4px 0 8px;color:var(--ash);font-size:9.5px;letter-spacing:2.5px;text-decoration:none;font-family:'Orbitron',sans-serif;text-transform:uppercase;">← IO</a>
+    <div class="header-row">
+        <div class="title"><span class="accent">⟨</span> VOICE<sup style="color:var(--moon);font-size:11px;">0</sup> <span class="accent">⟩</span></div>
+        <div class="meta">
+            <span class="val" id="sampleRateDisplay">—</span> Hz <span style="color:var(--line)">|</span>
+            <span class="val" id="bitDepth">8-BIT PCM</span> <span style="color:var(--line)">|</span>
+            MONO <span style="color:var(--line)">|</span>
+            <span class="val" id="streamStatus">WAITING</span>
+        </div>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- MIC -->
+    <div class="mic-area">
+        <button class="mic-btn" id="micBtn" onclick="toggleMic()">
+            <span class="mic-icon">🎤</span>
+        </button>
+        <div class="mic-label" id="micLabel">CLICK TO START — ALLOW MICROPHONE</div>
+    </div>
+
+    <!-- LIVE BYTE -->
+    <div class="live-byte">
+        <div class="live-byte-val" id="liveByte">--</div>
+        <div class="live-byte-dec" id="liveByteD">0</div>
+        <div class="live-byte-bin" id="liveByteBin">00000000</div>
+        <div class="live-byte-label">CURRENT AMPLITUDE — YOUR VOICE RIGHT NOW</div>
+    </div>
+
+    <!-- VOLUME -->
+    <div class="volume-meter">
+        <div class="vm-label">VOL</div>
+        <div class="vm-bar-wrap"><div class="vm-bar" id="volBar"></div></div>
+        <div class="vm-val" id="volVal">0%</div>
+    </div>
+
+    <!-- STATUS -->
+    <div class="status-bar">
+        <div class="status-item">BYTES: <span class="sv" id="byteCount">0</span></div>
+        <div class="status-item">PEAK: <span class="sv" id="peakVal">0x00</span></div>
+        <div class="status-item">AVG: <span class="sv" id="avgVal">0x00</span></div>
+        <div class="status-item">TIME: <span class="sv" id="timeVal">0.0s</span></div>
+    </div>
+
+    <!-- WAVEFORM -->
+    <div class="waveform-wrap">
+        <canvas class="waveform" id="waveCanvas"></canvas>
+        <div class="waveform-label">WAVEFORM — TIME DOMAIN</div>
+    </div>
+
+    <!-- FREQUENCY -->
+    <div class="freq-wrap">
+        <canvas class="freq" id="freqCanvas"></canvas>
+        <div class="freq-label">SPECTRUM — FREQUENCY DOMAIN</div>
+    </div>
+
+    <!-- HEX STREAM -->
+    <div class="hex-stream-wrap" id="hexWrap">
+        <div class="hex-stream-label">HEX STREAM — RAW AUDIO BYTES</div>
+        <div class="hex-stream" id="hexStream">
+            <span class="silence">Waiting for microphone...</span>
+        </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+        <button class="btn" onclick="clearStream()">CLEAR</button>
+        <button class="btn" onclick="copyHex()">COPY HEX</button>
+        <button class="btn" id="pauseBtn" onclick="togglePause()">PAUSE STREAM</button>
+        <button class="btn" id="colorBtn" onclick="toggleColor()">COLOR: AMPLITUDE</button>
+    </div>
+
+    <!-- INFO -->
+    <div class="info">
+        <span class="key">WHAT YOU'RE SEEING:</span> Your microphone captures air pressure waves. The Web Audio API samples that pressure
+        <span class="hl" id="infoRate">~44,100</span> times per second. Each sample is a number from
+        <span class="hex">0x00</span> (silence) to <span class="hex">0xFF</span> (max amplitude).
+        <span class="hl">Your voice is a stream of hex bytes. This is what sound looks like to a machine.</span>
+    </div>
+
+</div>
+
+<div class="footer">
+    λVOICE⁰ — LEMPYRΛ — YOUR VOICE IS VOLTAGE. VOLTAGE IS NUMBERS. NUMBERS ARE HEX.<br>
+    ZERO FRAMEWORKS. ZERO DEPENDENCIES. WEB AUDIO API + RAW BYTES.
+</div>
+
+<script>
+// ============================================================
+// λVoice⁰ — Your Voice Is Hexadecimal
+// lempyrλ — Free Education
+// Web Audio API → Raw PCM → Hex Stream
+// Zero dependencies.
+// ============================================================
+
+let audioCtx = null;
+let analyser = null;
+let micStream = null;
+let isRecording = false;
+let isPaused = false;
+let useColor = true;
+let byteCount = 0;
+let peakByte = 0;
+let byteSum = 0;
+let startTime = 0;
+let animFrame = null;
+
+const hexBuffer = [];
+const MAX_HEX_DISPLAY = 2000;
+
+// Canvas
+let waveCanvas, waveCtx, freqCanvas, freqCtx;
+
+async function toggleMic() {
+    if (isRecording) {
+        stopMic();
+    } else {
+        await startMic();
+    }
+}
+
+async function startMic() {
+    try {
+        micStream = await navigator.mediaDevices.getUserMedia({
+            audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+        });
+
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 2048;
+        analyser.smoothingTimeConstant = 0.3;
+
+        const source = audioCtx.createMediaStreamSource(micStream);
+        source.connect(analyser);
+
+        isRecording = true;
+        isPaused = false;
+        byteCount = 0;
+        peakByte = 0;
+        byteSum = 0;
+        startTime = Date.now();
+        hexBuffer.length = 0;
+
+        document.getElementById('micBtn').classList.add('recording');
+        document.getElementById('micLabel').textContent = 'RECORDING — CLICK TO STOP';
+        document.getElementById('streamStatus').textContent = 'STREAMING';
+        document.getElementById('sampleRateDisplay').textContent = audioCtx.sampleRate;
+        document.getElementById('infoRate').textContent = '~' + audioCtx.sampleRate.toLocaleString();
+        document.getElementById('hexStream').innerHTML = '';
+
+        initCanvases();
+        render();
+    } catch (err) {
+        document.getElementById('micLabel').textContent = 'MIC ACCESS DENIED — CHECK BROWSER PERMISSIONS';
+        console.error(err);
+    }
+}
+
+function stopMic() {
+    isRecording = false;
+    if (micStream) {
+        micStream.getTracks().forEach(t => t.stop());
+        micStream = null;
+    }
+    if (audioCtx) {
+        audioCtx.close();
+        audioCtx = null;
+    }
+    if (animFrame) cancelAnimationFrame(animFrame);
+
+    document.getElementById('micBtn').classList.remove('recording');
+    document.getElementById('micLabel').textContent = 'CLICK TO START';
+    document.getElementById('streamStatus').textContent = 'STOPPED';
+}
+
+function togglePause() {
+    isPaused = !isPaused;
+    document.getElementById('pauseBtn').textContent = isPaused ? 'RESUME STREAM' : 'PAUSE STREAM';
+    document.getElementById('streamStatus').textContent = isPaused ? 'PAUSED' : 'STREAMING';
+}
+
+function toggleColor() {
+    useColor = !useColor;
+    document.getElementById('colorBtn').textContent = useColor ? 'COLOR: AMPLITUDE' : 'COLOR: MONO';
+}
+
+function clearStream() {
+    hexBuffer.length = 0;
+    byteCount = 0; peakByte = 0; byteSum = 0;
+    startTime = Date.now();
+    document.getElementById('hexStream').innerHTML = '';
+    document.getElementById('byteCount').textContent = '0';
+    document.getElementById('peakVal').textContent = '0x00';
+    document.getElementById('avgVal').textContent = '0x00';
+}
+
+function copyHex() {
+    const text = hexBuffer.join(' ');
+    navigator.clipboard.writeText(text).catch(() => {});
+}
+
+function initCanvases() {
+    waveCanvas = document.getElementById('waveCanvas');
+    freqCanvas = document.getElementById('freqCanvas');
+
+    const dpr = window.devicePixelRatio || 1;
+
+    waveCanvas.width = waveCanvas.clientWidth * dpr;
+    waveCanvas.height = waveCanvas.clientHeight * dpr;
+    waveCtx = waveCanvas.getContext('2d');
+    waveCtx.scale(dpr, dpr);
+
+    freqCanvas.width = freqCanvas.clientWidth * dpr;
+    freqCanvas.height = freqCanvas.clientHeight * dpr;
+    freqCtx = freqCanvas.getContext('2d');
+    freqCtx.scale(dpr, dpr);
+}
+
+function render() {
+    if (!isRecording) return;
+    animFrame = requestAnimationFrame(render);
+
+    const bufLen = analyser.frequencyBinCount;
+    const timeData = new Uint8Array(bufLen);
+    const freqData = new Uint8Array(bufLen);
+    analyser.getByteTimeDomainData(timeData);
+    analyser.getByteFrequencyData(freqData);
+
+    // --- WAVEFORM ---
+    const w = waveCanvas.clientWidth;
+    const h = waveCanvas.clientHeight;
+    waveCtx.clearRect(0, 0, w, h);
+
+    // Grid
+    waveCtx.strokeStyle = '#0a0a0a';
+    waveCtx.lineWidth = 0.5;
+    waveCtx.beginPath();
+    waveCtx.moveTo(0, h / 2);
+    waveCtx.lineTo(w, h / 2);
+    waveCtx.stroke();
+
+    // Waveform line
+    waveCtx.lineWidth = 1.5;
+    waveCtx.strokeStyle = 'var(--magenta)';
+    waveCtx.shadowColor = 'rgba(255, 43, 214, 0.3)';
+    waveCtx.shadowBlur = 4;
+    waveCtx.beginPath();
+    const sliceW = w / bufLen;
+    for (let i = 0; i < bufLen; i++) {
+        const v = timeData[i] / 128.0;
+        const y = (v * h) / 2;
+        if (i === 0) waveCtx.moveTo(0, y);
+        else waveCtx.lineTo(i * sliceW, y);
+    }
+    waveCtx.stroke();
+    waveCtx.shadowBlur = 0;
+
+    // --- FREQUENCY BARS ---
+    const fw = freqCanvas.clientWidth;
+    const fh = freqCanvas.clientHeight;
+    freqCtx.clearRect(0, 0, fw, fh);
+
+    const barCount = 64;
+    const step = Math.floor(bufLen / barCount);
+    const barW = fw / barCount;
+
+    for (let i = 0; i < barCount; i++) {
+        let sum = 0;
+        for (let j = 0; j < step; j++) sum += freqData[i * step + j];
+        const avg = sum / step;
+        const barH = (avg / 255) * fh;
+
+        const hue = (i / barCount) * 280;
+        freqCtx.fillStyle = `hsla(${hue}, 80%, 50%, 0.7)`;
+        freqCtx.fillRect(i * barW, fh - barH, barW - 1, barH);
+    }
+
+    // --- HEX STREAM ---
+    if (!isPaused) {
+        // Sample a subset of the time domain data
+        const samplesPerFrame = 16;
+        const stride = Math.floor(bufLen / samplesPerFrame);
+
+        let frameMax = 0;
+        let frameSum = 0;
+
+        for (let i = 0; i < samplesPerFrame; i++) {
+            const val = timeData[i * stride];
+            // Convert from unsigned 128-center to amplitude byte
+            const amp = Math.abs(val - 128) * 2;
+            const byte = Math.min(255, amp);
+
+            const hex = byte.toString(16).toUpperCase().padStart(2, '0');
+            hexBuffer.push(hex);
+            byteCount++;
+            byteSum += byte;
+            if (byte > peakByte) peakByte = byte;
+            if (byte > frameMax) frameMax = byte;
+            frameSum += byte;
+        }
+
+        // Trim buffer
+        while (hexBuffer.length > MAX_HEX_DISPLAY) hexBuffer.shift();
+
+        // Update hex display (throttled)
+        if (byteCount % 32 === 0 || byteCount < 100) {
+            updateHexDisplay();
+        }
+
+        // Live byte — use max of frame
+        const liveByte = frameMax;
+        const liveHex = liveByte.toString(16).toUpperCase().padStart(2, '0');
+        document.getElementById('liveByte').textContent = liveHex;
+        document.getElementById('liveByte').style.textShadow =
+            `0 0 ${10 + (liveByte / 255) * 30}px rgba(255, 43, 214, ${0.2 + (liveByte / 255) * 0.6})`;
+        document.getElementById('liveByteD').textContent = liveByte;
+        document.getElementById('liveByteBin').textContent = liveByte.toString(2).padStart(8, '0');
+
+        // Volume bar
+        const vol = Math.min(100, Math.round((liveByte / 255) * 100));
+        const bar = document.getElementById('volBar');
+        bar.style.width = vol + '%';
+        bar.style.background = vol > 80 ? 'var(--magenta)' : vol > 40 ? '#ff9900' : 'var(--ok)';
+        document.getElementById('volVal').textContent = vol + '%';
+
+        // Stats
+        document.getElementById('byteCount').textContent = byteCount.toLocaleString();
+        document.getElementById('peakVal').textContent = '0x' + peakByte.toString(16).toUpperCase().padStart(2, '0');
+        const avg = byteCount > 0 ? Math.round(byteSum / byteCount) : 0;
+        document.getElementById('avgVal').textContent = '0x' + avg.toString(16).toUpperCase().padStart(2, '0');
+        const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+        document.getElementById('timeVal').textContent = elapsed + 's';
+    }
+}
+
+function updateHexDisplay() {
+    const stream = document.getElementById('hexStream');
+    const wrap = document.getElementById('hexWrap');
+
+    let html = '';
+    for (let i = 0; i < hexBuffer.length; i++) {
+        const hex = hexBuffer[i];
+        const val = parseInt(hex, 16);
+
+        let cls = 'silence';
+        if (useColor) {
+            if (val > 200) cls = 'peak';
+            else if (val > 140) cls = 'high';
+            else if (val > 60) cls = 'mid';
+            else if (val > 15) cls = 'low';
+        } else {
+            cls = 'mid';
+        }
+
+        html += `<span class="${cls}">${hex}</span> `;
+        if ((i + 1) % 32 === 0) html += '\n';
+    }
+
+    stream.innerHTML = html;
+
+    // Auto-scroll
+    wrap.scrollTop = wrap.scrollHeight;
+}
+
+// ============================================================
+// HEX STREAM BACKGROUND — RAW AUDIO BYTES
+// ============================================================
+const HEX_BG = {
+    canvas: null, ctx: null,
+    cols: 0, rows: 0, streams: [],
+    CW: 28, CH: 14
+};
+
+function randByte() {
+    const r = Math.random();
+    if (r < 0.62) return Math.floor(Math.random() * 18);
+    if (r < 0.82) return Math.floor(Math.random() * 70) + 18;
+    if (r < 0.95) return Math.floor(Math.random() * 75) + 88;
+    return Math.floor(Math.random() * 55) + 200;
+}
+
+function getAudioByte() {
+    if (analyser && isRecording) {
+        const buf = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteTimeDomainData(buf);
+        const v = buf[Math.floor(Math.random() * buf.length)];
+        return Math.min(255, Math.abs(v - 128) * 2);
+    }
+    return randByte();
+}
+
+function hexByteColor(val, alpha) {
+    if (val > 200) return `rgba(255,153,0,${alpha})`;
+    if (val > 140) return `rgba(255,0,102,${alpha})`;
+    if (val > 60)  return `rgba(0,255,0,${alpha})`;
+    if (val > 15)  return `rgba(21,101,192,${alpha})`;
+    return `rgba(18,18,18,${alpha})`;
+}
+
+function initHexBg() {
+    const cvs = document.getElementById('hexBg');
+    HEX_BG.canvas = cvs;
+    HEX_BG.ctx = cvs.getContext('2d');
+
+    function resize() {
+        cvs.width = window.innerWidth;
+        cvs.height = window.innerHeight;
+        HEX_BG.cols = Math.ceil(cvs.width / HEX_BG.CW);
+        HEX_BG.rows = Math.ceil(cvs.height / HEX_BG.CH) + 2;
+        HEX_BG.streams = Array.from({ length: HEX_BG.cols }, () => ({
+            y: Math.random() * -HEX_BG.rows,
+            speed: 0.25 + Math.random() * 0.35,
+            len: 10 + Math.floor(Math.random() * 14),
+            vals: Array.from({ length: 24 }, () => randByte())
+        }));
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    renderHexBg();
+}
+
+function renderHexBg() {
+    requestAnimationFrame(renderHexBg);
+    const { canvas, ctx, streams, CW, CH, rows } = HEX_BG;
+
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.font = `11px "Courier New", monospace`;
+    ctx.textAlign = 'center';
+
+    streams.forEach((s, col) => {
+        s.y += s.speed;
+        if (s.y > rows + s.len) {
+            s.y = -s.len - Math.random() * 10;
+            s.speed = 0.25 + Math.random() * 0.35;
+            s.len = 10 + Math.floor(Math.random() * 14);
+        }
+        for (let i = 0; i < s.len; i++) {
+            const row = Math.floor(s.y) - i;
+            if (row < 0 || row >= rows) continue;
+            const fade = 1 - i / s.len;
+            if (i === 0 && Math.random() < 0.25)
+                s.vals[0] = getAudioByte();
+            const val = s.vals[i % s.vals.length];
+            const alpha = i === 0 ? 0.9 : fade * 0.28;
+            ctx.fillStyle = hexByteColor(val, alpha);
+            ctx.fillText(val.toString(16).toUpperCase().padStart(2, '0'), col * CW + CW / 2, row * CH + CH);
+        }
+    });
+}
+
+// --- RESIZE ---
+window.addEventListener('resize', () => {
+    if (isRecording) initCanvases();
+});
+
+// --- INIT ---
+window.addEventListener('load', initHexBg);
+</script>
+
+    <script>
+      // ─ bg-image scroll-pan (GPU translate3d) — Luna PNG behind UI ─
+      (function(){
+        var img = document.querySelector('.bg-image img'); if (!img) return;
+        var ticking = false;
+        function update(){
+          var max = document.documentElement.scrollHeight - window.innerHeight;
+          var p = max > 0 ? Math.max(0, Math.min(1, window.scrollY / max)) : 0;
+          var extra = Math.max(0, img.offsetHeight - window.innerHeight);
+          img.style.transform = 'translate3d(-50%, ' + (-p * extra).toFixed(0) + 'px, 0)';
+          ticking = false;
+        }
+        window.addEventListener('scroll', function(){ if (!ticking){ requestAnimationFrame(update); ticking = true; } }, {passive:true});
+        window.addEventListener('resize', update);
+        if (img.complete) update(); else img.addEventListener('load', update);
+      })();
+    </script>
+</body>
+</html>
