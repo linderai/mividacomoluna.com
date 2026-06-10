@@ -252,13 +252,11 @@ note("c3 [eb3 g3] bb3 [g3 eb3]")
     })();
   </script>
 
-  <!-- ── STRUDEL ENGINE + UI WIRING ────────────────────────────────────── -->
-  <script type="module">
-    // @strudel/web exposes initStrudel() which attaches `evaluate` + `hush`
-    // to window. Sample bank optional; sawtooth/sine/square synths work
-    // without any samples being loaded.
-    import { initStrudel } from 'https://unpkg.com/@strudel/web@latest';
+  <!-- ── STRUDEL ENGINE (UMD bundle — attaches initStrudel/evaluate/hush/etc to window) ── -->
+  <script src="https://unpkg.com/@strudel/web@1.0.3"></script>
 
+  <!-- ── UI WIRING ─────────────────────────────────────────────────────── -->
+  <script>
     const $ = (id) => document.getElementById(id);
     const codeEl   = $('code');
     const statusEl = $('status');
@@ -333,8 +331,14 @@ note("c3 [eb3 g3] bb3 [g3 eb3]")
 
     async function ensureReady(){
       if (strudelReady) return;
+      if (typeof window.initStrudel !== 'function') {
+        throw new Error('strudel bundle not loaded — check network / CSP for unpkg.com');
+      }
       setStatus('booting strudel…');
-      await initStrudel();
+      await window.initStrudel();
+      if (typeof window.evaluate !== 'function') {
+        throw new Error('strudel evaluate() missing after init — package shape changed');
+      }
       strudelReady = true;
     }
 
@@ -352,12 +356,12 @@ note("c3 [eb3 g3] bb3 [g3 eb3]")
         // ─────────────────────────────────────────────────────────────
       } catch (err) {
         console.error(err);
-        setStatus('error · see console', 'err');
+        setStatus(err.message ? err.message.slice(0, 60) : 'error · see console', 'err');
       }
     };
 
     stopBtn.onclick = () => {
-      if (window.hush) window.hush();
+      if (typeof window.hush === 'function') window.hush();
       isPlaying = false;
       setStatus('stopped');
     };
