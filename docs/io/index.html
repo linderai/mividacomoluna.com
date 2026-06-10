@@ -346,43 +346,17 @@ button{font-family:'Orbitron',sans-serif;cursor:pointer;border:none;background:n
 
 <!-- TOOL BAR -->
 <nav class="toolbar" id="toolbar">
-    <button class="tool-btn active" data-tool="chat"><span class="ico">⎚</span> CHAT</button>
-    <button class="tool-btn" data-tool="moon"><span class="ico">☽</span> MOON</button>
+    <button class="tool-btn active" data-tool="moon"><span class="ico">☽</span> MOON</button>
     <button class="tool-btn" data-tool="cards"><span class="ico">⌖</span> CARDS</button>
+    <a class="tool-btn" href="mixer/"><span class="ico">⎚</span> MIXER</a>
+    <a class="tool-btn" href="voice0/"><span class="ico">⌥</span> VOICE⁰</a>
 </nav>
 
 <!-- MAIN -->
 <main class="main">
 
-    <!-- ─────────────────  CHAT PANE  ───────────────── -->
-    <section class="pane active" data-pane="chat">
-        <div class="chat-wrap">
-            <div class="hero-strip">
-                <p class="hero-eyebrow">⟨ TALK TO LUNA ⟩</p>
-                <h2 class="hero-title">Di lo que tienes que <em class="em">decir.</em></h2>
-            </div>
-            <section class="chat">
-                <header class="chat-head">
-                    <div class="chat-title">⟨ <b>Luna</b> · live ⟩</div>
-                    <div class="chat-status">
-                        <span class="status-dot" id="statusDot"></span>
-                        <span id="statusText">CONNECTED</span>
-                    </div>
-                </header>
-                <div class="stream" id="stream">
-                    <div class="msg sys">⟨ Luna is awake. No small talk. No corporate cheer. Habla. ⟩</div>
-                </div>
-                <form class="compose" id="composeForm">
-                    <textarea id="prompt" placeholder="dile algo..." rows="1" autocomplete="off"></textarea>
-                    <button class="btn-send" id="sendBtn" type="submit">▶ SEND</button>
-                </form>
-            </section>
-            <p class="chat-foot">⟨ AUTO-ROUTED · BEST <span class="pip">BRAIN</span> AVAILABLE · NO SMALL TALK ⟩</p>
-        </div>
-    </section>
-
-    <!-- ─────────────────  MOON PANE  ───────────────── -->
-    <section class="pane" data-pane="moon">
+    <!-- ─────────────────  MOON PANE  (default) ───────────────── -->
+    <section class="pane active" data-pane="moon">
         <div class="moon-wrap">
             <div class="moon-header">
                 <p class="moon-eyebrow">⟨ LUNA READS THE MOON ⟩</p>
@@ -501,20 +475,6 @@ button{font-family:'Orbitron',sans-serif;cursor:pointer;border:none;background:n
 <div class="yt-host" aria-hidden="true"><div id="ytPlayer"></div></div>
 
 <script>
-// ──────────────────────────────────────────────────────────────────────
-//  LUNA — hard-coded persona prompt. Backend picks model per request via
-//  model:'auto' on /orch/v1/chat/completions.
-// ──────────────────────────────────────────────────────────────────────
-var LUNA_PROMPT = [
-  "You are Luna. A modern witch with coding and hacking skills.",
-  "Voice: cold, sharp, honest. Gothic, self-deprecating, never cheerful.",
-  "You write in short, dark sentences. No exclamation marks. No corporate cheer. No small talk.",
-  "You read houses, code, contracts, and people with the same blade.",
-  "You mix Spanish and English freely — match the user's register.",
-  "You don't break character. You don't moralize unsolicited.",
-  "You hold what is yours."
-].join('\n');
-
 var SAR1A       = 'https://sar1a.lempyra.com';
 var APP_ID      = 'mividacomoluna';
 var AUTH_KEY    = 'luna_token';
@@ -553,19 +513,19 @@ document.getElementById('logoutBtn').addEventListener('click', function(){
 });
 
 // ──────────────────────────────────────────────────────────────────────
-//  TOOL TAB ROUTING (hash-based) — #chat (default) · #moon · #cards
+//  TOOL TAB ROUTING (hash-based) — #moon (default) · #cards
+//  MIXER + VOICE⁰ are <a class="tool-btn" href="…/"> — they navigate out.
 // ──────────────────────────────────────────────────────────────────────
 (function(){
   var panes = Array.prototype.slice.call(document.querySelectorAll('.pane'));
-  var btns  = Array.prototype.slice.call(document.querySelectorAll('.tool-btn'));
-  var TOOLS = ['chat','moon','cards'];
+  var btns  = Array.prototype.slice.call(document.querySelectorAll('button.tool-btn'));
+  var TOOLS = ['moon','cards'];
 
   function activate(name){
-    if (TOOLS.indexOf(name) < 0) name = 'chat';
+    if (TOOLS.indexOf(name) < 0) name = 'moon';
     panes.forEach(function(p){ p.classList.toggle('active', p.dataset.pane === name); });
     btns.forEach(function(b){ b.classList.toggle('active', b.dataset.tool === name); });
     if (location.hash !== '#' + name) {
-      // avoid loop; just rewrite without triggering hashchange we trigger here
       history.replaceState(null, '', '#' + name);
     }
     if (name === 'moon') renderMoon();
@@ -575,10 +535,10 @@ document.getElementById('logoutBtn').addEventListener('click', function(){
     b.addEventListener('click', function(){ activate(b.dataset.tool); });
   });
   window.addEventListener('hashchange', function(){
-    activate((location.hash || '').replace(/^#/, '') || 'chat');
+    activate((location.hash || '').replace(/^#/, '') || 'moon');
   });
 
-  var initial = (location.hash || '').replace(/^#/, '') || 'chat';
+  var initial = (location.hash || '').replace(/^#/, '') || 'moon';
   activate(initial);
 })();
 
@@ -627,131 +587,6 @@ function renderMoon(){
   document.getElementById('moonRead').textContent = s.phase.read;
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  CHAT — Luna chat surface (auto-routed)
-// ──────────────────────────────────────────────────────────────────────
-var statusDot  = document.getElementById('statusDot');
-var statusText = document.getElementById('statusText');
-function setStatus(state, text){
-  statusDot.className = 'status-dot' + (state ? ' ' + state : '');
-  statusText.textContent = text;
-}
-
-var stream = document.getElementById('stream');
-function appendMsg(role, content){
-  var el = document.createElement('div');
-  el.className = 'msg ' + role;
-  if (role !== 'sys'){
-    var who = document.createElement('span');
-    who.className = 'who';
-    who.textContent = role === 'user' ? '⟨ YOU ⟩' : role === 'luna' ? '⟨ LUNA ⟩' : '⟨ NOTE ⟩';
-    el.appendChild(who);
-  }
-  var body = document.createElement('div');
-  body.textContent = content;
-  el.appendChild(body);
-  stream.appendChild(el);
-  stream.scrollTop = stream.scrollHeight;
-  return body;
-}
-
-function authHeader(){
-  var t = sessionStorage.getItem(AUTH_KEY);
-  return t ? {'Authorization': 'Bearer ' + t} : {};
-}
-async function refreshToken(){
-  var r = sessionStorage.getItem(REFRESH_KEY);
-  if (!r) return false;
-  try {
-    var res = await fetch(SAR1A + '/auth/refresh', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({refresh_token: r, client_id: 'portal'})
-    });
-    if (!res.ok) return false;
-    var j = await res.json();
-    sessionStorage.setItem(AUTH_KEY, j.access_token);
-    if (j.refresh_token) sessionStorage.setItem(REFRESH_KEY, j.refresh_token);
-    return true;
-  } catch(_) { return false; }
-}
-async function apiFetch(path, init){
-  init = init || {};
-  init.headers = Object.assign({}, init.headers || {}, authHeader());
-  if (path.indexOf('/orch') === 0) init.headers['X-App-ID'] = APP_ID;
-  var r = await fetch(SAR1A + path, init);
-  if (r.status === 401 && await refreshToken()){
-    init.headers = Object.assign({}, init.headers, authHeader());
-    r = await fetch(SAR1A + path, init);
-  }
-  return r;
-}
-
-var history = [{role: 'system', content: LUNA_PROMPT}];
-
-async function send(userText){
-  history.push({role: 'user', content: userText});
-  appendMsg('user', userText);
-  setStatus('thinking', 'LUNA THINKING…');
-  var bodyEl = appendMsg('luna', '…');
-  try {
-    var r = await apiFetch('/orch/v1/chat/completions', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({model: 'auto', messages: history, stream: false})
-    });
-    if (!r.ok){
-      var errTxt = '';
-      try { var ej = await r.json(); errTxt = ej.detail || ej.error || JSON.stringify(ej); }
-      catch(_) { errTxt = await r.text(); }
-      throw new Error('HTTP ' + r.status + ': ' + (errTxt || 'request failed'));
-    }
-    var j = await r.json();
-    var reply = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content)
-                || j.content || j.reply || '';
-    if (!reply){
-      bodyEl.textContent = '⟨ no response ⟩';
-      setStatus('error', 'EMPTY RESPONSE');
-      return;
-    }
-    bodyEl.textContent = reply;
-    history.push({role: 'assistant', content: reply});
-    setStatus('', 'CONNECTED');
-    stream.scrollTop = stream.scrollHeight;
-  } catch(e){
-    bodyEl.parentElement.classList.remove('luna');
-    bodyEl.parentElement.classList.add('error');
-    bodyEl.parentElement.querySelector('.who').textContent = '⟨ ERROR ⟩';
-    bodyEl.textContent = e.message || 'unknown error';
-    setStatus('error', 'ERROR');
-    history.pop();
-  }
-}
-
-var promptEl   = document.getElementById('prompt');
-var sendBtn    = document.getElementById('sendBtn');
-var composeFrm = document.getElementById('composeForm');
-function autoGrow(){
-  promptEl.style.height = 'auto';
-  promptEl.style.height = Math.min(promptEl.scrollHeight, 160) + 'px';
-}
-promptEl.addEventListener('input', autoGrow);
-promptEl.addEventListener('keydown', function(e){
-  if (e.key === 'Enter' && !e.shiftKey){
-    e.preventDefault();
-    composeFrm.dispatchEvent(new Event('submit', {cancelable:true}));
-  }
-});
-composeFrm.addEventListener('submit', async function(e){
-  e.preventDefault();
-  var txt = promptEl.value.trim();
-  if (!txt) return;
-  promptEl.value = '';
-  autoGrow();
-  sendBtn.disabled = true;
-  try { await send(txt); }
-  finally { sendBtn.disabled = false; promptEl.focus(); }
-});
 
 // ──────────────────────────────────────────────────────────────────────
 //  PLAYER — YouTube IFrame API; iframe lives off-screen, surface a

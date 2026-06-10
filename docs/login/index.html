@@ -231,7 +231,7 @@ var AUTH = {
 };
 
 if (sessionStorage.getItem(AUTH.tokenKey)) {
-    window.location.replace('../dashboard/');
+    window.location.replace('../io/');
 }
 
 var gwDot     = document.getElementById('gw-dot');
@@ -297,7 +297,7 @@ async function doLogin(username, password) {
         sessionStorage.setItem(AUTH.userKey, username);
 
         submitBtn.textContent = '✓ ACCESS GRANTED';
-        window.location.replace('../dashboard/');
+        window.location.replace('../io/');
 
     } catch(e) {
         errorMsg.textContent = (e.message || 'LOGIN FAILED').toUpperCase();
