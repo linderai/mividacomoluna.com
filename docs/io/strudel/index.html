@@ -187,12 +187,13 @@
       <div class="label">▤ Code</div>
       <div class="code-wrap">
         <textarea id="code" spellcheck="false">// strudel mini-notation — edit, then ▶ PLAY
-// docs: https://strudel.cc/learn/
+// docs: https://strudel.cc/learn/  ·  code MUST end with .play()
 
 note("c3 [eb3 g3] bb3 [g3 eb3]")
   .s("sawtooth")
   .lpf(800)
   .room(0.4)
+  .play()
 </textarea>
       </div>
       <div class="transport">
@@ -212,6 +213,7 @@ note("c3 [eb3 g3] bb3 [g3 eb3]")
           <p><code>.s("sawtooth"|"sine"|"square"|"bd"|"sd"|"hh")</code> — sound source</p>
           <p><code>.lpf(800)</code> <code>.hpf(200)</code> — filters · <code>.room(0.5)</code> reverb · <code>.delay(0.25)</code></p>
           <p><code>.gain(0.7)</code> <code>.pan(0.3)</code> <code>.speed(1.5)</code></p>
+          <p><strong style="color:var(--bone)">End your code with <code>.play()</code></strong> — that's the call that actually starts the pattern.</p>
           <p>Full reference: <a href="https://strudel.cc/learn/" target="_blank" rel="noopener">strudel.cc/learn</a></p>
         </div>
       </details>
@@ -336,9 +338,6 @@ note("c3 [eb3 g3] bb3 [g3 eb3]")
       }
       setStatus('booting strudel…');
       await window.initStrudel();
-      if (typeof window.evaluate !== 'function') {
-        throw new Error('strudel evaluate() missing after init — package shape changed');
-      }
       strudelReady = true;
     }
 
@@ -347,7 +346,11 @@ note("c3 [eb3 g3] bb3 [g3 eb3]")
         await ensureReady();
         localStorage.setItem(LS_LAST, codeEl.value);
         setStatus('evaluating…');
-        await window.evaluate(codeEl.value);
+        // strudel's UMD bundle attaches pattern fns (note, s, hush, …) as
+        // window globals but NOT evaluate(). Per their docs example, the
+        // user's code is plain JS that ends with `.play()` and we just
+        // run it in the global scope.
+        (new Function(codeEl.value))();
         isPlaying = true;
         setStatus('▶ playing');
         // ── EFFECTS HOOK ─────────────────────────────────────────────
