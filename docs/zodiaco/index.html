@@ -1,0 +1,281 @@
+<script src="../auth-guard.js"></script>
+<title>Tu Signo Real · las 13 constelaciones</title>
+<style>
+  :root{
+    --void:#08070f; --panel:#0f0d1c; --panel2:#141127;
+    --line:#241f3d;
+    --aqua:#5bdcec; --aqua2:#2b8fb0;
+    --gold:#f6c453; --hot:#fff3ce;
+    --violet:#a98bff; --moon:#e8ecf8;
+    --text:#dbe0ee; --muted:#8a8fa6; --dim:#5b5f75;
+    --ok:#66e0b0;
+    --serif:'Iowan Old Style',Georgia,'Palatino Linotype','Times New Roman',serif;
+    --mono:ui-monospace,'SF Mono','Cascadia Code',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--void);color:var(--text);
+    font-family:var(--serif);-webkit-font-smoothing:antialiased;line-height:1.6;}
+  body{background:
+    radial-gradient(1100px 620px at 50% -8%, #1a1533 0%, transparent 60%),
+    radial-gradient(800px 500px at 88% 18%, #14243a 0%, transparent 55%),
+    var(--void);}
+  .mono{font-family:var(--mono);}
+  .wrap{max-width:680px;margin:0 auto;padding:0 22px 90px;}
+
+  /* ── starfield ── */
+  #stars{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.7;}
+  .wrap,header{position:relative;z-index:1;}
+
+  header{text-align:center;padding:74px 22px 34px;position:relative;z-index:1;max-width:720px;margin:0 auto;}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:5px;text-transform:uppercase;
+    color:var(--aqua);opacity:.9;}
+  h1{font-size:clamp(34px,7.5vw,54px);line-height:1.08;margin:.34em 0 .28em;text-wrap:balance;
+    font-weight:600;letter-spacing:-.5px;}
+  h1 em{font-style:italic;color:var(--gold);}
+  .sub{color:var(--muted);font-size:18px;max-width:46ch;margin:0 auto;text-wrap:balance;}
+
+  /* ── finder ── */
+  .finder{background:linear-gradient(180deg,var(--panel2),var(--panel));
+    border:1px solid var(--line);border-radius:18px;padding:26px;margin:30px auto 0;
+    box-shadow:0 24px 60px rgba(0,0,0,.45);}
+  .finder label{font-family:var(--mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--muted);display:block;margin-bottom:10px;}
+  .row{display:flex;gap:12px;flex-wrap:wrap;}
+  input[type=date]{flex:1 1 200px;min-width:0;background:#0a0916;color:var(--text);
+    border:1px solid var(--line);border-radius:11px;padding:14px 15px;font-family:var(--mono);
+    font-size:16px;color-scheme:dark;}
+  input[type=date]:focus-visible{outline:2px solid var(--aqua);outline-offset:2px;border-color:var(--aqua);}
+  button{flex:1 1 200px;background:linear-gradient(180deg,#6be0ee,#2ea6bf);color:#04121a;border:0;
+    border-radius:11px;padding:14px 18px;font-family:var(--mono);font-weight:700;font-size:14px;
+    letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:transform .12s,filter .12s;}
+  button:hover{filter:brightness(1.08);}button:active{transform:translateY(1px);}
+  button:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+
+  /* ── reveal ── */
+  .reveal{margin-top:26px;display:none;}
+  .reveal.on{display:block;animation:rise .6s cubic-bezier(.2,.7,.2,1);}
+  @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  .card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);
+    border-radius:18px;padding:30px 26px;text-align:center;overflow:hidden;position:relative;}
+  .card.ophi{border-color:#5a3fa0;box-shadow:0 0 0 1px #5a3fa0, 0 24px 60px rgba(90,63,160,.28);}
+  .glyph{font-size:76px;line-height:1;color:var(--aqua);text-shadow:0 0 34px rgba(91,220,236,.5);}
+  .card.ophi .glyph{color:var(--violet);text-shadow:0 0 40px rgba(169,139,255,.6);}
+  .realname{font-size:clamp(30px,6vw,42px);margin:.14em 0 .05em;letter-spacing:-.5px;}
+  .realdates{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:1px;}
+  .verdict{font-size:19px;margin:20px auto 0;max-width:40ch;text-wrap:balance;color:var(--text);}
+  .verdict b{color:var(--gold);font-style:normal;}
+  .blurb{color:var(--muted);font-size:16px;margin:14px auto 0;max-width:42ch;font-style:italic;}
+  .vs{display:flex;gap:12px;margin-top:24px;}
+  .vs>div{flex:1;background:#0b0a17;border:1px solid var(--line);border-radius:13px;padding:15px 12px;}
+  .vs .k{font-family:var(--mono);font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);}
+  .vs .g{font-size:30px;line-height:1.1;margin:6px 0 2px;}
+  .vs .n{font-size:16px;}
+  .vs .tro .g{color:var(--muted);}
+  .vs .rea .g{color:var(--aqua);}
+  .vs .rea{border-color:#2a4d5a;}
+  .moonline{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-top:18px;letter-spacing:.5px;}
+
+  /* ── the 13 ── */
+  section{margin-top:56px;}
+  .h2{font-size:24px;margin:0 0 4px;}
+  .lead{color:var(--muted);margin:0 0 20px;font-size:15.5px;}
+  .grid13{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+  .con{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 13px;
+    display:flex;align-items:center;gap:11px;}
+  .con .cg{font-size:24px;width:30px;text-align:center;color:var(--aqua);}
+  .con .cn{font-size:15px;line-height:1.15;}
+  .con .cd{font-family:var(--mono);font-size:10.5px;color:var(--dim);letter-spacing:.3px;}
+  .con.o{border-color:#5a3fa0;background:linear-gradient(180deg,#171130,#120e22);}
+  .con.o .cg{color:var(--violet);}
+  .con.o .tag{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--violet);
+    border:1px solid #5a3fa0;border-radius:20px;padding:1px 6px;margin-left:auto;}
+
+  /* ── explainer ── */
+  .why{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;}
+  .why p{color:var(--muted);font-size:15.5px;margin:0 0 12px;}
+  .why p:last-child{margin:0;}
+  .why b{color:var(--text);font-weight:600;}
+  .foot{margin-top:46px;text-align:center;color:var(--dim);font-family:var(--mono);font-size:12px;
+    letter-spacing:.5px;line-height:1.9;}
+  .foot a{color:var(--aqua2);}
+  @media (prefers-reduced-motion:reduce){.reveal.on{animation:none;}}
+</style>
+
+<canvas id="stars" aria-hidden="true"></canvas>
+
+<header>
+  <div class="eyebrow">las 13 constelaciones · zodíaco real</div>
+  <h1>El signo que crees que sos<br><em>no es el que el cielo dice.</em></h1>
+  <p class="sub">La astrología usa 12 signos fijados hace ~2000 años. El Sol, hoy, cruza <b>13 constelaciones</b> — incluida <b>Ofiuco</b>. Descubrí dónde estaba de verdad el día que naciste.</p>
+</header>
+
+<div class="wrap">
+  <div class="finder">
+    <label for="dob">Tu fecha de nacimiento</label>
+    <div class="row">
+      <input type="date" id="dob" value="1988-07-29" min="1900-01-01" max="2030-12-31"/>
+      <button id="go">Revelar mi signo real</button>
+    </div>
+  </div>
+
+  <div class="reveal" id="reveal" aria-live="polite">
+    <div class="card" id="card">
+      <div class="glyph" id="glyph">⛎</div>
+      <div class="realname" id="realname">Ofiuco</div>
+      <div class="realdates mono" id="realdates">29 nov – 17 dic</div>
+      <p class="verdict" id="verdict"></p>
+      <p class="blurb" id="blurb"></p>
+      <div class="vs">
+        <div class="tro"><div class="k">Creías que eras</div><div class="g" id="troG">♌</div><div class="n" id="troN">Leo</div></div>
+        <div class="rea"><div class="k">El Sol estaba en</div><div class="g" id="reaG">♋</div><div class="n" id="reaN">Cáncer</div></div>
+      </div>
+      <div class="moonline" id="moonline"></div>
+    </div>
+  </div>
+
+  <section>
+    <h2 class="h2">Las 13 constelaciones reales</h2>
+    <p class="lead">Fechas en que el Sol cruza cada constelación (límites IAU). Fijate en la #13.</p>
+    <div class="grid13" id="grid13"></div>
+  </section>
+
+  <section>
+    <h2 class="h2">¿Por qué no coinciden?</h2>
+    <div class="why">
+      <p><b>Los 12 signos son un mapa viejo.</b> Se fijaron hace ~2000 años, cuando el equinoccio de primavera caía en Aries. Desde entonces, la <b>precesión de los equinoccios</b> —el bamboleo lento del eje terrestre— corrió el cielo unos <b>24°</b>.</p>
+      <p>Tu signo <b>tropical</b> (el de las apps) es una casilla de estación, ya desfasada del cielo. Tu signo <b>real / sidéreo</b> es la constelación donde el Sol <b>estaba de verdad</b> — casi siempre un signo atrás.</p>
+      <p><b>Y hay una 13ª:</b> Ofiuco, el serpentario. El Sol lo cruza ~18 días (29 nov – 17 dic), pero los 12 signos lo saltan. Si naciste en esas fechas, tu signo real no existe en el horóscopo común.</p>
+      <p class="mono" style="font-size:12px;color:var(--dim);letter-spacing:.5px">Marco: constelacional / sidéreo (límites IAU). Modelo simbólico, no causación física.</p>
+    </div>
+  </section>
+
+  <div class="foot">
+    Tu Signo Real · mividacomoluna<br>
+    <a href="alineacion.html">ver la alineación del cielo de hoy →</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  // ── 12 tropical signs [name, glyph, startMonth(1-12), startDay] ──
+  const TRO = [
+    ["Aries","♈",3,21],["Tauro","♉",4,20],["Géminis","♊",5,21],["Cáncer","♋",6,21],
+    ["Leo","♌",7,23],["Virgo","♍",8,23],["Libra","♎",9,23],["Escorpio","♏",10,23],
+    ["Sagitario","♐",11,22],["Capricornio","♑",12,22],["Acuario","♒",1,20],["Piscis","♓",2,19]
+  ];
+  // ── 13 real / IAU constellations [name, glyph, sMonth, sDay, eMonth, eDay, blurb] ──
+  const REAL = [
+    ["Capricornio","♑",1,20,2,16,"La cabra-pez: ambición paciente, resistencia sin ruido."],
+    ["Acuario","♒",2,16,3,11,"El aguador: mente lejana, corriente propia, libertad."],
+    ["Piscis","♓",3,11,4,18,"Los peces: profundidad, empatía, disolución de límites."],
+    ["Aries","♈",4,18,5,13,"El carnero: chispa, arranque, coraje de primero."],
+    ["Tauro","♉",5,13,6,21,"El toro: apetito, constancia, placer terrenal."],
+    ["Géminis","♊",6,21,7,20,"Los gemelos: doble voz, curiosidad, velocidad mental."],
+    ["Cáncer","♋",7,20,8,10,"El cangrejo: coraza afuera, marea adentro; memoria y hogar."],
+    ["Leo","♌",8,10,9,16,"El león: centro, calor, la necesidad de ser visto."],
+    ["Virgo","♍",9,16,10,30,"La virgen: precisión, servicio, el arte de afinar."],
+    ["Libra","♎",10,30,11,23,"La balanza: medida, belleza, la justicia como estética."],
+    ["Escorpio","♏",11,23,11,29,"El escorpión: intensidad breve y filosa — apenas 6 días de Sol."],
+    ["Ofiuco","⛎",11,29,12,17,"El serpentario: el 13º. Muerte y renacimiento, el que sostiene el veneno sin morir."],
+    ["Sagitario","♐",12,17,1,20,"El arquero: la flecha lejana, la búsqueda, el horizonte."]
+  ];
+  const ord = (m,d)=>m*100+d;
+  function pick(table, m, d){            // table rows start with [name,glyph,sM,sD,...]
+    const D = ord(m,d);
+    let best=null, bestStart=-1;
+    for(const r of table){
+      const s = ord(r[2],r[3]);
+      if(s<=D && s>bestStart){bestStart=s;best=r;}
+    }
+    if(!best){ // wrapped past new year → the sign with the latest start
+      best = table.reduce((a,b)=> ord(b[2],b[3])>ord(a[2],a[3])?b:a);
+    }
+    return best;
+  }
+  const MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  const fmt=(m,d)=>d+" "+MES[m-1];
+
+  // ── moon phase ──
+  const SYN=29.530588853, NEWEPOCH=Date.UTC(2000,0,6,18,14)/86400000;
+  function moonPhase(date){
+    const d=date.getTime()/86400000; let a=((d-NEWEPOCH)%SYN); if(a<0)a+=SYN;
+    const k=(1-Math.cos(2*Math.PI*a/SYN))/2;
+    const names=[[1.85,"Luna nueva","🌑"],[5.5,"Creciente","🌒"],[9.2,"Cuarto creciente","🌓"],
+      [12.9,"Gibosa creciente","🌔"],[16.6,"Luna llena","🌕"],[20.3,"Gibosa menguante","🌖"],
+      [23.9,"Cuarto menguante","🌗"],[27.7,"Menguante","🌘"],[30,"Luna nueva","🌑"]];
+    for(const [lim,nm,em] of names){ if(a<lim) return {name:nm,emoji:em,k}; }
+    return {name:"Luna nueva",emoji:"🌑",k};
+  }
+
+  // ── render the 13 grid ──
+  const grid=document.getElementById("grid13");
+  REAL.forEach(r=>{
+    const o = r[0]==="Ofiuco";
+    const el=document.createElement("div");
+    el.className="con"+(o?" o":"");
+    el.innerHTML=`<span class="cg">${r[1]}</span>
+      <span><span class="cn">${r[0]}</span><br><span class="cd mono">${fmt(r[2],r[3])} – ${fmt(r[4],r[5])}</span></span>
+      ${o?'<span class="tag">#13</span>':''}`;
+    grid.appendChild(el);
+  });
+
+  // ── reveal ──
+  function reveal(){
+    const v=document.getElementById("dob").value; if(!v) return;
+    const [Y,M,D]=v.split("-").map(Number);
+    const tro=pick(TRO,M,D), rea=pick(REAL,M,D);
+    const isO = rea[0]==="Ofiuco";
+    const same = tro[0]===rea[0];
+    const card=document.getElementById("card");
+    card.classList.toggle("ophi",isO);
+    document.getElementById("glyph").textContent=rea[1];
+    document.getElementById("realname").textContent=rea[0];
+    document.getElementById("realdates").textContent=fmt(rea[2],rea[3])+" – "+fmt(rea[4],rea[5]);
+    document.getElementById("blurb").textContent=rea[6];
+    document.getElementById("troG").textContent=tro[1];
+    document.getElementById("troN").textContent=tro[0];
+    document.getElementById("reaG").textContent=rea[1];
+    document.getElementById("reaN").textContent=rea[0];
+    const vd=document.getElementById("verdict");
+    if(isO)      vd.innerHTML=`Sos <b>Ofiuco ⛎</b> — el signo #13 que la astrología tropical borró del mapa. Tu signo real no existe en el horóscopo común.`;
+    else if(same)vd.innerHTML=`Coincide: sos <b>${rea[0]}</b> en ambos marcos. Sos de los pocos que el desfase no movió.`;
+    else         vd.innerHTML=`Creías que eras <b>${tro[0]}</b>. El día que naciste, el Sol estaba en <b>${rea[0]}</b>.`;
+    const mp=moonPhase(new Date(Date.UTC(Y,M-1,D,12)));
+    document.getElementById("moonline").textContent=`${mp.emoji}  la Luna estaba ${mp.name.toLowerCase()} (${Math.round(mp.k*100)}% iluminada)`;
+    document.getElementById("reveal").classList.add("on");
+  }
+  document.getElementById("go").addEventListener("click",reveal);
+  document.getElementById("dob").addEventListener("keydown",e=>{if(e.key==="Enter")reveal();});
+
+  // ── starfield (decorative) ──
+  const cv=document.getElementById("stars"), cx=cv.getContext("2d");
+  let stars=[];
+  function seed(){
+    const w=cv.width=innerWidth, h=cv.height=innerHeight;
+    const n=Math.round(w*h/9000); stars=[];
+    // deterministic-ish scatter without Math.random dependency on layout
+    for(let i=0;i<n;i++){
+      const a=Math.sin(i*12.9898)*43758.5453, b=Math.sin(i*78.233)*12543.13;
+      stars.push({x:((a-Math.floor(a))*w),y:((b-Math.floor(b))*h),
+        r:((Math.sin(i*3.7)+1)/2)*1.3+.2, p:((Math.sin(i*1.1)+1)/2)});
+    }
+  }
+  let t=0, raf=null;
+  const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  function draw(){
+    cx.clearRect(0,0,cv.width,cv.height);
+    for(const s of stars){
+      const tw=reduce?.7:(.5+.5*Math.sin(t*.03+s.p*6.28));
+      cx.globalAlpha=.25+tw*.6; cx.fillStyle="#dfe6f8";
+      cx.beginPath();cx.arc(s.x,s.y,s.r,0,6.283);cx.fill();
+    }
+    cx.globalAlpha=1;
+    if(!reduce){t++;raf=requestAnimationFrame(draw);}
+  }
+  seed();draw();
+  addEventListener("resize",()=>{seed();if(reduce)draw();});
+
+  reveal(); // show the default (born 29 jul → Cáncer, no Leo)
+})();
+</script>
