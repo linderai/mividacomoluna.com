@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>El umbral · Un ritual con Luna</title>
+  <meta name="description" content="Entrá al ritual de Luna. Una intención, tres símbolos y una lectura completa para llevarte. Muestra editorial gratuita.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <script src="assets/CODEX-worlds-v01.js"></script>
+  <link rel="stylesheet" href="assets/CODEX-worlds-v01.css">
+  <link rel="stylesheet" href="assets/CODEX-ritual-v01.css">
+  <script src="assets/CODEX-ritual-v01.js" defer></script>
+</head>
+<body class="ritual-shell">
+  <a class="ritual-skip" href="#ritual-main">Saltar al ritual</a>
+  <header class="ritual-nav">
+    <a class="ritual-brand" href="./">☾ Mi Vida Como Luna</a>
+    <button type="button" class="world-switch" data-world-toggle aria-pressed="false" aria-label="Colors · Linder. Cambiar a Goth · Luna"><span class="world-choice world-choice--colors">✦ Colors <small>· Linder</small></span><span class="world-choice world-choice--goth">☾ Goth <small>· Luna</small></span></button>
+  </header>
+  <main id="ritual-main">
+    <p class="ritual-kicker">Luna / El umbral / Muestra gratuita</p>
+    <h1 class="ritual-heading">Hay preguntas que<br>merecen su propia noche.</h1>
+    <p class="ritual-lead">Dejá que una imagen abra una pregunta distinta. Elegí una intención, revelá los tres símbolos y llevate la lectura completa. Sin reloj. Sin conversación en vivo.</p>
+    <p class="ritual-note">Esta muestra usa textos originales preescritos y símbolos propios, no una tirada de tarot aleatoria ni una respuesta generada por IA. Tu selección no se envía ni se guarda. No consume créditos.</p>
+    <noscript><p>Esta muestra necesita JavaScript para revelar los símbolos. Podés <a href="./#lecturas">leer sobre las consultas</a> sin activarlo.</p></noscript>
+    <form id="ritual-form">
+      <label for="ritual-intent">¿Qué querés explorar?</label>
+      <select id="ritual-intent" name="intent" required>
+        <option value="beginnings">Mi dirección · Volver a empezar</option>
+        <option value="bonds">Mis vínculos · Lo que deseo</option>
+        <option value="release">Mis ciclos · Lo que dejo atrás</option>
+      </select>
+      <div><button class="ritual-link primary" type="submit">Abrir el ritual</button></div>
+    </form>
+    <p id="ritual-status" class="ritual-note" role="status" aria-live="polite" aria-atomic="true"></p>
+    <section id="ritual-table" aria-label="Tres símbolos de la lectura" hidden>
+      <div class="ritual-deck">
+        <div class="ritual-card"><small>I · LO QUE APARECE</small><span class="symbol" aria-hidden="true">✧</span><strong>Por revelar</strong></div>
+        <div class="ritual-card"><small>II · LA TENSIÓN</small><span class="symbol" aria-hidden="true">✧</span><strong>Por revelar</strong></div>
+        <div class="ritual-card"><small>III · OTRA MIRADA</small><span class="symbol" aria-hidden="true">✧</span><strong>Por revelar</strong></div>
+      </div>
+      <button type="button" class="ritual-link" id="ritual-reveal">Revelar el primer símbolo</button>
+    </section>
+    <article id="ritual-result" class="ritual-result" hidden>
+      <p class="ritual-kicker">Una lectura completa / Para llevarte</p>
+      <h2 id="reading-title" tabindex="-1"></h2>
+      <h3>Lo que aparece</h3><p id="reading-appears"></p>
+      <h3>La tensión</h3><p id="reading-tension"></p>
+      <h3>Otra perspectiva</h3><p id="reading-perspective"></p>
+      <blockquote id="reading-question"></blockquote>
+      <div class="ritual-actions">
+        <button type="button" id="ritual-save" class="ritual-link primary">Guardar mi lectura · .txt</button>
+        <a href="./#acceso" class="ritual-link">Conocer las próximas consultas</a>
+      </div>
+      <p class="ritual-note">Las consultas personales, el grimorio en cuenta y los pagos están en preparación. Hoy podés guardar esta muestra en tu dispositivo y volver a explorar otra intención.</p>
+    </article>
+  </main>
+  <footer>Experiencia simbólica de reflexión y entretenimiento para mayores de 18 años. No predice hechos ni sustituye asesoramiento profesional. <a href="./">Volver al universo</a></footer>
+</body>
+</html>

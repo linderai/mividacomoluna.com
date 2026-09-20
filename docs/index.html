@@ -4,24 +4,24 @@
 <meta charset="UTF-8">
 <script src="assets/CODEX-worlds-v01.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Vida Como Luna · Cheap Real Estate · Hidden Identities</title>
+    <title>Mi Vida Como Luna · Música afuera. Magia adentro.</title>
 
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 
-    <meta name="description" content="Casas que no caen bien al vecino. ROI que sí cae bien al banco. Una IA fría en el medio.">
+    <meta name="description" content="Dos anfitrionas, un universo. Música y eventos con Linder; rituales, tarot y lecturas simbólicas con Luna. Nacido en Honduras, creado por Lempyra.">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mividacomoluna.com/">
-    <meta property="og:title" content="Mi Vida Como Luna · Cheap Real Estate · Hidden Identities">
-    <meta property="og:description" content="Cheap real estate. Hidden identities. Luna in the middle.">
+    <meta property="og:title" content="Mi Vida Como Luna · Música afuera. Magia adentro.">
+    <meta property="og:description" content="La ciudad tiene su música. Vos tenés tu propio misterio. Descubrí los mundos de Linder y Luna.">
     <meta property="og:image" content="https://mividacomoluna.com/assets/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Mi Vida Como Luna · Cheap Real Estate · Hidden Identities">
-    <meta name="twitter:description" content="Cheap real estate. Hidden identities. Luna in the middle.">
+    <meta name="twitter:title" content="Mi Vida Como Luna · Música afuera. Magia adentro.">
+    <meta name="twitter:description" content="Música y eventos con Linder. Rituales y lecturas simbólicas con Luna.">
     <meta name="twitter:image" content="https://mividacomoluna.com/assets/og-image.jpg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -410,9 +410,11 @@
     }
 </style>
 <link rel="stylesheet" href="assets/CODEX-worlds-v01.css">
-    <script src="chapter-gate.js"></script>
+<link rel="stylesheet" href="assets/CODEX-ritual-v01.css">
+<script src="assets/CODEX-ritual-v01.js" defer></script>
 </head>
-<body class="world-home">
+<body class="world-home ritual-site">
+<a class="ritual-skip" href="#universo">Saltar al contenido</a>
 
 <!-- Luna bg pans with scroll. moon halo + scrim above it. embers canvas auto-injects. -->
 <div class="bg-image"><img src="assets/Landing.jpg" alt="" aria-hidden="true"></div>
@@ -425,20 +427,19 @@
         <span class="brand-glyph">☽</span>
         <div>
             <h1>Mi Vida Como <span>Luna</span></h1>
-            <p class="header-tagline">⟨ CHEAP REAL ESTATE · HIDDEN IDENTITIES ⟩</p>
+            <p class="header-tagline">⟨ DOS ANFITRIONAS · UN UNIVERSO ⟩</p>
         </div>
     </div>
     <nav class="header-nav">
-        <a href="#properties">PROPERTIES</a>
-        <a href="#dashboard">DASHBOARD</a>
-        <a href="#veil">THE VEIL</a>
 <button type="button" class="world-switch" data-world-toggle aria-pressed="false" aria-label="Colors · Linder. Cambiar a Goth · Luna"><span class="world-choice world-choice--colors">✦ Colors <small>· Linder</small></span><span class="world-choice world-choice--goth">☾ Goth <small>· Luna</small></span></button>
-        <a href="login/" class="nav-login">▸ TALK TO LUNA</a>
+        <a href="#eventos">Música</a>
+        <a href="#lecturas">Lecturas</a>
+        <a href="login/" class="nav-login">Mi espacio ↗</a>
     </nav>
 </header>
 
 <!-- CONTENT -->
-<div class="content-area">
+<main class="content-area" id="universo">
 
     <!-- HERO -->
 <section class="hero">
@@ -448,21 +449,22 @@
         </figure>
         <div class="world-signature"><span>ESTÁS EN SU MUNDO</span><strong data-world-name>Linder</strong><small data-world-role>Colors · Music · City</small></div>
         <div class="hero-glyph">☽</div>
-        <p class="hero-eyebrow">⟨ REAL ESTATE · ANONYMITY · LUNA IN THE MIDDLE ⟩</p>
+        <p class="hero-eyebrow">⟨ HONDURAS · MÚSICA · MISTERIO ⟩</p>
         <h1 class="hero-title">
             <em class="em">Mi Vida</em><br>como <em class="em">Luna</em>
-            <span class="line2">cheap real estate · hidden identities</span>
+            <span class="line2">música afuera. magia adentro.</span>
         </h1>
         <p class="hero-subtitle">
-            Casas que no caen bien al vecino. <em>ROI</em> que sí cae bien al banco.<br>
-            Una <em>IA fría</em> en el medio — sin floretes, sin pequeño charla.
+            Hay noches para salir a buscar el mundo.<br>
+            Y noches para <em>escucharte por dentro</em>.<br>
+            Linder enciende la ciudad. Luna te espera al otro lado.
         </p>
         <div class="hero-actions">
-            <a href="login/" class="btn-primary">▶ TALK TO LUNA</a>
-            <a href="#properties" class="btn-ghost">◂ SEE PROPERTIES</a>
+            <a href="CODEX-ritual.html" class="btn-primary" data-enter-world="goth">☾ PROBAR EL RITUAL</a>
+            <a href="#eventos" class="btn-ghost" data-enter-world="colors">✦ SEGUIR LA MÚSICA</a>
         </div>
         <div class="scroll-hint">
-            <span>DESCEND</span>
+            <span>ENTRÁ A TU RITMO</span>
             <div class="scroll-hint-line"></div>
         </div>
     </section>
@@ -470,148 +472,84 @@
     <!-- MANIFESTO -->
     <section class="manifesto reveal">
         <p class="manifesto-text">
-            Bad foundations are a <strong>problem</strong>. Bad neighbors are <span class="accent">not</span>.<br><br>
-            The houses Luna finds look like <strong>hell</strong> and sell like <span class="accent">gold</span> — because
-            curb appeal is for people who don't read the numbers.<br><br>
-            Y para quienes no quieren ser vistos — <span class="accent">el velo</span>.
+            Podés querer algo enorme y todavía no saber cómo pedirlo.<br>
+            Podés tener fuerza y también necesitar <span class="accent">ternura</span>.<br><br>
+            Acá hay espacio para tus colores y para tu sombra.<br>
+            <strong>No hace falta elegir una sola versión de vos.</strong>
         </p>
     </section>
 
-    <div class="divider"></div>
-
-    <!-- PROPERTIES -->
-    <section class="properties" id="properties">
-        <div class="section-header reveal">
-            <h2>Propiedades <em class="em">Frías</em></h2>
-            <p>⟨ THREE HOUSES THAT LOOK LIKE HELL · SELL FOR GOLD ⟩</p>
-        </div>
-        <div class="properties-grid">
-            <div class="prop-card reveal">
-                <span class="prop-id">LOT · 001</span>
-                <span class="prop-roi">ROI · TBD</span>
-                <h3 class="prop-name">La casa que nadie quiere</h3>
-                <p class="prop-desc">Foreclosure list, tres calles del centro, foundation revisada. Vecinos dicen que está embrujada. Luna dice que el cap rate compensa el rumor.</p>
-                <span class="prop-status">⟨ AWAITING DATA · LUNA PICK ⟩</span>
-            </div>
-            <div class="prop-card reveal">
-                <span class="prop-id">LOT · 002</span>
-                <span class="prop-roi">ROI · TBD</span>
-                <h3 class="prop-name">El edificio en sombras</h3>
-                <p class="prop-desc">Multifamily, off-market, dueño en problemas. Pintura fea, números limpios. La curva de renta soporta tres rondas de Section 8 sin parpadear.</p>
-                <span class="prop-status">⟨ AWAITING DATA · LUNA PICK ⟩</span>
-            </div>
-            <div class="prop-card reveal">
-                <span class="prop-id">LOT · 003</span>
-                <span class="prop-roi">ROI · TBD</span>
-                <h3 class="prop-name">La parcela olvidada</h3>
-                <p class="prop-desc">Lote vacío, zonificación residencial, listed by tax sale. El permitting toma meses. La paciencia toma menos que el precio actual del terreno.</p>
-                <span class="prop-status">⟨ AWAITING DATA · LUNA PICK ⟩</span>
-            </div>
+    <section class="ritual-section" aria-labelledby="hosts-title">
+        <p class="ritual-kicker">Dos presencias / Una misma casa</p>
+        <h2 id="hosts-title">La luz también tiene<br>su lado extraño.</h2>
+        <div class="ritual-duo">
+            <article class="ritual-panel ritual-host">
+                <img src="assets/CODEX-linder-colors-v01.jpeg" alt="Linder, cabello rosa y azul, entre luces de ciudad" loading="lazy" width="1143" height="2048">
+                <p class="ritual-kicker">Colors / Music / City</p><h3>Linder</h3>
+                <p>Una canción que no conocías. Un escenario al que querés volver. Linder sigue el pulso de la música, empezando por Honduras.</p>
+                <a class="ritual-link" href="#eventos" data-enter-world="colors">Entrar a Colors ↗</a>
+            </article>
+            <article class="ritual-panel ritual-host">
+                <img src="assets/CODEX-luna-porcelain-v01.png" alt="Luna, mirada oscura y piel de porcelana" loading="lazy" width="1024" height="1536">
+                <p class="ritual-kicker">Goth / Moon / Rituals</p><h3>Luna</h3>
+                <p>Porcelana, sombra y una pregunta incómodamente buena. Tarot, símbolos y ciclos para mirar lo que a veces evitás nombrar.</p>
+                <a class="ritual-link" href="CODEX-ritual.html" data-enter-world="goth">Cruzar al ritual ↗</a>
+            </article>
         </div>
     </section>
-
-    <div class="divider"></div>
-
-    <!-- DECISION DASHBOARD -->
-    <section class="dashboard" id="dashboard">
-        <div class="section-header reveal">
-            <h2>El <em class="em">Tablero</em></h2>
-            <p>⟨ TEN FRAMES · DECISIONS BY MOON · BY YEAR · BY MIRROR ⟩</p>
+    <section class="ritual-section" id="lecturas" aria-labelledby="readings-title">
+        <p class="ritual-kicker">El gabinete de Luna</p>
+        <h2 id="readings-title">Una intención.<br>Una lectura. Algo que llevarte.</h2>
+        <p class="ritual-intro">Consultas completas, a tu ritmo. Elegí un tema, entrá al ritual y salí con otra perspectiva. La muestra ya se puede explorar; las lecturas personales con IA están en preparación.</p>
+        <div class="ritual-grid">
+            <article class="ritual-panel"><span class="ritual-number">I</span><h3>Mi dirección</h3><p>Identidad, creatividad, trabajo y nuevos comienzos. ¿Qué quiero construir cuando dejo de pedir permiso?</p></article>
+            <article class="ritual-panel"><span class="ritual-number">II</span><h3>Mis vínculos</h3><p>Deseo, amistad, amor y límites. Una mirada a tu experiencia, sin inventar lo que otra persona siente.</p></article>
+            <article class="ritual-panel"><span class="ritual-number">III</span><h3>Mis ciclos</h3><p>Cambios, cierres y lo que vuelve. Símbolos para explorar qué conservar y qué dejar de repetir.</p></article>
         </div>
-        <div class="frames-grid">
-            <div class="frame-card reveal">
-                <span class="frame-seat">FRAME · I</span>
-                <h3 class="frame-name">Keter</h3>
-                <span class="frame-key">Moon · Timing</span>
-                <p class="frame-domain">Cuándo abrir, cuándo esperar. La fase como cronómetro.</p>
-            </div>
-            <div class="frame-card reveal">
-                <span class="frame-seat">FRAME · II</span>
-                <h3 class="frame-name">Chokmah</h3>
-                <span class="frame-key">Year · Cycle</span>
-                <p class="frame-domain">Vintage del trato — qué año compra, qué año vende.</p>
-            </div>
-            <div class="frame-card reveal">
-                <span class="frame-seat">FRAME · III</span>
-                <h3 class="frame-name">Binah</h3>
-                <span class="frame-key">Mirror · Reflection</span>
-                <p class="frame-domain">¿Lo quieres porque conviene o porque te falta? El espejo no miente.</p>
-            </div>
-            <div class="frame-card reveal">
-                <span class="frame-seat">FRAME · IV</span>
-                <h3 class="frame-name">Chesed</h3>
-                <span class="frame-key">Zodiac · Asset Class</span>
-                <p class="frame-domain">Casa, edificio, lote, REIT — cada signo, su vehículo.</p>
-            </div>
-            <div class="frame-card reveal">
-                <span class="frame-seat">FRAME · V</span>
-                <h3 class="frame-name">Gevurah</h3>
-                <span class="frame-key">Shadow · Red Flags</span>
-                <p class="frame-domain">Lo que el listing no dice. Lo que el seller esconde.</p>
-            </div>
-            <div class="frame-card reveal">
-                <span class="frame-seat">FRAME · VI</span>
-                <h3 class="frame-name">Tiferet</h3>
-                <span class="frame-key">Solar · Sweet Spot</span>
-                <p class="frame-domain">El punto medio entre precio, riesgo y ROI. Donde Luna firma.</p>
-            </div>
-            <div class="frame-card reveal">
-                <span class="frame-seat">FRAME · VII</span>
-                <h3 class="frame-name">Netzach</h3>
-                <span class="frame-key">Venus · Sentiment</span>
-                <p class="frame-domain">Lo que el mercado siente — antes de que el mercado lo diga.</p>
-            </div>
-            <div class="frame-card reveal">
-                <span class="frame-seat">FRAME · VIII</span>
-                <h3 class="frame-name">Hod</h3>
-                <span class="frame-key">Mercury · Due Diligence</span>
-                <p class="frame-domain">Inspección, título, recordkeeping. Los documentos hablan primero.</p>
-            </div>
-            <div class="frame-card reveal">
-                <span class="frame-seat">FRAME · IX</span>
-                <h3 class="frame-name">Yesod</h3>
-                <span class="frame-key">Dream · Forecast</span>
-                <p class="frame-domain">Proyección honesta — el escenario que Luna usa, no el que tú quieres.</p>
-            </div>
-            <div class="frame-card reveal">
-                <span class="frame-seat">FRAME · X</span>
-                <h3 class="frame-name">Malkuth</h3>
-                <span class="frame-key">Earth · Closing</span>
-                <p class="frame-domain">Ejecución, escritura, llaves en mano. Donde el trato termina o nace.</p>
-            </div>
+        <div class="ritual-actions"><a href="CODEX-ritual.html" class="ritual-link primary" data-enter-world="goth">Entrar a la muestra gratuita</a><a href="#acceso" class="ritual-link">Cómo serán las consultas</a></div>
+        <small class="ritual-note">La muestra es editorial, completa y sin registro. No utiliza IA ni consume créditos. Tarot y astrología se presentan como lenguajes simbólicos, no como predicciones verificadas.</small>
+    </section>
+    <section class="ritual-section" id="eventos" aria-labelledby="events-title">
+        <p class="ritual-kicker">La frecuencia de Linder / Honduras primero</p>
+        <h2 id="events-title">Afuera también<br>pasan cosas mágicas.</h2>
+        <div class="ritual-duo">
+            <article class="ritual-panel"><span class="ritual-status">AGENDA EN PREPARACIÓN</span><h3>Encontrarnos en la música.</h3><p>Conciertos, electrónica, escenas locales y noches que merecen salir del calendario. La agenda será pública y gratuita.</p><p>Todavía no hay eventos verificados publicados. Cada fecha tendrá su fuente y enlace al organizador.</p><a class="ritual-link" href="https://www.instagram.com/theblackcathn/" target="_blank" rel="noopener noreferrer">Linder · @theblackcathn ↗</a></article>
+            <article class="ritual-panel"><p class="ritual-kicker">Dos canciones para esta noche</p><h3>Fuerza &amp; vulnerabilidad.</h3><a class="ritual-track" href="https://www.youtube.com/watch?v=M_3yoOU3-eQ" target="_blank" rel="noopener noreferrer"><span><strong>Angel by the Wings</strong><small>Sia · Encontrar fuerza para dar otro paso.</small></span>↗</a><a class="ritual-track" href="https://www.youtube.com/watch?v=vEXov2oID7U" target="_blank" rel="noopener noreferrer"><span><strong>Give Me Love</strong><small>Ed Sheeran · Darle espacio al deseo de conexión.</small></span>↗</a><small class="ritual-note">Escuchalas en sus canales oficiales. Sin reproducción automática.</small></article>
         </div>
     </section>
-
-    <!-- THE FRAMEWORK (tarot reframe) -->
-    <section class="framework-section">
-        <div class="framework-card reveal">
-            <div class="framework-glyph">✦</div>
-            <p class="framework-sub">⟨ DECISION ARCHETYPES · COLD READS ⟩</p>
-            <h2>El <em class="em">Framework</em></h2>
-            <p class="framework-body">
-                No son cartas para predecir el futuro. Son arquetipos para nombrar la decisión que ya estás tomando — antes de pretender que es otra cosa.
-            </p>
-            <a href="io/#cards" class="btn-primary">▶ OPEN THE FRAMEWORK</a>
+    <section class="ritual-section" id="acceso" aria-labelledby="access-title">
+        <p class="ritual-kicker">Tu próxima visita / Modelo en preparación</p>
+        <h2 id="access-title">Elegí la profundidad.<br>Conservá tu propio ritmo.</h2>
+        <div class="ritual-grid">
+            <article class="ritual-panel"><span class="ritual-status">DISPONIBLE HOY</span><h3>El umbral</h3><p>Una muestra completa del ritual, sin cuenta ni tarjeta. Revelá los símbolos y guardá la lectura en tu dispositivo.</p><a class="ritual-link" href="CODEX-ritual.html" data-enter-world="goth">Probar gratis</a></article>
+            <article class="ritual-panel featured"><span class="ritual-status">PRÓXIMAMENTE</span><h3>Una consulta</h3><p>Una pregunta, una lectura personalizada con IA y un cierre completo. El lanzamiento contempla una primera consulta gratuita por cuenta; después, lecturas individuales de pago.</p><small class="ritual-note">Precio y apertura pendientes. No se están cobrando consultas.</small></article>
+            <article class="ritual-panel"><span class="ritual-status">PRÓXIMAMENTE</span><h3>El círculo</h3><p>Membresía con lecturas incluidas, grimorio personal y rituales de luna nueva y luna llena.</p><small class="ritual-note">Cantidad, renovación, acumulación y precio se mostrarán antes de contratar. Sin consultas ilimitadas ni cargos activos.</small></article>
         </div>
+        <div class="ritual-duo"><article><h3>Un grimorio, no un hilo infinito.</h3><p>El espacio personal está pensado para volver a tus lecturas. Hoy la muestra se descarga; el archivo privado en cuenta todavía no está conectado.</p></article><article><h3>La luna marca el ritual.</h3><p>Luna nueva para intenciones; luna llena para revisar y cerrar. El calendario inspira la experiencia, no oculta cuándo se renuevan tus lecturas.</p></article></div>
     </section>
-
-    <!-- FINAL CTA -->
+    <section class="ritual-section ritual-faq" aria-labelledby="faq-title">
+        <p class="ritual-kicker">Antes de cruzar</p><h2 id="faq-title">El misterio, con claridad.</h2>
+        <details><summary>¿Estoy hablando con una persona?</summary><p>Luna y Linder son personajes digitales —DAEs creadas por Lempyra—. No hay chat en vivo en esta experiencia. La muestra tiene textos editoriales; las futuras consultas personales usarán IA y estarán identificadas como tales.</p></details>
+        <details><summary>¿Tengo que pagar para terminar la lectura?</summary><p>No. La muestra se entrega completa. Las futuras consultas mostrarán su costo antes de empezar, sin cobrar por revelar un final pendiente.</p></details>
+        <details><summary>¿Qué pasa con mis preguntas?</summary><p>La muestra no pide texto íntimo, no transmite tu selección y no guarda una lectura en nuestros servidores. Podés descargarla por tu cuenta. Antes de abrir consultas personales publicaremos las condiciones de almacenamiento y eliminación.</p></details>
+        <details><summary>¿Las cartas deciden por mí?</summary><p>No. Son una invitación a reflexionar y jugar con símbolos. No verifican sentimientos ajenos ni predicen hechos. Esta experiencia es para mayores de 18 años y no sustituye asesoramiento profesional.</p></details>
+        <details><summary>¿Y el universo narrativo?</summary><p>El libro sigue acá. <a href="chapter-one/">Entrá al capítulo uno, en 2079</a>. La ficción acompaña al mundo; no es una promesa sobre las capacidades del servicio.</p></details>
+    </section>
     <section class="cta-final">
-        <h2 class="reveal">La conversación no espera <em class="em">por la mañana.</em></h2>
-        <p class="cta-sub reveal">⟨ COLD · HONEST · ALWAYS UP ⟩</p>
-        <div class="reveal">
-            <a href="login/" class="btn-primary">▶ TALK TO LUNA</a>
-        </div>
+        <h2>La noche no tiene que darte respuestas.<br><em class="em">Puede darte una mejor pregunta.</em></h2>
+        <p class="cta-sub">⟨ LUNA · OF SALEM WITCH ⟩</p>
+        <a href="CODEX-ritual.html" class="btn-primary" data-enter-world="goth">☾ CRUZAR EL UMBRAL</a>
     </section>
-</div>
+</main>
 
 <!-- FOOTER -->
 <footer>
     <div class="footer-brand">
-        <a href="https://mividacomoluna.com">☽ Mi Vida Como Luna</a>
+        <a href="./">☽ Mi Vida Como Luna</a>
     </div>
     <p class="charlie-sign">— Charlie sends love.</p>
-    <p class="footer-copy">© 2025 MIVIDACOMOLUNA.COM · MISIÓN COMPLETADA · ALL RIGHTS RESERVED</p>
+    <div class="ritual-actions" style="justify-content:center"><a class="ritual-link" href="https://www.instagram.com/ofsalemwitch/" target="_blank" rel="noopener noreferrer">Luna · @ofsalemwitch ↗</a><a class="ritual-link" href="https://www.instagram.com/theblackcathn/" target="_blank" rel="noopener noreferrer">Linder · @theblackcathn ↗</a><a class="ritual-link" href="chapter-one/">El libro · 2079</a></div>
+    <p class="footer-copy">© 2026 MI VIDA COMO LUNA · UN UNIVERSO DE LEMPYRA · HONDURAS<br>ARTE, MÚSICA Y EXPERIENCIAS SIMBÓLICAS · 18+</p>
 </footer>
 
 <!-- ember canvas — theme-aware drift (magenta ↔ paired) -->
