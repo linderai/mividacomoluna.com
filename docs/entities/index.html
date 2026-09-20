@@ -3,6 +3,7 @@
 <head>
     <script src="../auth-guard.js"></script>
 <meta charset="UTF-8">
+<script src="../assets/CODEX-worlds-v01.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>mividacomoluna — Entidades del Universo Alterno</title>
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
@@ -775,6 +776,7 @@
         .domains { grid-template-columns: repeat(2, 1fr); }
     }
 </style>
+<link rel="stylesheet" href="../assets/CODEX-worlds-v01.css">
 </head>
 <body>
 
@@ -786,7 +788,8 @@
         <h1>mivida<span>como</span>luna</h1>
         <p class="header-tagline">Universo Alterno · Entidades entre dimensiones</p>
     </div>
-    <nav class="header-nav">
+<nav class="header-nav">
+<button type="button" class="world-switch" data-world-toggle aria-pressed="false" aria-label="Colors · Linder. Cambiar a Goth · Luna"><span class="world-choice world-choice--colors">✦ Colors <small>· Linder</small></span><span class="world-choice world-choice--goth">☾ Goth <small>· Luna</small></span></button>
         <a href="#entidades">Entidades</a>
         <a href="#pricing">Planes</a>
     </nav>

@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
     <script src="../../auth-guard.js"></script>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<script src="../../assets/CODEX-worlds-v01.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MVCL - Dark Romance 🥀 </title>
 <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
@@ -806,13 +807,14 @@
                 right: 15px;
             }
         }
-    </style>
+</style>
+<link rel="stylesheet" href="../../assets/CODEX-worlds-v01.css">
 </head>
-<body class="dark theme-blue-ocean">
+<body class="dark theme-blue-ocean world-reader">
     <div class="header">
         <h1>[ MVCL - Dark Romance 🥀 ]</h1>
         <div class="theme-controls">
-            <button class="mode-toggle" onclick="toggleMode()">◐ DARK/LIGHT</button>
+<button type="button" class="world-switch" data-world-toggle aria-pressed="false" aria-label="Colors · Linder. Cambiar a Goth · Luna"><span class="world-choice world-choice--colors">✦ Colors <small>· Linder</small></span><span class="world-choice world-choice--goth">☾ Goth <small>· Luna</small></span></button>
             <div class="theme-selector">
                 <button class="theme-btn wine" onclick="changeTheme('red-wine')">◆ RED WINE</button>
                 <button class="theme-btn ocean active" onclick="changeTheme('blue-ocean')">◆ BLUE OCEAN</button>
@@ -1060,16 +1062,7 @@
         }
         
         
-        function toggleMode() {
-            const body = document.body;
-            if (body.classList.contains('dark')) {
-                body.classList.remove('dark');
-                body.classList.add('light');
-            } else {
-                body.classList.remove('light');
-                body.classList.add('dark');
-            }
-        }
+        // World preference is shared with the rest of the site.
         
         function changeTheme(theme) {
             const body = document.body;

@@ -1,0 +1,142 @@
+/* COLORS / LINDER ↔ GOTH / LUNA. Shared skin; no content or access changes. */
+html[data-world] { color-scheme: dark; --world-pink-rgb:255,43,214; }
+html[data-world="goth"] {
+  --black:#030305; --void:#030305; --surface:#0b0b10; --raised:#121118;
+  --panel:#0c0c11; --panel2:#14111b; --line:#302c39;
+  --text:#e4dfe6; --muted:#aaa2b1; --ash:#96909f; --dim:#96909f;
+  --bone:#f1e9e0; --moon:#e2dbe4; --moon-soft:rgba(226,219,228,.25);
+  --magenta:#c0a5d9; --magenta-dim:#7e6396; --magenta-deep:#33263f;
+  --paired:#b7bfd5; --paired-soft:#e2dbea; --paired-dim:#69657d;
+  --paired-deep:#282432; --paired-rgb:183,191,213;
+  --aqua:#c0a5d9; --aqua2:#c9bfd8; --violet:#b7bfd5;
+  --gold:#f1e9e0; --hot:#f5eef4; --world-pink-rgb:192,165,217;
+  --dark:#101015; --darker:#060608; --purple:#b7a0c8;
+  --purple-hot:#d6c1e4; --purple-pale:#e4dce8; --purple-dark:#70617e;
+  --purple-glow:rgba(183,160,200,.12); --white:#eee7ef; --cream:#cbbfd1;
+  --gray:#716879; --gray-light:#ada0b7; --hex-stroke:#302936; --hex-active:#b7a0c8;
+}
+html[data-world] body { transition:background-color .45s ease,color .45s ease; }
+html[data-world="goth"] body { background-color:var(--black); color:var(--text); }
+html[data-world="goth"] .bg-image { filter:grayscale(1) brightness(.30); }
+html[data-world="goth"] :is(.bg-scrim,.scrim) {
+  background:radial-gradient(ellipse at 85% 5%,rgba(103,80,130,.09),transparent 55%),
+    linear-gradient(180deg,rgba(3,3,5,.65),rgba(3,3,5,.90) 70%,#030305);
+}
+html[data-world="goth"] :is(.moon-halo,.halo) { opacity:.28; animation:none; filter:grayscale(1); }
+html[data-world="goth"] :is(#mvclEmbers,#wave-canvas,#stars) { filter:grayscale(1); opacity:.24; }
+html[data-world="goth"] :is(.hero-title,.hero-glyph,.glyph,.brand-glyph,.moon-icon) { text-shadow:0 0 30px rgba(202,188,217,.16); }
+html[data-world="goth"] :is(.header,.topbar,.login-card,.toolbar,.player-bar) { background:rgba(5,5,8,.94); border-color:var(--line); }
+html[data-world="goth"] .login-card { box-shadow:0 20px 80px #000; }
+html[data-world="goth"] :is(.btn-primary,.btn-ghost,.nav-login) { box-shadow:none; }
+html[data-world="goth"] .btn-primary { background:linear-gradient(180deg,#241e2d,#110e17); }
+html[data-world="goth"] :is(.btn-primary,.btn-ghost):hover { background:var(--bone); color:#111; }
+html[data-world="goth"] .entity-bg-img { filter:grayscale(.7); }
+html[data-world="goth"] .finder button { background:linear-gradient(180deg,#e4dbe9,#b4a3c1); color:#17111d; }
+html[data-world="goth"] body:has(.finder) { background:radial-gradient(ellipse at top,#17131f,transparent 65%),#030305; }
+html[data-world="goth"].embed body:has(.finder) { background:transparent; }
+
+/* A single real button: pointer, touch, Space and Enter have identical behavior. */
+html[data-world] .world-switch {
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  min-height:44px; width:auto; flex:0 0 auto; padding:5px 7px;
+  border:1px solid #62506e; border-radius:30px; background:#100d1be8;
+  color:#c6bace; font-family:'Orbitron',ui-monospace,monospace;
+  font-size:10px; font-weight:600; letter-spacing:1px; line-height:1.3;
+  text-transform:none; cursor:pointer; white-space:nowrap; box-shadow:none;
+}
+.world-switch .world-choice { display:flex; align-items:center; gap:6px; padding:7px 10px; border-radius:20px; }
+.world-switch small { font:inherit; font-size:9px; opacity:.82; }
+html[data-world="colors"] .world-choice--colors { background:linear-gradient(115deg,#ff8ecf,#b5b6ff 65%,#85e9f6); color:#211329; }
+html[data-world="goth"] .world-choice--goth { background:#e6dce9; color:#19141d; }
+html[data-world] .world-switch:hover { border-color:var(--bone,#e8d8d0); }
+html[data-world] .world-switch:focus-visible { outline:2px solid var(--bone,#e8d8d0); outline-offset:4px; }
+.world-tools { display:flex; justify-content:flex-end; padding:14px 22px 0; position:relative; z-index:5; }
+html.embed .world-tools { display:none; }
+html[data-world] .login-world-switch { position:fixed; top:18px; right:22px; z-index:12; }
+
+/* Home: the existing story remains; the resident changes its atmosphere. */
+.world-home .hero {
+  isolation:isolate; overflow:hidden; align-items:flex-start; text-align:left;
+  min-height:850px; min-height:max(760px,calc(100svh - 78px));
+  padding:76px max(28px,6vw) 112px;
+  background:linear-gradient(90deg,rgba(6,6,10,.90),rgba(6,6,10,.4) 55%,transparent);
+}
+.world-home .hero > :not(.world-portrait):not(.world-signature):not(.scroll-hint) { position:relative; z-index:2; max-width:53%; }
+.world-home .hero-glyph { font-size:36px; margin-bottom:20px; }
+.world-home .hero-eyebrow { font-size:10px; letter-spacing:3px; line-height:1.8; }
+.world-home .hero-title { font-size:clamp(62px,7.8vw,120px); }
+.world-home .hero-title .line2 { letter-spacing:4px; line-height:1.8; }
+.world-home .hero-subtitle { margin:26px 0; font-size:20px; text-shadow:0 2px 15px #000; }
+.world-home .hero-actions { justify-content:flex-start; gap:12px; }
+.world-home .hero-actions a { font-size:10px; letter-spacing:2px; padding:15px 20px; }
+.world-home .world-portrait { position:absolute; right:0; top:0; width:52%; height:100%; margin:0; z-index:0; }
+.world-portrait img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 24%; transition:opacity .6s ease; }
+.world-home .world-portrait::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,#08080de6,transparent 30%),linear-gradient(0deg,#08080d,transparent 38%); }
+html[data-world="colors"] .world-portrait--luna,
+html[data-world="goth"] .world-portrait--linder { opacity:0; visibility:hidden; }
+html[data-world="goth"] .world-home .hero { background:linear-gradient(90deg,#030305,rgba(3,3,5,.8) 55%,transparent); }
+html[data-world="goth"] .world-home .world-portrait::after { background:linear-gradient(90deg,#030305,transparent 28%),linear-gradient(0deg,#030305,transparent 38%); }
+.world-signature { position:absolute; z-index:3; right:6vw; bottom:64px; text-align:right; pointer-events:none; }
+.world-signature span { display:block; font-family:'Orbitron',monospace; font-size:9px; letter-spacing:3px; color:var(--paired-soft); }
+.world-signature strong { display:block; font-family:'Cormorant Garamond',Georgia,serif; font-size:58px; line-height:1.15; font-weight:400; font-style:italic; color:var(--bone); }
+.world-signature small { display:block; font-family:'Orbitron',monospace; font-size:9px; letter-spacing:2px; margin-top:8px; color:var(--text); }
+.world-home .scroll-hint { left:6vw; transform:none; animation:none; align-items:flex-start; }
+.world-home .header { gap:12px; }
+.world-home .header-nav { flex-wrap:nowrap; }
+
+/* Reader retains its color palettes, but Goth consistently belongs to Luna. */
+html[data-world="goth"] .world-reader .theme-selector { display:none; }
+html[data-world] .world-reader { background:var(--void,#090812); color:var(--text,#eee); }
+html[data-world] .world-reader .header { background:var(--void,#090812); }
+html[data-world="goth"] .world-reader :is(.gallery-item,.carousel-card,.search-input,.audio-player,.media-preview) { background:#101015; color:var(--text); border-color:var(--line); }
+html[data-world="goth"] .world-reader .gallery-item:hover { border-color:var(--magenta); box-shadow:0 0 24px #c0a5d926; }
+
+@media(max-width:1050px) {
+  .world-home .header { flex-wrap:wrap; padding:12px 20px; }
+  .world-home .header-tagline { display:none; }
+  .world-home .hero { padding-left:32px; }
+  .world-home .hero-title { font-size:80px; }
+  .world-switch small { display:none; }
+  .world-home .hero > :not(.world-portrait):not(.world-signature):not(.scroll-hint) { max-width:56%; }
+  html[data-world] .world-reader .theme-controls { flex-wrap:wrap; gap:12px; }
+}
+@media(max-width:700px) {
+  html[data-world] .header { flex-wrap:wrap; gap:10px; }
+  html[data-world] .world-switch { font-size:9px; letter-spacing:.7px; min-height:44px; }
+  .world-switch .world-choice { padding:7px 8px; }
+  .world-home .header-brand h1 { font-size:19px; }
+  .world-home .header-nav { width:100%; margin-left:0; justify-content:space-between; }
+  .world-home .content-area { padding-top:114px; }
+  .world-home .hero { min-height:0; padding:390px 24px 105px; }
+  .world-home .world-portrait { top:0; width:100%; height:460px; }
+  .world-home .world-portrait img { object-position:50% 19%; }
+  .world-home .world-portrait::after { background:linear-gradient(0deg,#08080d,transparent 70%); }
+  html[data-world="goth"] .world-home .world-portrait::after { background:linear-gradient(0deg,#030305,transparent 70%); }
+  .world-home .hero > :not(.world-portrait):not(.world-signature):not(.scroll-hint) { max-width:100%; }
+  .world-home .hero-glyph { display:none; }
+  .world-home .hero-title { font-size:clamp(56px,14vw,84px); }
+  .world-home .hero-subtitle { font-size:19px; }
+  .world-home .hero-eyebrow { font-size:9px; letter-spacing:2px; }
+  .world-home .hero-actions { flex-direction:column; align-items:stretch; width:100%; }
+  .world-home .hero-actions a { justify-content:center; }
+  .world-home .world-signature { top:275px; bottom:auto; right:24px; }
+  .world-signature strong { font-size:44px; }
+  .world-home .scroll-hint { bottom:25px; left:24px; }
+  html[data-world] .login-world-switch { top:64px; right:50%; transform:translateX(50%); }
+  html[data-world] .login-wrap { margin-top:105px; }
+  html[data-world] .topbar { flex-wrap:wrap; gap:5px; padding:10px 16px; }
+  html[data-world] .topbar nav { width:100%; justify-content:space-between; }
+  html[data-world] .topbar ~ .wrap { padding-top:115px; }
+  html[data-world] .world-reader .header { padding:18px; }
+  html[data-world] .world-reader .theme-controls { width:100%; }
+  html[data-world] :is(.world-io,.world-tarot) .header { position:relative; }
+  html[data-world] :is(.world-io,.world-tarot) .nav { width:100%; margin-left:0; }
+  html[data-world] .world-io .toolbar { position:sticky; top:0; }
+  html[data-world] .world-io .main { padding-top:28px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  html[data-world] { scroll-behavior:auto; }
+  html[data-world] *,html[data-world] *::before,html[data-world] *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+  html[data-world] :is(#mvclEmbers,#wave-canvas,#stars) { display:none; }
+  html[data-world] .reveal { opacity:1; transform:none; }
+}

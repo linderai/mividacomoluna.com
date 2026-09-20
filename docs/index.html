@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es" class="theme-blue">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<script src="assets/CODEX-worlds-v01.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Vida Como Luna · Cheap Real Estate · Hidden Identities</title>
 
@@ -407,10 +408,11 @@
       .theme-toggle{padding:5px 9px;font-size:9px;letter-spacing:1.5px}
       .veil-card{padding:48px 24px}
     }
-    </style>
+</style>
+<link rel="stylesheet" href="assets/CODEX-worlds-v01.css">
     <script src="chapter-gate.js"></script>
 </head>
-<body>
+<body class="world-home">
 
 <!-- Luna bg pans with scroll. moon halo + scrim above it. embers canvas auto-injects. -->
 <div class="bg-image"><img src="assets/Landing.jpg" alt="" aria-hidden="true"></div>
@@ -430,10 +432,7 @@
         <a href="#properties">PROPERTIES</a>
         <a href="#dashboard">DASHBOARD</a>
         <a href="#veil">THE VEIL</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle accent color">
-            <span class="dot"></span>
-            <span id="themeLabel">BLUE</span>
-        </button>
+<button type="button" class="world-switch" data-world-toggle aria-pressed="false" aria-label="Colors · Linder. Cambiar a Goth · Luna"><span class="world-choice world-choice--colors">✦ Colors <small>· Linder</small></span><span class="world-choice world-choice--goth">☾ Goth <small>· Luna</small></span></button>
         <a href="login/" class="nav-login">▸ TALK TO LUNA</a>
     </nav>
 </header>
@@ -442,7 +441,12 @@
 <div class="content-area">
 
     <!-- HERO -->
-    <section class="hero">
+<section class="hero">
+        <figure class="world-portrait" aria-label="Dos anfitrionas, un universo">
+            <img class="world-portrait--linder" src="assets/CODEX-linder-colors-v01.jpeg" alt="Linder, cabello rosa, chaqueta de cuero y ciudad de luz" width="1143" height="2048" fetchpriority="high">
+            <img class="world-portrait--luna" src="assets/CODEX-luna-porcelain-v01.png" alt="Luna, piel de porcelana, cabello negro y estilo rocker sin tatuajes" width="1024" height="1536">
+        </figure>
+        <div class="world-signature"><span>ESTÁS EN SU MUNDO</span><strong data-world-name>Linder</strong><small data-world-role>Colors · Music · City</small></div>
         <div class="hero-glyph">☽</div>
         <p class="hero-eyebrow">⟨ REAL ESTATE · ANONYMITY · LUNA IN THE MIDDLE ⟩</p>
         <h1 class="hero-title">
@@ -633,24 +637,7 @@
   if (img.complete) update(); else img.addEventListener('load', update);
 })();
 
-// theme toggle — BLUE ⇄ RED, persisted in localStorage
-(function(){
-  var html = document.documentElement;
-  var btn = document.getElementById('themeToggle');
-  var label = document.getElementById('themeLabel');
-  var saved = localStorage.getItem('mvcl_theme') || 'blue';
-  function apply(mode){
-    html.classList.remove('theme-blue','theme-red');
-    html.classList.add('theme-' + mode);
-    label.textContent = mode.toUpperCase();
-    localStorage.setItem('mvcl_theme', mode);
-  }
-  apply(saved);
-  btn.addEventListener('click', function(){
-    var next = html.classList.contains('theme-blue') ? 'red' : 'blue';
-    apply(next);
-  });
-})();
+// Shared Colors / Goth preference is handled by assets/CODEX-worlds-v01.js.
 
 // reveal on scroll
 var io = new IntersectionObserver(function(ents){

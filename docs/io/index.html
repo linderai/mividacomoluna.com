@@ -2,6 +2,7 @@
 <html lang="es" class="theme-blue">
 <head>
 <meta charset="UTF-8">
+<script src="../assets/CODEX-worlds-v01.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Luna · Mi Vida Como Luna</title>
 <meta name="robots" content="noindex, nofollow">
@@ -317,8 +318,9 @@ button{font-family:'Orbitron',sans-serif;cursor:pointer;border:none;background:n
   .player-btn.play{width:40px;height:40px;font-size:14px}
 }
 </style>
+<link rel="stylesheet" href="../assets/CODEX-worlds-v01.css">
 </head>
-<body>
+<body class="world-io">
 
 <div class="bg-image"></div>
 <div class="moon-halo"></div>
@@ -336,10 +338,7 @@ button{font-family:'Orbitron',sans-serif;cursor:pointer;border:none;background:n
     <nav class="nav">
         <a href="../">◂ LANDING</a>
         <span class="user-chip" id="userChip">@—</span>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle accent color">
-            <span class="dot"></span>
-            <span id="themeLabel">BLUE</span>
-        </button>
+<button type="button" class="world-switch" data-world-toggle aria-pressed="false" aria-label="Colors · Linder. Cambiar a Goth · Luna"><span class="world-choice world-choice--colors">✦ Colors <small>· Linder</small></span><span class="world-choice world-choice--goth">☾ Goth <small>· Luna</small></span></button>
         <button class="nav-logout" id="logoutBtn">▸ LOGOUT</button>
     </nav>
 </header>
@@ -482,23 +481,7 @@ var AUTH_KEY    = 'luna_token';
 var REFRESH_KEY = 'luna_refresh';
 var USER_KEY    = 'luna_user';
 
-// ─ theme toggle (matches landing) ─
-(function(){
-  var html  = document.documentElement;
-  var btn   = document.getElementById('themeToggle');
-  var label = document.getElementById('themeLabel');
-  var saved = localStorage.getItem('mvcl_theme') || 'blue';
-  function apply(m){
-    html.classList.remove('theme-blue','theme-red');
-    html.classList.add('theme-' + m);
-    label.textContent = m.toUpperCase();
-    localStorage.setItem('mvcl_theme', m);
-  }
-  apply(saved);
-  btn.addEventListener('click', function(){
-    apply(html.classList.contains('theme-blue') ? 'red' : 'blue');
-  });
-})();
+// Shared Colors / Goth preference is handled by assets/CODEX-worlds-v01.js.
 
 // ─ user chip ─
 var userChip = document.getElementById('userChip');

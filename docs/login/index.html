@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es" class="theme-blue">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<script src="../assets/CODEX-worlds-v01.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://sar1a.lempyra.com; font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: blob:;">
     <title>Mi Vida Como Luna · Login</title>
@@ -159,7 +160,8 @@
       .home-link{top:16px;left:18px;font-size:13px}
       .theme-toggle{top:14px;right:16px;padding:5px 9px;font-size:9px}
     }
-    </style>
+</style>
+<link rel="stylesheet" href="../assets/CODEX-worlds-v01.css">
 </head>
 <body>
 
@@ -168,10 +170,7 @@
 <div class="bg-scrim"></div>
 
 <a href="../" class="home-link"><span class="g">☽</span> mi vida como luna</a>
-<button class="theme-toggle" id="themeToggle" aria-label="Toggle accent color">
-    <span class="tdot"></span>
-    <span id="themeLabel">BLUE</span>
-</button>
+<button type="button" class="world-switch login-world-switch" data-world-toggle aria-pressed="false" aria-label="Colors · Linder. Cambiar a Goth · Luna"><span class="world-choice world-choice--colors">✦ Colors <small>· Linder</small></span><span class="world-choice world-choice--goth">☾ Goth <small>· Luna</small></span></button>
 
 <div class="login-wrap">
     <div class="login-card">
@@ -202,23 +201,7 @@
 </div>
 
 <script>
-// ─ theme toggle (matches landing + dashboard) ─
-(function(){
-  var html = document.documentElement;
-  var btn  = document.getElementById('themeToggle');
-  var lab  = document.getElementById('themeLabel');
-  var saved = localStorage.getItem('mvcl_theme') || 'blue';
-  function apply(m){
-    html.classList.remove('theme-blue','theme-red');
-    html.classList.add('theme-' + m);
-    lab.textContent = m.toUpperCase();
-    localStorage.setItem('mvcl_theme', m);
-  }
-  apply(saved);
-  btn.addEventListener('click', function(){
-    apply(html.classList.contains('theme-blue') ? 'red' : 'blue');
-  });
-})();
+// Shared Colors / Goth preference is handled by assets/CODEX-worlds-v01.js.
 
 // ─ auth flow (preserved verbatim from prior chassis) ─
 var AUTH = {
