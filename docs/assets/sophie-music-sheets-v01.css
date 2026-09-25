@@ -85,6 +85,8 @@ button { cursor: pointer; }
   box-shadow: 0 24px 70px rgba(0, 0, 0, .32);
 }
 .song-hero img { width: 100%; aspect-ratio: 16 / 9; max-height: 640px; object-fit: cover; }
+/* Reverse Linder's reading direction without altering the original artwork. */
+img[src$="linder-amanda-mal-letter-v01.png"] { transform: scaleX(-1); }
 .song-heading {
   padding: clamp(1.5rem, 5vw, 3.75rem);
   background: linear-gradient(125deg, var(--surface), var(--surface-raised));
