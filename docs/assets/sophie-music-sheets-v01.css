@@ -1,0 +1,205 @@
+/* Music letters, v01. Plain CSS so these review pages can travel as static files. */
+:root {
+  color-scheme: dark;
+  --page: #09080e;
+  --surface: #17131d;
+  --surface-raised: #211a28;
+  --paper: #201a23;
+  --ink: #f7f0ec;
+  --muted: #c9b9c7;
+  --line: #665367;
+  --accent: #df9aab;
+  --accent-strong: #f6b7c4;
+  --glow: rgba(141, 67, 107, .22);
+  --sheet-size: 16px;
+}
+
+body[data-song-world="goth"] {
+  --page: #08070c;
+  --surface: #15121a;
+  --surface-raised: #211923;
+  --paper: #1d1820;
+  --ink: #f5edeb;
+  --muted: #cdbdc7;
+  --line: #65515f;
+  --accent: #d19bab;
+  --accent-strong: #f0b5c5;
+  --glow: rgba(112, 54, 89, .24);
+}
+
+body[data-song-world="colors"] {
+  --page: #0d0a19;
+  --surface: #1d1731;
+  --surface-raised: #2a2142;
+  --paper: #211b36;
+  --ink: #f8f3ff;
+  --muted: #d7cce9;
+  --line: #81709d;
+  --accent: #f1a5da;
+  --accent-strong: #ffcaec;
+  --glow: rgba(126, 92, 222, .28);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-width: 0;
+  background: radial-gradient(circle at 83% -12%, var(--glow), transparent 38rem), var(--page);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.65;
+}
+img { display: block; max-width: 100%; }
+a { color: var(--accent-strong); text-underline-offset: .19em; }
+a:hover { color: var(--ink); }
+button, textarea { font: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent-strong); outline-offset: 4px; }
+::selection { background: var(--accent); color: var(--page); }
+
+.music-header {
+  position: relative;
+  z-index: 2;
+  border-bottom: 1px solid var(--line);
+  background: rgba(8, 7, 12, .88);
+}
+.music-header > *, .music-page { width: min(100% - 2.25rem, 1120px); margin-inline: auto; }
+.music-header > * { min-height: 4.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.music-header a { font: 600 .8rem/1.3 system-ui, sans-serif; letter-spacing: .13em; text-transform: uppercase; text-decoration: none; }
+.music-header { padding: 1rem max(1.125rem, calc((100% - 1120px) / 2)); display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; }
+.music-header > * { width:auto; min-height:2.2rem; margin:0; }
+.music-header nav { display:flex; flex-wrap:wrap; gap:1rem; }
+.skip-link { position:absolute; top:-8rem; left:1rem; z-index:99; padding:1rem; background:var(--page); }
+.skip-link:focus { top:.5rem; }
+.music-page { padding-block: 2rem 5rem; }
+
+.song-hero {
+  margin:0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--surface);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .32);
+}
+.song-hero img { width: 100%; aspect-ratio: 16 / 9; max-height: 640px; object-fit: cover; }
+.song-heading {
+  padding: clamp(1.5rem, 5vw, 3.75rem);
+  background: linear-gradient(125deg, var(--surface), var(--surface-raised));
+}
+.kicker { margin: 0 0 .65rem; color: var(--accent-strong); font: 700 .73rem/1.4 system-ui, sans-serif; letter-spacing: .19em; text-transform: uppercase; }
+.song-heading h1 { margin: 0; max-width: 18ch; font-size: clamp(2.5rem, 8vw, 5.8rem); line-height: 1.02; letter-spacing: -.045em; }
+.song-heading p { max-width: 66ch; margin: 1.25rem 0 0; color: var(--muted); font-size: clamp(1rem, 2.1vw, 1.18rem); }
+.song-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.2rem 2rem; margin: 0; padding: 1.4rem clamp(1.5rem, 5vw, 3.75rem); border-top: 1px solid var(--line); }
+.song-meta div { min-width: 0; }
+.song-meta dt { margin-bottom: .25rem; color: var(--muted); font: 700 .69rem/1.4 system-ui, sans-serif; letter-spacing: .13em; text-transform: uppercase; }
+.song-meta dd { margin: 0; overflow-wrap: anywhere; font: 500 .93rem/1.45 system-ui, sans-serif; }
+.song-meta { display:block; }
+.song-meta dl { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1.5rem; }
+.song-meta p { color:var(--muted); max-width:80ch; }
+.song-hero figcaption { padding:.65rem 1rem; color:var(--muted); font:.75rem/1.5 system-ui,sans-serif; }
+.music-toolbar [role="group"] { display:flex; align-items:center; gap:.4rem; }
+.notes-controls { display:flex; flex-wrap:wrap; gap:.5rem; margin-block:.75rem; }
+.scroll-hint { color:var(--muted); font:.8rem/1.6 system-ui,sans-serif; }
+
+.song-nav { display: flex; flex-wrap: wrap; gap: .55rem; margin-block: 1.6rem; }
+.song-nav a, .music-toolbar button, .session-notes button, .song-card a {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 2.65rem; padding: .58rem .95rem;
+  border: 1px solid var(--line); border-radius: .45rem;
+  background: var(--surface); color: var(--ink);
+  font: 600 .83rem/1.35 system-ui, sans-serif;
+  text-decoration: none;
+  transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.song-nav a:hover, .music-toolbar button:hover, .session-notes button:hover, .song-card a:hover { background: var(--surface-raised); border-color: var(--accent); }
+.music-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem;
+  margin-block: 2rem 1.15rem; padding: .8rem;
+  border: 1px solid var(--line); border-radius: .65rem;
+  background: var(--surface);
+}
+.music-toolbar [aria-pressed="true"] { background: var(--accent); color: var(--page); border-color: var(--accent); }
+.music-toolbar .font-controls { display: inline-flex; align-items: center; gap: .35rem; margin-inline-start: auto; }
+.music-toolbar #font-value { min-width: 2.6rem; text-align: center; color: var(--muted); font: 600 .81rem system-ui, sans-serif; }
+
+.sheet-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(245px, 300px); align-items: start; gap: 1.35rem; }
+.chord-sheet, .session-notes, .credits, .audio-pending {
+  min-width: 0; border: 1px solid var(--line); border-radius: .75rem;
+  background: var(--paper); box-shadow: 0 16px 44px rgba(0, 0, 0, .13);
+}
+.chord-sheet { padding: clamp(1.25rem, 4vw, 3.5rem); }
+.chord-sheet > h2 { margin-top: 0; }
+.song-section { padding-block: 1.4rem; border-top: 1px solid var(--line); }
+.song-section:first-of-type { border-top: 0; }
+.song-section h2 { margin: 0 0 .8rem; color: var(--accent-strong); font: 700 .79rem/1.4 system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase; }
+.song-section pre {
+  max-width: 100%; overflow-x: auto; overflow-y: hidden;
+  margin: 0; padding: .2rem 0 .7rem;
+  color: var(--ink);
+  font: 500 var(--sheet-size)/1.8 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  white-space: pre;
+  tab-size: 4;
+  scrollbar-color: var(--line) transparent;
+}
+.session-notes, .credits, .audio-pending { padding: 1.35rem; }
+.session-notes h2, .credits h2, .audio-pending h2 { margin: 0 0 .7rem; font-size: 1.3rem; line-height: 1.2; }
+.session-notes p, .credits p, .audio-pending p { margin: .4rem 0 1rem; color: var(--muted); font-size: .9rem; }
+.session-notes label { display: block; margin-block: .9rem .4rem; font: 700 .8rem system-ui, sans-serif; }
+.session-notes textarea { display: block; width: 100%; min-height: 11rem; resize: vertical; padding: .75rem; border: 1px solid var(--line); border-radius: .4rem; background: var(--page); color: var(--ink); line-height: 1.5; }
+.session-notes .note-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .7rem; }
+.session-notes #notes-status { min-height: 1.4em; color: var(--accent-strong); }
+.credits, .audio-pending { margin-top: 1.35rem; }
+.credits p:last-child, .audio-pending p:last-child { margin-bottom: 0; }
+
+.song-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 1.25rem; margin-block: 2rem; }
+.song-card { overflow: hidden; border: 1px solid var(--line); border-radius: .75rem; background: var(--surface); }
+.song-card { text-decoration:none; display:block; padding-bottom:1.5rem; transition:transform .2s ease,border-color .2s ease; }
+.song-card:hover { transform:translateY(-3px); border-color:var(--accent); }
+.song-card span { font:.85rem system-ui,sans-serif; }
+.book-letter { max-width:740px; margin:3rem auto; padding:0 1rem; font-size:clamp(1.1rem,2vw,1.35rem); }
+.book-letter h1 { font-size:clamp(2.5rem,7vw,4.5rem); line-height:1.08; }
+.book-letter p { margin-block:1.7rem; }
+.book-letter hr { border:0; border-top:1px solid var(--line); margin:3rem 0; }
+.song-card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.song-card > :not(img) { margin-inline: 1.3rem; }
+.song-card h2 { margin-block: 1.1rem .35rem; font-size: 1.6rem; line-height: 1.2; }
+.song-card p { margin-block: .4rem 1.1rem; color: var(--muted); }
+.song-card a { margin-bottom: 1.3rem; }
+
+body[data-view="rehearsal"] .song-hero img { max-height: 250px; object-position: center 38%; }
+body[data-view="rehearsal"] .song-heading { padding-block: 1.3rem; }
+body[data-view="rehearsal"] .song-heading h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+body[data-view="rehearsal"] .chord-sheet { background: var(--surface); }
+body[data-view="rehearsal"] .song-hero,
+body[data-view="rehearsal"] .letter-intro { display:none; }
+
+@media (max-width: 760px) {
+  .music-page { width: min(100% - 1.25rem, 1120px); padding-top: .65rem; }
+  .music-header > * { max-width:100%; }
+  .sheet-layout { grid-template-columns: minmax(0, 1fr); }
+  .music-toolbar .font-controls { margin-inline-start: 0; }
+  .song-hero img { max-height: 440px; }
+  .song-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+@media print {
+  :root, body[data-song-world] { color-scheme: light; --ink: #111; --muted: #333; --line: #aaa; --accent-strong: #111; --paper: #fff; --surface: #fff; }
+  body { background: #fff; color: #111; font-size: 11pt; }
+  .music-header, .song-hero img, .song-nav, .music-toolbar, .session-notes, .audio-pending, .song-cards { display: none !important; }
+  .music-page { width: 100%; padding: 0; }
+  .song-hero, .chord-sheet, .credits { border: 0; box-shadow: none; }
+  .song-heading, .song-meta, .chord-sheet, .credits { padding: 0; background: #fff; }
+  .song-heading h1 { font-size: 24pt; }
+  .song-heading p { color: #333; }
+  .song-section { break-inside: avoid; padding-block: .7rem; }
+  .song-section pre { overflow: visible; font-size: min(var(--sheet-size), 12px); line-height: 1.35; }
+  a { color: #111; text-decoration: underline; }
+}
