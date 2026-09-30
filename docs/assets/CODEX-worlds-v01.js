@@ -2,9 +2,10 @@
 (function () {
   'use strict';
   var root = document.documentElement;
-  var key = 'mvcl_world_v1';
-  var world = 'colors';
-  try { if (localStorage.getItem(key) === 'goth') world = 'goth'; } catch (_) {}
+  // New baseline: start in Luna once, then remember an explicit toggle choice.
+  var key = 'mvcl_world_v2';
+  var world = 'goth';
+  try { if (localStorage.getItem(key) === 'colors') world = 'colors'; } catch (_) {}
   root.dataset.world = world;
   root.classList.remove('theme-red');
   root.classList.add('theme-blue');
@@ -42,7 +43,7 @@
   });
   window.addEventListener('storage', function (event) {
     if (event.key === key || event.key === null) {
-      setWorld(event.newValue === 'goth' ? 'goth' : 'colors', false);
+      setWorld(event.newValue === 'colors' ? 'colors' : 'goth', false);
     }
   });
   // Same-origin embedded zodiac receives an immediate update; no credentials or messages sent.
